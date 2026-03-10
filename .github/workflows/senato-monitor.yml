@@ -27,7 +27,11 @@ jobs:
       - name: Run Senato monitor
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_TO: ${{ secrets.SMTP_TO }}
         run: python scripts/run_monitor.py
+        
       - name: Commit risultati
         run: |
           git config --global user.name "github-actions"
