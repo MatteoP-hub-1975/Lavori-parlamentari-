@@ -198,6 +198,10 @@ def main():
     print(f"URL: {page_url}")
 
     html = fetch_html(page_url)
+    raw_json_path = OUTPUT_DIR / f"senato_atti_{target_date_str}.json"
+
+with open(raw_json_path, "r", encoding="utf-8") as f:
+    raw_entries = json.load(f)
     page_text = extract_page_text(html)
     prompt = build_prompt(target_date_str, page_url, page_text)
 
