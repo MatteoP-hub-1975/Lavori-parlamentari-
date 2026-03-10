@@ -137,7 +137,7 @@ def main():
 
 if __name__ == "__main__":
     main()    Esempio:
-        python scripts/fetch_senato_atti.py 2026-03-09
+        # python scripts/fetch_senato_atti.py 2026-03-09
 
     Altrimenti usa ieri.
     """
