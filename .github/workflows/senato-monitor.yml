@@ -26,3 +26,10 @@ jobs:
 
       - name: Run Senato monitor
         run: python scripts/run_monitor.py
+      - name: Commit risultati
+        run: |
+          git config --global user.name "github-actions"
+          git config --global user.email "actions@github.com"
+          git add data/senato/*.json || true
+          git commit -m "Aggiornamento atti Senato" || true
+          git push
