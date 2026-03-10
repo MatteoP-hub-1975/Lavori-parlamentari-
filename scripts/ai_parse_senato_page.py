@@ -48,7 +48,7 @@ def extract_page_text(html: str) -> str:
     return "\n".join(lines)
 
 
-def build_prompt(target_date_str: str, page_url: str, page_text: str) -> str:
+def build_prompt(target_date_str: str, page_url: str, page_text: str, raw_entries_json: str) -> str:
     return f"""
 Analizza la seguente pagina del Senato italiano "Ultimi atti pubblicati" relativa alla data {target_date_str}.
 
@@ -60,11 +60,15 @@ Testo della pagina:
 {page_text}
 <<<END_PAGE_TEXT>>>
 
+ELENCO DEI PDF TROVATI DALLO SCRAPER:
+<<<BEGIN_PDF_LIST>>>
+{raw_entries_json}
+<<<END_PDF_LIST>>>
+
 Obiettivo:
 1. Individuare i singoli atti/documenti pubblicati quel giorno.
 2. Restituire una lista JSON di atti strutturati.
-3. Assegnare una categoria preliminare per ciascun atto.
-4. Indicare se richiede la lettura del PDF completo.
+3. Associare il link_pdf più plausibile tra quelli forniti.
 
 Regole di classificazione:
 - Le categorie possibili sono SOLO queste:
@@ -72,38 +76,9 @@ Regole di classificazione:
   2. "Interesse industriale generale"
   3. "Interesse industria del trasporto"
   4. "Interesse trasporto marittimo"
-- Pesca e diporto vanno classificati come "Non attinenti".
-- La sanità NON va esclusa a priori.
-- Se c'è dubbio, scegli la categoria più rilevante.
-- Se un atto NON è chiaramente "Non attinenti", allora "richiede_lettura_pdf" deve essere true.
-- Gli ODG in linea generale richiedono lettura del PDF, salvo caso eccezionale di chiara non attinenza.
 
-Istruzioni di estrazione:
-- Lavora solo sulle informazioni realmente presenti nella pagina.
-- Non inventare dati mancanti.
-- Se un campo non è disponibile, usa stringa vuota.
-- Il campo "link_pdf" deve contenere il link PDF se è chiaramente identificabile dalla pagina; altrimenti stringa vuota.
-- Il campo "sezione" deve riflettere la macro-sezione della pagina, ad esempio:
-  - "ODG e Calendario"
-  - "DDL e relazioni"
-  - "Resoconti"
-  - "Documenti"
-  - "Atti del Governo"
-  - "Risposte scritte ad interrogazioni"
-- Il campo "tipo_atto" deve essere sintetico, per esempio:
-  - "DDL"
-  - "ODG"
-  - "Calendario"
-  - "Resoconto"
-  - "Documento"
-  - "Atto del Governo"
-  - "Risposte scritte"
+Formato JSON richiesto:
 
-Formato di output richiesto:
-Restituisci SOLO JSON valido.
-Nessun testo prima o dopo il JSON.
-
-Schema:
 [
   {{
     "ramo": "Senato",
@@ -120,6 +95,8 @@ Schema:
     "richiede_lettura_pdf": false
   }}
 ]
+
+Restituisci SOLO JSON valido.
 """.strip()
 
 
@@ -139,8 +116,6 @@ def extract_json_from_response(text: str):
 
 
 def validate_items(items, target_date_str: str):
-    if not isinstance(items, list):
-        raise ValueError("L'output AI deve essere una lista JSON.")
 
     allowed_categories = {
         "Non attinenti",
@@ -150,9 +125,8 @@ def validate_items(items, target_date_str: str):
     }
 
     normalized = []
+
     for item in items:
-        if not isinstance(item, dict):
-            continue
 
         normalized_item = {
             "ramo": "Senato",
@@ -185,6 +159,7 @@ def save_json(items, target_date_str: str) -> Path:
 
 
 def main():
+
     if not os.environ.get("OPENAI_API_KEY"):
         raise RuntimeError("Manca la variabile d'ambiente OPENAI_API_KEY.")
 
@@ -194,16 +169,21 @@ def main():
     target_date_str = target_date.isoformat()
 
     page_url = build_day_url(target_date)
+
     print(f"Analizzo con AI la pagina Senato del giorno {target_date_str}")
-    print(f"URL: {page_url}")
 
     html = fetch_html(page_url)
+
+    page_text = extract_page_text(html)
+
     raw_json_path = OUTPUT_DIR / f"senato_atti_{target_date_str}.json"
 
-with open(raw_json_path, "r", encoding="utf-8") as f:
-    raw_entries = json.load(f)
-    page_text = extract_page_text(html)
-    prompt = build_prompt(target_date_str, page_url, page_text)
+    with open(raw_json_path, "r", encoding="utf-8") as f:
+        raw_entries = json.load(f)
+
+    raw_entries_json = json.dumps(raw_entries, ensure_ascii=False, indent=2)
+
+    prompt = build_prompt(target_date_str, page_url, page_text, raw_entries_json)
 
     response = client.responses.create(
         model="gpt-5.4",
@@ -211,12 +191,15 @@ with open(raw_json_path, "r", encoding="utf-8") as f:
     )
 
     raw_text = response.output_text
+
     items = extract_json_from_response(raw_text)
+
     items = validate_items(items, target_date_str)
 
     output_path = save_json(items, target_date_str)
 
     print(f"Atti strutturati trovati: {len(items)}")
+
     print(f"File salvato in: {output_path}")
 
 
