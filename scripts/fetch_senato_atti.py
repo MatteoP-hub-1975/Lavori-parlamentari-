@@ -26,7 +26,7 @@ def parse_target_date() -> datetime.date:
     """
     Legge la data da riga di comando.
     Esempio:
-        # python scripts/fetch_senato_atti.py 2026-03-09
+    
     """
     if len(sys.argv) < 2:
         raise ValueError("Devi passare una data nel formato YYYY-MM-DD")
@@ -137,7 +137,6 @@ def main():
 
 if __name__ == "__main__":
     main()    Esempio:
-        # python scripts/fetch_senato_atti.py 2026-03-09
 
     Altrimenti usa ieri.
     """
