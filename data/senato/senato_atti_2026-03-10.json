@@ -3,6 +3,36 @@
     "ramo": "Senato",
     "tipo_atto": "Documento",
     "numero": "",
+    "titolo": "pdf",
+    "data": "2026-03-10",
+    "link": "https://www.senato.it/service/PDF/PDFServer/DF/446980.pdf",
+    "commissione": "",
+    "seduta": ""
+  },
+  {
+    "ramo": "Senato",
+    "tipo_atto": "Documento",
+    "numero": "",
+    "titolo": "pdf N.B.: Testo sottolineato (1)",
+    "data": "2026-03-10",
+    "link": "https://www.senato.it/service/PDF/PDFServer/DF/446976.pdf",
+    "commissione": "",
+    "seduta": ""
+  },
+  {
+    "ramo": "Senato",
+    "tipo_atto": "Documento",
+    "numero": "",
+    "titolo": "pdf N.B.: Testo sottolineato (1)",
+    "data": "2026-03-10",
+    "link": "https://www.senato.it/service/PDF/PDFServer/DF/446977.pdf",
+    "commissione": "",
+    "seduta": ""
+  },
+  {
+    "ramo": "Senato",
+    "tipo_atto": "Documento",
+    "numero": "",
     "titolo": "pdf N.B.: Testo sottolineato (2)",
     "data": "2026-03-10",
     "link": "https://www.senato.it/service/PDF/PDFServer/DF/446973.pdf",
@@ -26,6 +56,16 @@
     "titolo": "pdf N.B.: Testo sottolineato (2)",
     "data": "2026-03-10",
     "link": "https://www.senato.it/service/PDF/PDFServer/DF/446972.pdf",
+    "commissione": "",
+    "seduta": ""
+  },
+  {
+    "ramo": "Senato",
+    "tipo_atto": "Documento",
+    "numero": "",
+    "titolo": "pdf N.B.: Testo sottolineato (1)",
+    "data": "2026-03-10",
+    "link": "https://www.senato.it/service/PDF/PDFServer/DF/446975.pdf",
     "commissione": "",
     "seduta": ""
   },
@@ -86,6 +126,16 @@
     "titolo": "pdf",
     "data": "2026-03-10",
     "link": "https://www.senato.it/service/PDF/PDFServer/DF/442150.pdf",
+    "commissione": "",
+    "seduta": ""
+  },
+  {
+    "ramo": "Senato",
+    "tipo_atto": "Documento",
+    "numero": "",
+    "titolo": "pdf",
+    "data": "2026-03-10",
+    "link": "https://www.senato.it/service/PDF/PDFServer/DF/446978.pdf",
     "commissione": "",
     "seduta": ""
   },
