@@ -1,12 +1,13 @@
 import json
 import re
 import sys
-from datetime import date, datetime, timedelta
+from datetime import datetime
 from pathlib import Path
 from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
+
 
 BASE_URL = "https://www.senato.it"
 OUTPUT_DIR = Path("data/senato")
@@ -16,60 +17,126 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; SenatoMonitor/1.0)"
 }
 
-SECTION_TITLES = {
-    "ODG e Calendario",
-    "DDL e relazioni",
-    "Risposte scritte ad interrogazioni",
-    "Resoconti",
-    "Documenti",
-    "Atti del Governo",
-    "Emendamenti",
-    "Messaggi",
-}
-
-STOP_TITLES = {
-    "In questa pagina",
-    "Pubblicati di recente",
-    "Senato - Arcipelago",
-    "Servizio - Bottom Footer",
-}
-
-TYPE_PATTERNS = [
-    r"^Disegno di legge(?: \d+)?$",
-    r"^O\.D\.G\. Giunte e Commissioni$",
-    r"^Ordine del giorno Assemblea$",
-    r"^Calendario dei lavori dell'Assemblea$",
-    r"^Resoconto .+$",
-    r"^Risposte scritte ad interrogazioni$",
-    r"^Documento .+$",
-    r"^Atto del Governo .+$",
-    r"^Doc\. .+$",
-]
-
 
 def compact_spaces(text: str) -> str:
     return re.sub(r"\s+", " ", (text or "")).strip()
 
 
-def is_section_title(line: str) -> bool:
-    return line in SECTION_TITLES
-
-
-def is_stop_title(line: str) -> bool:
-    return line in STOP_TITLES
-
-
-def is_type_line(line: str) -> bool:
-    for pattern in TYPE_PATTERNS:
-        if re.match(pattern, line, flags=re.IGNORECASE):
-            return True
-    return False
-
-
-def parse_cli_date() -> date:
+def parse_target_date() -> datetime.date:
     """
-    Se passi una data come argomento, usa quella.
+    Legge la data da riga di comando.
     Esempio:
+        python scripts/fetch_senato_atti.py 2026-03-09
+    """
+    if len(sys.argv) < 2:
+        raise ValueError("Devi passare una data nel formato YYYY-MM-DD")
+
+    return datetime.strptime(sys.argv[1], "%Y-%m-%d").date()
+
+
+def build_day_url(target_date) -> str:
+    ymd = target_date.strftime("%Y%m%d")
+    return f"{BASE_URL}/leggi-e-documenti/ultimi-atti-pubblicati/periodo?from={ymd}&to={ymd}"
+
+
+def fetch_html(url: str) -> str:
+    response = requests.get(url, headers=HEADERS, timeout=60)
+    response.raise_for_status()
+    return response.text
+
+
+def extract_entries(page_url: str, html: str, target_date: str) -> list[dict]:
+    soup = BeautifulSoup(html, "html.parser")
+
+    entries = []
+    seen_links = set()
+
+    # Cerchiamo tutti i link PDF della pagina del giorno.
+    # In questa prima fase ogni PDF diventa un "atto" da salvare.
+    for a in soup.find_all("a", href=True):
+        href = a["href"].strip()
+        label = compact_spaces(a.get_text(" ", strip=True))
+        full_url = urljoin(page_url, href)
+
+        if "/PDF/" not in full_url:
+            continue
+
+        if full_url in seen_links:
+            continue
+
+        seen_links.add(full_url)
+
+        # Proviamo a prendere il testo vicino al link come descrizione dell'atto
+        parent_text = compact_spaces(a.parent.get_text(" ", strip=True))
+        row_text = compact_spaces(a.find_parent().get_text(" ", strip=True)) if a.find_parent() else parent_text
+        context_text = row_text or parent_text or label
+
+        tipo_atto = ""
+        numero = ""
+        titolo = context_text
+
+        # Tentativo minimo di riconoscimento DDL
+        m_ddl = re.search(r"Disegno di legge\s+(\d+)", context_text, flags=re.IGNORECASE)
+        if m_ddl:
+            tipo_atto = "DDL"
+            numero = m_ddl.group(1)
+
+        # Tentativo minimo ODG
+        elif re.search(r"O\.D\.G\.|Ordine del giorno", context_text, flags=re.IGNORECASE):
+            tipo_atto = "ODG"
+            m_seduta = re.search(r"seduta(?:/e)?\s*n\.\s*([0-9]+)", context_text, flags=re.IGNORECASE)
+            if m_seduta:
+                numero = m_seduta.group(1)
+
+        # Tentativo minimo risposte scritte
+        elif re.search(r"Risposte scritte", context_text, flags=re.IGNORECASE):
+            tipo_atto = "Risposte scritte"
+
+        else:
+            tipo_atto = "Documento"
+
+        entries.append(
+            {
+                "ramo": "Senato",
+                "tipo_atto": tipo_atto,
+                "numero": numero,
+                "titolo": titolo,
+                "data": target_date,
+                "link": full_url,
+                "commissione": "",
+                "seduta": "",
+            }
+        )
+
+    return entries
+
+
+def save_json(entries: list[dict], target_date: str) -> Path:
+    output_path = OUTPUT_DIR / f"senato_atti_{target_date}.json"
+    with output_path.open("w", encoding="utf-8") as f:
+        json.dump(entries, f, ensure_ascii=False, indent=2)
+    return output_path
+
+
+def main():
+    target_date = parse_target_date()
+    target_date_str = target_date.isoformat()
+
+    page_url = build_day_url(target_date)
+    print(f"Recupero atti Senato del giorno {target_date_str}")
+    print(f"URL: {page_url}")
+
+    html = fetch_html(page_url)
+    entries = extract_entries(page_url, html, target_date_str)
+
+    output_path = save_json(entries, target_date_str)
+
+    print(f"Atti trovati: {len(entries)}")
+    print(f"File salvato in: {output_path}")
+
+
+if __name__ == "__main__":
+    main()    Esempio:
         python scripts/fetch_senato_atti.py 2026-03-09
 
     Altrimenti usa ieri.
