@@ -53,7 +53,10 @@
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446973.pdf",
     "categoria_preliminare": "Interesse industriale generale",
     "motivazione_preliminare": "La commissione tratta materie come energia, lavori pubblici, comunicazioni e innovazione tecnologica, potenzialmente rilevanti per il sistema industriale.",
-    "richiede_lettura_pdf": true
+    "richiede_lettura_pdf": true,
+    "categoria_finale": "Interesse trasporto marittimo",
+    "motivazione_finale": "Il documento riguarda in modo diretto e specifico il settore marittimo-portuale. In particolare, l'ordine del giorno prevede sia l'audizione dell'avvocato Annalisa Tardino nell'ambito della proposta di nomina a presidente dell'Autorità di sistema portuale del Mare di Sicilia occidentale, sia il seguito dell'esame della proposta di nomina della stessa in sede consultiva su atti del Governo. Pur contenendo anche altri temi eterogenei della Commissione (parchi, rigenerazione urbana, servizio pubblico radiotelevisivo, ripristino della natura), l'elemento più specificamente rilevante e qualificante ai fini della classificazione è l'Autorità di sistema portuale, che rientra pienamente nell'ambito del trasporto marittimo.",
+    "estratto_rilevante": "Audizione dell'avvocato Annalisa Tardino nell'ambito della proposta di nomina a presidente dell'Autorità di sistema portuale del Mare di Sicilia occidentale [...] IN SEDE CONSULTIVA SU ATTI DEL GOVERNO [...] Proposta di nomina dell'avvocato Annalisa Tardino a presidente dell'Autorità di sistema portuale del Mare di Sicilia occidentale"
   },
   {
     "ramo": "Senato",
@@ -81,7 +84,10 @@
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446972.pdf",
     "categoria_preliminare": "Interesse industriale generale",
     "motivazione_preliminare": "Le attività della commissione bilancio possono incidere su stanziamenti e misure economiche rilevanti per l'industria, ma il dettaglio non è visibile nella pagina.",
-    "richiede_lettura_pdf": true
+    "richiede_lettura_pdf": true,
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il documento è un ordine del giorno della 5ª Commissione Bilancio del Senato che elenca numerosi disegni di legge e relativi pareri da rendere in sede consultiva. Il contenuto è eterogeneo e prevalentemente riferito a materie sociali, sanitarie, scolastiche, ordinamentali e istituzionali. Sebbene compaiano singoli punti che toccano temi come la risorsa mare, la navigazione o la mobilità sostenibile, il documento nel suo complesso non riguarda specificamente né l'industria del trasporto né il trasporto marittimo, ma costituisce un calendario/lavoro parlamentare generale della Commissione Bilancio.",
+    "estratto_rilevante": "ORDINE DEL GIORNO – IN SEDE CONSULTIVA ... Seguito dell'esame dei disegni di legge ... Valorizzazione della risorsa mare ... Istituzione della Capitale italiana della mobilità sostenibile ... Modifiche al codice della navigazione e altre disposizioni in materia di ordinamento amministrativo della navigazione e del lavoro marittimo"
   },
   {
     "ramo": "Senato",
@@ -95,7 +101,10 @@
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446975.pdf",
     "categoria_preliminare": "Interesse industriale generale",
     "motivazione_preliminare": "La materia del lavoro pubblico e privato e della previdenza può avere impatti generali sul tessuto produttivo, pur senza un focus settoriale esplicito.",
-    "richiede_lettura_pdf": true
+    "richiede_lettura_pdf": true,
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il documento è un ordine del giorno della 10ª Commissione del Senato su affari sociali, sanità, lavoro e previdenza. I temi trattati riguardano principalmente patologie oculari, fondi di solidarietà bilaterali, sicurezza sul lavoro, terapie complementari, salario minimo, medicina territoriale, epilessia, fibromialgia, medicina di genere, barriere architettoniche e riforma della legislazione farmaceutica. Non emergono contenuti specificamente riferibili all'industria, né al settore del trasporto in generale, né al trasporto marittimo.",
+    "estratto_rilevante": "10ª Commissione permanente (AFFARI SOCIALI, SANITÀ, LAVORO PUBBLICO E PRIVATO, PREVIDENZA SOCIALE) ... Seguito della discussione dei disegni di legge ... Disposizioni per la tutela delle persone affette da patologie oculari ... Modifiche ... in materia di fondi di solidarietà bilaterali ... salute e sicurezza sul lavoro ... salario minimo ... potenziamento della medicina territoriale ... tutela delle persone affette da epilessia ... fibromialgia ... medicina di genere ... riforma e riordino della legislazione farmaceutica"
   },
   {
     "ramo": "Senato",
@@ -221,7 +230,10 @@
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/423408.pdf",
     "categoria_preliminare": "Interesse industriale generale",
     "motivazione_preliminare": "La disciplina su gestione e destinazione dei beni sequestrati e confiscati può incidere su attività economiche, imprese e patrimoni produttivi, pur non riferendosi a un settore specifico.",
-    "richiede_lettura_pdf": true
+    "richiede_lettura_pdf": true,
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il disegno di legge riguarda modifiche al codice antimafia e alle norme processuali in materia di gestione, amministrazione e destinazione dei beni sequestrati e confiscati alla criminalità organizzata. Il contenuto è centrato su misure di prevenzione, amministrazione giudiziaria, controllo giudiziario delle aziende, compiti dell'ANBSC, tutela dei terzi e gestione di beni e aziende sequestrate. Non emergono disposizioni specificamente riferite all'industria, al settore dei trasporti o al trasporto marittimo come ambito materiale principale dell'atto. L'eventuale coinvolgimento di imprese o aziende è solo indiretto e connesso al regime dei sequestri/confische, non a politiche industriali o di trasporto.",
+    "estratto_rilevante": "Il presente disegno di legge, apportando una serie di modifiche al codice antimafia e all’articolo 104-bis delle norme di attuazione del codice di procedura penale, in particolare per quanto concerne l’amministrazione giudiziaria dei beni connessi ad attività economiche e delle aziende, il controllo giudiziario delle aziende, la nomina e la revoca dell’amministratore giudiziario, i compiti dell’ANBSC, la gestione delle aziende e dei beni sequestrati, l’affitto o cessione di beni aziendali in costanza di procedura, la destinazione dei beni e delle somme..."
   },
   {
     "ramo": "Senato",
@@ -235,7 +247,10 @@
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446971.pdf",
     "categoria_preliminare": "Interesse industriale generale",
     "motivazione_preliminare": "Riforma del sistema sanzionatorio del testo unico della finanza; rilevante per mercati, società e contesto economico-produttivo generale.",
-    "richiede_lettura_pdf": true
+    "richiede_lettura_pdf": true,
+    "categoria_finale": "Interesse industriale generale",
+    "motivazione_finale": "Il documento riguarda uno schema di decreto legislativo di riforma del sistema sanzionatorio previsto dal TUF, cioè la disciplina dei mercati finanziari, degli emittenti e dell’intermediazione finanziaria. Non emergono riferimenti specifici al settore dei trasporti né, in particolare, al trasporto marittimo. Tuttavia, il provvedimento incide sul quadro regolatorio generale dei mercati e delle società quotate, con effetti potenziali trasversali su tutte le imprese, incluse quelle industriali; per questo rientra nell’ambito dell’interesse industriale generale.",
+    "estratto_rilevante": "Schema di decreto legislativo recante attuazione della delega di cui all'articolo 19-bis della legge 5 marzo 2024, n. 21, per la riforma organica e il riordino del sistema sanzionatorio e di tutte le procedure sanzionatorie recati dal Testo unico di cui al decreto legislativo 24 febbraio 1998, n. 58 [...] l’articolo 19-bis della legge n. 21 del 2024 [...] reca indicazioni puntuali volte alla riforma organica delle sanzioni del TUF nel loro complesso [...] diretti a rafforzare l’efficienza e l’efficacia del sistema sanzionatorio amministrativo in materia di mercati finanziari"
   },
   {
     "ramo": "Senato",
@@ -249,6 +264,9 @@
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446968.pdf",
     "categoria_preliminare": "Interesse industriale generale",
     "motivazione_preliminare": "Relazione AIR della Consob su analisi di impatto della regolamentazione; documento potenzialmente rilevante per il quadro regolatorio economico e industriale.",
-    "richiede_lettura_pdf": true
+    "richiede_lettura_pdf": true,
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il documento è una relazione AIR della Consob relativa a interventi di regolazione dei mercati finanziari e societari: operazioni di rafforzamento patrimoniale, rendicontazione di sostenibilità, lista del consiglio di amministrazione, crowdfunding, procedimento sanzionatorio e OICR. Non emergono contenuti specificamente riferiti all’industria, al settore dei trasporti o al trasporto marittimo. L’oggetto è regolatorio-finanziario generale e non settoriale rispetto alle categorie richieste.",
+    "estratto_rilevante": "Nel corso degli ultimi anni è emersa la crescente diffusione di forme di operatività volte al reperimento di risorse finanziarie da parte delle società e realizzate mediante l’emissione di prestiti obbligazionari convertibili riservati ad un unico soggetto ('investitore unico')... La crescente diffusione dei POC non standard e, in linea generale, degli aumenti di capitale riservati ad un unico investitore... ha fatto emergere la necessità di fornire specifiche indicazioni in merito ai presidi informativi da adottare..."
   }
 ]
