@@ -42,6 +42,10 @@ def main():
     exit_code = run_script("scripts/ai_parse_senato_page.py", target_date)
     if exit_code != 0:
         raise SystemExit(exit_code)
+        
+    exit_code = run_script("scripts/analyze_senato_pdfs.py", target_date)
+    if exit_code != 0:
+        raise SystemExit(exit_code)
 
     print("Monitor completato con successo.")
 
