@@ -5,12 +5,12 @@
     "sezione": "ODG e Calendario",
     "tipo_atto": "Ordine del giorno Assemblea",
     "numero": "",
-    "titolo": "Ordine del giorno Assemblea",
+    "titolo": "Ordine del giorno Assemblea del 11/03/2026",
     "commissione": "Assemblea",
     "seduta": "398",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446980.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno dell'Assemblea senza indicazione tematica specifica nella pagina; non emerge un collegamento chiaro con industria o trasporti.",
+    "motivazione_preliminare": "Ordine del giorno dell'Assemblea senza elementi testuali che indichino specifici contenuti industriali o di trasporto; per la sola pagina non emerge un tema attinente.",
     "richiede_lettura_pdf": false
   },
   {
@@ -19,12 +19,12 @@
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Commissione",
     "numero": "",
-    "titolo": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
+    "titolo": "O.D.G. 8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
     "commissione": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
     "seduta": "255",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446973.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La commissione tratta materie come energia, lavori pubblici, comunicazioni e innovazione tecnologica, potenzialmente rilevanti per il sistema industriale.",
+    "motivazione_preliminare": "La competenza della commissione comprende energia, lavori pubblici, comunicazioni e innovazione tecnologica, materie potenzialmente rilevanti per l'industria in generale.",
     "richiede_lettura_pdf": true
   },
   {
@@ -33,12 +33,12 @@
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Commissione",
     "numero": "",
-    "titolo": "1ª Affari Costituzionali",
+    "titolo": "O.D.G. 1ª Affari Costituzionali",
     "commissione": "1ª Affari Costituzionali",
     "seduta": "448,449,450,451",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446974.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dalla denominazione della commissione emerge una competenza prevalentemente ordinamentale e costituzionale, senza chiara attinenza industriale o trasportistica.",
+    "motivazione_preliminare": "Dal solo titolo emerge una commissione di carattere ordinamentale-costituzionale, senza chiari riferimenti a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -47,12 +47,12 @@
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Commissione",
     "numero": "",
-    "titolo": "5ª Bilancio",
+    "titolo": "O.D.G. 5ª Bilancio",
     "commissione": "5ª Bilancio",
     "seduta": "533,534,535,536",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446972.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Gli atti della Commissione Bilancio possono incidere trasversalmente su misure economiche, investimenti e settori produttivi; in assenza di dettaglio va considerata la rilevanza generale.",
+    "motivazione_preliminare": "La commissione Bilancio può trattare misure finanziarie incidenti su settori industriali; non essendo chiaramente non attinente, richiede lettura del PDF.",
     "richiede_lettura_pdf": true
   },
   {
@@ -61,12 +61,12 @@
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Commissione",
     "numero": "",
-    "titolo": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
+    "titolo": "O.D.G. 10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
     "commissione": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
     "seduta": "387,388,389,390",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446975.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La presenza della materia lavoro pubblico e privato può avere impatto sul sistema produttivo; la sanità non va esclusa a priori. Serve verifica del contenuto.",
+    "motivazione_preliminare": "La presenza della materia lavoro pubblico e privato può coinvolgere profili trasversali di interesse per il sistema industriale; non è chiaramente non attinente.",
     "richiede_lettura_pdf": true
   },
   {
@@ -80,7 +80,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446978.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Il contenuto riguarda la riorganizzazione dell'assistenza sanitaria e del Servizio sanitario nazionale, senza attinenza evidente a industria o trasporti.",
+    "motivazione_preliminare": "Il contenuto descritto riguarda la riorganizzazione del Servizio sanitario nazionale e dell'assistenza territoriale e ospedaliera, senza nesso diretto con industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -94,7 +94,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446967.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "La materia concerne trattamento di fine servizio dei dipendenti pubblici e relative modalità di erogazione, senza nesso chiaro con i settori industriali o dei trasporti.",
+    "motivazione_preliminare": "Il disegno di legge concerne il trattamento di fine servizio dei dipendenti delle amministrazioni pubbliche, materia non direttamente riferibile a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -107,9 +107,9 @@
     "commissione": "",
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/423408.pdf",
-    "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Il provvedimento riguarda antimafia, misure di prevenzione e beni sequestrati/confiscati; non emerge una specifica attinenza industriale o trasportistica.",
-    "richiede_lettura_pdf": false
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "La disciplina sulla gestione e destinazione di beni sequestrati e confiscati può incidere su asset produttivi e imprese; non è chiaramente non attinente.",
+    "richiede_lettura_pdf": true
   },
   {
     "ramo": "Senato",
@@ -122,7 +122,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446971.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "L'atto interviene sul sistema sanzionatorio del testo unico della finanza, materia di regolazione dei mercati e delle imprese con impatto potenziale generale sul tessuto industriale.",
+    "motivazione_preliminare": "L'atto riguarda il riordino del sistema sanzionatorio del testo unico della finanza, con possibile impatto generale sul contesto economico e societario.",
     "richiede_lettura_pdf": true
   },
   {
@@ -136,7 +136,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446968.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Si tratta di una raccolta di analisi di impatto della regolamentazione della Consob; può contenere elementi rilevanti per il quadro normativo delle imprese e dei mercati.",
+    "motivazione_preliminare": "Una raccolta di analisi di impatto della regolamentazione di Consob può contenere profili rilevanti per operatori economici e imprese; richiede verifica del PDF.",
     "richiede_lettura_pdf": true
   }
 ]
