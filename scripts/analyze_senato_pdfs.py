@@ -104,6 +104,9 @@ def main():
 
             pdf_text = extract_pdf_text(pdf_bytes)
 
+            debug_path = OUTPUT_DIR / f"debug_pdf_text_{target_date}.txt"
+            debug_path.write_text(pdf_text, encoding="utf-8")
+
             pdf_text = pdf_text[:MAX_CHARS]
 
             prompt = build_prompt(item, pdf_text)
