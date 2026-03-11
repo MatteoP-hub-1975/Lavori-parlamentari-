@@ -12,7 +12,7 @@ from openai import OpenAI
 OUTPUT_DIR = Path("data/senato")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-MAX_CHARS = 8000  # estratto massimo dal PDF
+MAX_CHARS = 20000  # estratto massimo dal PDF
 
 
 def parse_target_date():
