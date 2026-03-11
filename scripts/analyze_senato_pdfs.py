@@ -128,6 +128,8 @@ def main():
             pdf_bytes = download_pdf(link)
 
             pdf_text = extract_pdf_text(pdf_bytes)
+            print("LUNGHEZZA PDF TEXT:", len(pdf_text))
+            print("TIPO ATTO:", item.get("tipo_atto"), "| TITOLO:", item.get("titolo"))
 
             debug_path = OUTPUT_DIR / f"debug_pdf_text_{target_date}.txt"
             debug_path.write_text(pdf_text, encoding="utf-8")
