@@ -10,20 +10,14 @@ ROME_TZ = ZoneInfo("Europe/Rome")
 def get_run_mode(now_rome: datetime) -> tuple[str, str]:
     hour = now_rome.hour
 
-    # DEBUG temporaneo
-    run_mode = "debug"
-    target_date = "2026-03-10"
-
-    # LOGICA ORIGINALE (da ripristinare dopo il test)
-    # if hour < 12:
-    #     run_mode = "morning"
-    #     target_date = (now_rome.date() - timedelta(days=1)).isoformat()
-    # else:
-    #     run_mode = "afternoon"
-    #     target_date = now_rome.date().isoformat()
+    if hour < 12:
+        run_mode = "morning"
+        target_date = (now_rome.date() - timedelta(days=1)).isoformat()
+    else:
+        run_mode = "afternoon"
+        target_date = now_rome.date().isoformat()
 
     return run_mode, target_date
-
 
 def run_script(script_path: str, target_date: str) -> int:
     cmd = [sys.executable, script_path, target_date]
