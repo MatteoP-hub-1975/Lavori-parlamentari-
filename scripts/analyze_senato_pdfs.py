@@ -8,7 +8,30 @@ import requests
 import fitz  # PyMuPDF
 from openai import OpenAI
 
+EXCLUDED_ORGANS = [
+    "Giunta Regolamento",
+    "Giunta elezioni e immunità parlamentari",
+    "Giunta provvisoria per la verifica dei poteri",
+    "Commissione biblioteca e archivio storico",
+    "Commissione straordinaria per il contrasto dei fenomeni di intolleranza, razzismo, antisemitismo e istigazione all'odio e alla violenza",
+    "Commissione straordinaria per la tutela e la promozione dei diritti umani",
+    "Commissione di inchiesta su scomparsa Orlandi e Gregori",
+    "Commissione contenziosa",
+    "Consiglio di garanzia",
+    "Comitato per la legislazione",
+]
 
+def is_excluded_organ(item) -> bool:
+    text = " ".join(
+        [
+            str(item.get("commissione", "")),
+            str(item.get("titolo", "")),
+            str(item.get("tipo_atto", "")),
+        ]
+    ).lower()
+
+    return any(org.lower() in text for org in EXCLUDED_ORGANS)
+    
 OUTPUT_DIR = Path("data/senato")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
