@@ -49,7 +49,8 @@ Testo estratto dal PDF:
 
 Classifica definitivamente il documento in una delle categorie:
 Nei documenti eterogenei o composti da più punti, ordini del giorno, pareri, provvedimenti o materie diverse, non devi basarti solo sul tema prevalente o sull’oggetto complessivo del documento. Se anche una sola parte del testo contiene contenuti specificamente riconducibili al trasporto marittimo, alla navigazione, al lavoro marittimo, ai porti, all’ordinamento marittimo o ad altre materie del perimetro marittimo rilevante, il documento non può essere classificato come "Non attinenti" e deve essere classificato almeno come "Interesse trasporto marittimo".
-Se il documento tratta temi di lavoro o relazioni industriali generali come salario minimo, retribuzione, contrattazione collettiva, CCNL, ferie, distacchi sindacali o altre condizioni generali di lavoro, e tali temi non sono specificamente riferiti al trasporto marittimo, alla navigazione o al lavoro marittimo, il documento deve essere classificato come "Interesse industriale generale".
+Se il documento contiene riferimenti a temi di lavoro o relazioni industriali generali come salario minimo, retribuzione, contrattazione collettiva, CCNL, ferie, distacchi sindacali, rappresentanza sindacale, condizioni di lavoro o altri istituti generali del diritto del lavoro, e tali riferimenti non riguardano specificamente il trasporto marittimo o il lavoro marittimo, il documento deve essere classificato come "Interesse industriale generale".
+La presenza di uno solo di questi temi è sufficiente per escludere la classificazione "Non attinenti".
 - Non attinenti
 - Interesse industriale generale
 - Interesse industria del trasporto
