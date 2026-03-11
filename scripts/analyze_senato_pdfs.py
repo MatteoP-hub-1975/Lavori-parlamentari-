@@ -49,7 +49,7 @@ Testo estratto dal PDF:
 <<<END_TEXT>>>
 
 Classifica definitivamente il documento in una delle categorie:
-
+Nei documenti eterogenei o composti da più punti, ordini del giorno, pareri, provvedimenti o materie diverse, non devi basarti solo sul tema prevalente o sull’oggetto complessivo del documento. Se anche una sola parte del testo contiene contenuti specificamente riconducibili al trasporto marittimo, alla navigazione, al lavoro marittimo, ai porti, all’ordinamento marittimo o ad altre materie del perimetro marittimo rilevante, il documento non può essere classificato come "Non attinenti" e deve essere classificato almeno come "Interesse trasporto marittimo".
 - Non attinenti
 - Interesse industriale generale
 - Interesse industria del trasporto
