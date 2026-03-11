@@ -12,7 +12,6 @@ from openai import OpenAI
 OUTPUT_DIR = Path("data/senato")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-MAX_CHARS = 20000  # estratto massimo dal PDF
 
 
 def parse_target_date():
@@ -107,7 +106,6 @@ def main():
             debug_path = OUTPUT_DIR / f"debug_pdf_text_{target_date}.txt"
             debug_path.write_text(pdf_text, encoding="utf-8")
 
-            pdf_text = pdf_text[:MAX_CHARS]
 
             prompt = build_prompt(item, pdf_text)
 
