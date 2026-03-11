@@ -5,68 +5,68 @@
     "sezione": "ODG e Calendario",
     "tipo_atto": "Ordine del giorno Assemblea",
     "numero": "",
-    "titolo": "Ordine del giorno Assemblea del 11/03/2026",
+    "titolo": "Ordine del giorno Assemblea",
     "commissione": "Assemblea",
     "seduta": "398",
-    "link_pdf": "",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446980.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno dell'Assemblea senza indicazione nel testo di contenuti specifici riferibili a industria, trasporti o trasporto marittimo.",
-    "richiede_lettura_pdf": true
+    "motivazione_preliminare": "Ordine del giorno dell'Assemblea senza indicazione tematica specifica nella pagina; non emerge un collegamento chiaro con industria o trasporti.",
+    "richiede_lettura_pdf": false
   },
   {
     "ramo": "Senato",
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
-    "tipo_atto": "O.D.G. Giunte e Commissioni",
+    "tipo_atto": "O.D.G. Commissione",
     "numero": "",
-    "titolo": "O.D.G. 8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
+    "titolo": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
     "commissione": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
     "seduta": "255",
-    "link_pdf": "",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446973.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La commissione tratta materie come energia, lavori pubblici, comunicazioni e innovazione tecnologica, potenzialmente rilevanti per il sistema industriale in senso generale; per conferma serve il contenuto del PDF.",
+    "motivazione_preliminare": "La commissione tratta materie come energia, lavori pubblici, comunicazioni e innovazione tecnologica, potenzialmente rilevanti per il sistema industriale.",
     "richiede_lettura_pdf": true
   },
   {
     "ramo": "Senato",
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
-    "tipo_atto": "O.D.G. Giunte e Commissioni",
+    "tipo_atto": "O.D.G. Commissione",
     "numero": "",
-    "titolo": "O.D.G. 1ª Affari Costituzionali",
+    "titolo": "1ª Affari Costituzionali",
     "commissione": "1ª Affari Costituzionali",
     "seduta": "448,449,450,451",
-    "link_pdf": "",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446974.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "La commissione Affari costituzionali non presenta, dal solo titolo, un collegamento diretto con industria o trasporti.",
-    "richiede_lettura_pdf": true
+    "motivazione_preliminare": "Dalla denominazione della commissione emerge una competenza prevalentemente ordinamentale e costituzionale, senza chiara attinenza industriale o trasportistica.",
+    "richiede_lettura_pdf": false
   },
   {
     "ramo": "Senato",
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
-    "tipo_atto": "O.D.G. Giunte e Commissioni",
+    "tipo_atto": "O.D.G. Commissione",
     "numero": "",
-    "titolo": "O.D.G. 5ª Bilancio",
+    "titolo": "5ª Bilancio",
     "commissione": "5ª Bilancio",
     "seduta": "533,534,535,536",
-    "link_pdf": "",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446972.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Gli atti della commissione Bilancio possono incidere trasversalmente su misure economiche e industriali, ma il contenuto specifico non è desumibile senza leggere il PDF.",
+    "motivazione_preliminare": "Gli atti della Commissione Bilancio possono incidere trasversalmente su misure economiche, investimenti e settori produttivi; in assenza di dettaglio va considerata la rilevanza generale.",
     "richiede_lettura_pdf": true
   },
   {
     "ramo": "Senato",
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
-    "tipo_atto": "O.D.G. Giunte e Commissioni",
+    "tipo_atto": "O.D.G. Commissione",
     "numero": "",
-    "titolo": "O.D.G. 10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
+    "titolo": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
     "commissione": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
     "seduta": "387,388,389,390",
-    "link_pdf": "",
-    "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "La commissione è centrata su affari sociali, sanità, lavoro e previdenza; non emerge un nesso diretto con industria dei trasporti o marittima dal solo titolo.",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446975.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "La presenza della materia lavoro pubblico e privato può avere impatto sul sistema produttivo; la sanità non va esclusa a priori. Serve verifica del contenuto.",
     "richiede_lettura_pdf": true
   },
   {
@@ -78,9 +78,9 @@
     "titolo": "Delega al Governo per l'adozione di misure in materia di riorganizzazione e potenziamento dell'assistenza territoriale e ospedaliera e revisione del modello organizzativo del Servizio sanitario nazionale",
     "commissione": "",
     "seduta": "",
-    "link_pdf": "",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446978.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Il disegno di legge riguarda l'organizzazione del Servizio sanitario nazionale e l'assistenza territoriale e ospedaliera, senza profili diretti su industria o trasporti.",
+    "motivazione_preliminare": "Il contenuto riguarda la riorganizzazione dell'assistenza sanitaria e del Servizio sanitario nazionale, senza attinenza evidente a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -92,9 +92,9 @@
     "titolo": "Modifiche alla disciplina vigente in materia di riduzione dei termini per la liquidazione del trattamento di fine servizio dei dipendenti delle amministrazioni pubbliche, e rivalutazione dei limiti di importo per la relativa erogazione rateale",
     "commissione": "",
     "seduta": "",
-    "link_pdf": "",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446967.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Il contenuto concerne trattamento di fine servizio dei dipendenti pubblici e relative modalità di erogazione, materia non direttamente attinente a industria o trasporti.",
+    "motivazione_preliminare": "La materia concerne trattamento di fine servizio dei dipendenti pubblici e relative modalità di erogazione, senza nesso chiaro con i settori industriali o dei trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -106,9 +106,9 @@
     "titolo": "Modifiche al codice delle leggi antimafia e delle misure di prevenzione, di cui al decreto legislativo 6 settembre 2011, n. 159, e alle norme di attuazione, di coordinamento e transitorie del codice di procedura penale, in materia di gestione e destinazione dei beni sequestrati e confiscati alla criminalità organizzata",
     "commissione": "",
     "seduta": "",
-    "link_pdf": "",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/423408.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "L'atto riguarda normativa antimafia e gestione dei beni sequestrati e confiscati, senza specifico focus su industria o trasporti dal titolo disponibile.",
+    "motivazione_preliminare": "Il provvedimento riguarda antimafia, misure di prevenzione e beni sequestrati/confiscati; non emerge una specifica attinenza industriale o trasportistica.",
     "richiede_lettura_pdf": false
   },
   {
@@ -120,10 +120,10 @@
     "titolo": "Schema di decreto legislativo recante attuazione della delega di cui all'articolo 19-bis della legge 5 marzo 2024, n. 21, per la riforma organica e il riordino del sistema sanzionatorio e di tutte le procedure sanzionatorie recati dal testo unico di cui al decreto legislativo 24 febbraio 1998, n. 58",
     "commissione": "",
     "seduta": "",
-    "link_pdf": "",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446971.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "L'atto interviene sul sistema sanzionatorio del testo unico della finanza, con possibile impatto sul quadro regolatorio delle imprese e dei mercati; non emergono riferimenti specifici al trasporto o al marittimo.",
-    "richiede_lettura_pdf": false
+    "motivazione_preliminare": "L'atto interviene sul sistema sanzionatorio del testo unico della finanza, materia di regolazione dei mercati e delle imprese con impatto potenziale generale sul tessuto industriale.",
+    "richiede_lettura_pdf": true
   },
   {
     "ramo": "Senato",
@@ -134,9 +134,9 @@
     "titolo": "Relazioni di analisi di impatto della regolamentazione ultimate nel 2025",
     "commissione": "",
     "seduta": "",
-    "link_pdf": "",
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446968.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Si tratta di una relazione generale di analisi di impatto della regolamentazione predisposta da Consob, potenzialmente rilevante per il contesto economico e regolatorio delle imprese.",
+    "motivazione_preliminare": "Si tratta di una raccolta di analisi di impatto della regolamentazione della Consob; può contenere elementi rilevanti per il quadro normativo delle imprese e dei mercati.",
     "richiede_lettura_pdf": true
   }
 ]
