@@ -107,6 +107,8 @@ def main():
 
     for item in items:
 
+        if is_excluded_organ(item):
+            continue
         categoria = item.get("categoria_preliminare")
 
         if categoria == "Non attinenti":
