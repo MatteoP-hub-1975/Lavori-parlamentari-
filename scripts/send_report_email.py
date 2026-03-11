@@ -32,6 +32,8 @@ def build_sections(items):
 
     for item in items:
 
+        if is_excluded_organ(item):
+            continue
         categoria = item.get("categoria_finale") or item.get("categoria_preliminare")
 
         titolo = item.get("titolo", "")
