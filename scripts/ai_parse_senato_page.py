@@ -14,9 +14,6 @@ def validate_items(items, target_date_str: str):
         if not isinstance(item, dict):
             continue
 
-        if is_excluded_organ(item):
-            continue
-
         normalized_item = {
             "ramo": "Senato",
             "data_pubblicazione": target_date_str,
@@ -31,6 +28,9 @@ def validate_items(items, target_date_str: str):
             "motivazione_preliminare": compact_spaces(str(item.get("motivazione_preliminare", ""))),
             "richiede_lettura_pdf": bool(item.get("richiede_lettura_pdf", False)),
         }
+
+        if is_excluded_organ(normalized_item):
+            continue
 
         if normalized_item["categoria_preliminare"] not in allowed_categories:
             normalized_item["categoria_preliminare"] = "Non attinenti"
