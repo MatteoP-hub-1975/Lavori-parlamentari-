@@ -91,10 +91,16 @@ Testo della pagina:
 {page_text}
 <<<END_PAGE_TEXT>>>
 
+ELENCO DEI PDF TROVATI DALLO SCRAPER:
+<<<BEGIN_PDF_LIST>>>
+{raw_entries_json}
+<<<END_PDF_LIST>>>
+
 Obiettivo:
 1. Individuare i singoli atti/documenti pubblicati quel giorno.
 2. Restituire una lista JSON di atti strutturati.
-3. Non riportare nell'output gli organi esclusi.
+3. Associare il link_pdf più plausibile tra quelli forniti.
+4. Non riportare nell'output gli organi esclusi.
 
 Regola di esclusione assoluta:
 Se un atto riguarda uno dei seguenti organi del Senato, non devi classificarlo né restituirlo nell'output JSON. Devi semplicemente ometterlo del tutto.
@@ -111,12 +117,28 @@ Organi da escludere:
 - Consiglio di garanzia
 - Comitato per la legislazione
 
-Regole di classificazione:
+Regole di classificazione preliminare:
 - Le categorie possibili sono SOLO queste:
   1. "Non attinenti"
   2. "Interesse industriale generale"
   3. "Interesse industria del trasporto"
   4. "Interesse trasporto marittimo"
+
+- Pesca e diporto vanno classificati come "Non attinenti".
+- La sanità NON va esclusa a priori.
+- Se c'è dubbio, scegli la categoria più rilevante.
+- Se un atto NON è chiaramente "Non attinenti", allora "richiede_lettura_pdf" deve essere true.
+- Gli ODG in linea generale richiedono lettura del PDF, salvo caso eccezionale di chiara non attinenza.
+
+Istruzioni di estrazione:
+- Lavora solo sulle informazioni realmente presenti nella pagina e nell'elenco PDF fornito.
+- Non inventare dati mancanti.
+- Se un campo non è disponibile, usa stringa vuota.
+- Il campo "link_pdf" deve contenere uno degli URL presenti nell'elenco PDF se l'associazione è plausibile; altrimenti stringa vuota.
+- Il campo "sezione" deve riflettere la macro-sezione della pagina.
+- Il campo "tipo_atto" deve essere sintetico.
+- Se il nome dell'organo/commissione compare nel titolo o in altri campi testuali, usalo correttamente per identificare l'atto.
+- Non restituire atti relativi agli organi esclusi anche se compaiono nella pagina o nell'elenco PDF.
 
 Formato JSON richiesto:
 
@@ -138,6 +160,7 @@ Formato JSON richiesto:
 ]
 
 Restituisci SOLO JSON valido.
+Nessun testo prima o dopo il JSON.
 """.strip()
 
 
