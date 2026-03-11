@@ -20,6 +20,7 @@ def get_run_mode(now_rome: datetime) -> tuple[str, str]:
     # else:
     #     run_mode = "afternoon"
     #     target_date = now_rome.date().isoformat()
+    return run_mode, target_date
 
 def run_script(script_path: str, target_date: str) -> int:
     cmd = [sys.executable, script_path, target_date]
