@@ -7,7 +7,29 @@ from email.mime.multipart import MIMEMultipart
 from pathlib import Path
 
 OUTPUT_DIR = Path("data/senato")
+EXCLUDED_ORGANS = [
+    "Giunta Regolamento",
+    "Giunta elezioni e immunità parlamentari",
+    "Giunta provvisoria per la verifica dei poteri",
+    "Commissione biblioteca e archivio storico",
+    "Commissione straordinaria per il contrasto dei fenomeni di intolleranza, razzismo, antisemitismo e istigazione all'odio e alla violenza",
+    "Commissione straordinaria per la tutela e la promozione dei diritti umani",
+    "Commissione di inchiesta su scomparsa Orlandi e Gregori",
+    "Commissione contenziosa",
+    "Consiglio di garanzia",
+    "Comitato per la legislazione",
+]
 
+def is_excluded_organ(item) -> bool:
+    text = " ".join(
+        [
+            str(item.get("commissione", "")),
+            str(item.get("titolo", "")),
+            str(item.get("tipo_atto", "")),
+        ]
+    ).lower()
+
+    return any(org.lower() in text for org in EXCLUDED_ORGANS)
 
 def parse_target_date():
     if len(sys.argv) < 2:
