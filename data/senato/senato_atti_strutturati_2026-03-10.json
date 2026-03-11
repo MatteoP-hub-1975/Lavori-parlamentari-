@@ -10,7 +10,7 @@
     "seduta": "398",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446980.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno dell'Assemblea senza elementi nel titolo che indichino temi industriali o del trasporto.",
+    "motivazione_preliminare": "Ordine del giorno dell'Assemblea senza indicazioni nel testo della pagina su contenuti riferiti a industria o trasporti.",
     "richiede_lettura_pdf": true
   },
   {
@@ -24,7 +24,7 @@
     "seduta": "104",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446976.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Commissione d'inchiesta su emergenza sanitaria; non emergono profili specifici di interesse industriale o trasportistico dal titolo.",
+    "motivazione_preliminare": "Commissione d'inchiesta sull'emergenza sanitaria, materia non riconducibile direttamente a industria o trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -32,27 +32,13 @@
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "7",
-    "titolo": "7ª Cultura e patrimonio culturale, istruzione pubblica, sedute n. 287, 288, 289 (11/03/2026 - 12/03/2026)",
-    "commissione": "7ª Cultura e patrimonio culturale, istruzione pubblica",
-    "seduta": "287,288,289",
-    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446977.pdf",
-    "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno di commissione cultura e istruzione, senza riferimenti a industria o trasporti.",
-    "richiede_lettura_pdf": false
-  },
-  {
-    "ramo": "Senato",
-    "data_pubblicazione": "2026-03-10",
-    "sezione": "ODG e Calendario",
-    "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "8",
+    "numero": "",
     "titolo": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica, seduta n. 255 dell'11/03/2026",
     "commissione": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
     "seduta": "255",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446973.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La competenza della commissione include energia, lavori pubblici, comunicazioni e innovazione tecnologica, ambiti potenzialmente rilevanti per il sistema industriale.",
+    "motivazione_preliminare": "La commissione tratta materie come energia, comunicazioni e innovazione tecnologica, potenzialmente rilevanti per il sistema industriale.",
     "richiede_lettura_pdf": true
   },
   {
@@ -60,13 +46,13 @@
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "1",
-    "titolo": "1ª Affari Costituzionali, sedute n. 448, 449, 450, 451 (11/03/2026 - 12/03/2026)",
+    "numero": "",
+    "titolo": "1ª Affari Costituzionali, sedute n. 448,449,450,451 (11/03/2026 - 12/03/2026)",
     "commissione": "1ª Affari Costituzionali",
     "seduta": "448,449,450,451",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446974.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno di commissione costituzionale, senza indicazioni specifiche di impatto su industria o trasporti.",
+    "motivazione_preliminare": "Commissione su affari costituzionali, senza elementi nel testo che indichino un focus industriale o sui trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -74,13 +60,13 @@
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "5",
-    "titolo": "5ª Bilancio, sedute n. 533, 534, 535, 536 (11/03/2026 - 12/03/2026)",
+    "numero": "",
+    "titolo": "5ª Bilancio, sedute n. 533,534,535,536 (11/03/2026 - 12/03/2026)",
     "commissione": "5ª Bilancio",
     "seduta": "533,534,535,536",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446972.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La commissione bilancio può trattare misure finanziarie con impatto trasversale sul sistema produttivo, ma il titolo non consente maggiore specificazione.",
+    "motivazione_preliminare": "Gli atti della Commissione bilancio possono incidere trasversalmente su misure economiche e industriali, ma il contenuto specifico non è visibile dalla pagina.",
     "richiede_lettura_pdf": true
   },
   {
@@ -88,13 +74,13 @@
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "10",
-    "titolo": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale, sedute n. 387, 388, 389, 390 (10/03/2026 - 12/03/2026)",
+    "numero": "",
+    "titolo": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale, sedute n. 387,388,389,390 (10/03/2026 - 12/03/2026)",
     "commissione": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
     "seduta": "387,388,389,390",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446975.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La presenza del tema lavoro pubblico e privato può avere ricadute generali sul mondo produttivo, ma non si rilevano riferimenti diretti a trasporti o marittimo.",
+    "motivazione_preliminare": "La presenza della materia lavoro pubblico e privato può avere impatti indiretti sul sistema industriale, ma non emergono temi specifici dal testo.",
     "richiede_lettura_pdf": true
   },
   {
@@ -108,7 +94,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442831.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Audizione relativa alla commissione d'inchiesta sulla scomparsa Orlandi e Gregori; nessun collegamento con industria o trasporti.",
+    "motivazione_preliminare": "Audizione nell'ambito della commissione d'inchiesta sulla scomparsa Orlandi e Gregori, non attinente a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -122,7 +108,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442830.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Audizione in commissione d'inchiesta su vicenda Orlandi-Gregori, non pertinente ai settori industriali o del trasporto.",
+    "motivazione_preliminare": "Audizione riferita alla commissione d'inchiesta Orlandi e Gregori, priva di nesso con industria o trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -136,7 +122,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442642.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Resoconto di audizione in commissione d'inchiesta privo di connessioni con industria o trasporto.",
+    "motivazione_preliminare": "Resoconto di audizione su tema d'inchiesta giudiziaria/storica, non connesso ai settori richiesti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -150,7 +136,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442641.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Audizione nell'ambito di una commissione d'inchiesta su persone scomparse, non attinente ai settori richiesti.",
+    "motivazione_preliminare": "Resoconto di audizione su materia non collegata a industria o trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -164,7 +150,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442582.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Resoconto di audizione in commissione d'inchiesta senza profili industriali o di trasporto.",
+    "motivazione_preliminare": "Audizione in commissione d'inchiesta non pertinente ai comparti industriali o del trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -178,7 +164,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442150.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Audizione in commissione d'inchiesta su scomparsa Orlandi e Gregori; non collegata ai temi industriali o del trasporto.",
+    "motivazione_preliminare": "Audizione in commissione d'inchiesta su vicenda Orlandi e Gregori, estranea alle categorie industriali/trasportistiche richieste.",
     "richiede_lettura_pdf": false
   },
   {
@@ -192,7 +178,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446978.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Disegno di legge in materia sanitaria e organizzazione del SSN; non attinente a industria o trasporti.",
+    "motivazione_preliminare": "DDL in materia di organizzazione del Servizio sanitario nazionale, non riferito a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -206,7 +192,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446967.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Provvedimento sul trattamento di fine servizio dei dipendenti pubblici, privo di nesso diretto con i settori industriali o del trasporto.",
+    "motivazione_preliminare": "DDL su trattamento di fine servizio dei dipendenti pubblici, senza attinenza specifica ai settori industriali o del trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -220,7 +206,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/423408.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La disciplina su gestione e destinazione dei beni sequestrati e confiscati può incidere su attività economiche e asset produttivi, ma non emerge un focus specifico sui trasporti.",
+    "motivazione_preliminare": "La disciplina sulla gestione e destinazione dei beni sequestrati e confiscati può coinvolgere asset produttivi e imprese, con possibile impatto sul sistema industriale generale.",
     "richiede_lettura_pdf": true
   },
   {
@@ -234,7 +220,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446971.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Riforma del sistema sanzionatorio nel quadro del TUF, con possibile impatto generale su imprese, mercati e operatori economici.",
+    "motivazione_preliminare": "Riforma del sistema sanzionatorio previsto dal TUF, con impatto su mercati finanziari, società quotate e governance economica; interesse generale per il sistema industriale.",
     "richiede_lettura_pdf": true
   },
   {
@@ -248,7 +234,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446968.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Relazione di impatto della regolamentazione della Consob, potenzialmente rilevante per il contesto normativo ed economico generale delle imprese.",
+    "motivazione_preliminare": "Relazione AIR della Consob con possibile rilevanza trasversale per regolazione economico-finanziaria e imprese, ma contenuto specifico da verificare.",
     "richiede_lettura_pdf": true
   }
 ]
