@@ -10,7 +10,7 @@
     "seduta": "398",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446980.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno dell'Assemblea privo nel testo di riferimenti specifici a industria, trasporti o marittimo.",
+    "motivazione_preliminare": "Ordine del giorno dell'Assemblea senza elementi nel titolo che indichino temi industriali o del trasporto.",
     "richiede_lettura_pdf": true
   },
   {
@@ -24,7 +24,7 @@
     "seduta": "104",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446976.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Commissione d'inchiesta su emergenza sanitaria; non emergono profili industriali o di trasporto dal testo disponibile.",
+    "motivazione_preliminare": "Commissione d'inchiesta su emergenza sanitaria; non emergono profili specifici di interesse industriale o trasportistico dal titolo.",
     "richiede_lettura_pdf": false
   },
   {
@@ -32,13 +32,13 @@
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "",
+    "numero": "7",
     "titolo": "7ª Cultura e patrimonio culturale, istruzione pubblica, sedute n. 287, 288, 289 (11/03/2026 - 12/03/2026)",
     "commissione": "7ª Cultura e patrimonio culturale, istruzione pubblica",
     "seduta": "287,288,289",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446977.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno della Commissione Cultura e istruzione; assenza di elementi collegati a industria o trasporti.",
+    "motivazione_preliminare": "Ordine del giorno di commissione cultura e istruzione, senza riferimenti a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -46,30 +46,30 @@
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "",
+    "numero": "8",
     "titolo": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica, seduta n. 255 dell'11/03/2026",
     "commissione": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
     "seduta": "255",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446973.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La commissione tratta materie come energia, lavori pubblici, comunicazioni e innovazione tecnologica, potenzialmente rilevanti per il sistema industriale in senso ampio.",
+    "motivazione_preliminare": "La competenza della commissione include energia, lavori pubblici, comunicazioni e innovazione tecnologica, ambiti potenzialmente rilevanti per il sistema industriale.",
     "richiede_lettura_pdf": true,
     "categoria_finale": "Interesse trasporto marittimo",
-    "motivazione_finale": "Il documento è un ordine del giorno della 8ª Commissione con materie eterogenee, ma contiene almeno una parte chiaramente riconducibile al perimetro marittimo-portuale. In particolare, è prevista l'audizione dell'avvocato Annalisa Tardino nell'ambito della proposta di nomina a presidente dell'Autorità di sistema portuale del Mare di Sicilia occidentale, nonché il seguito dell'esame della medesima proposta di nomina in sede consultiva su atti del Governo. La presenza di riferimenti espliciti a un'Autorità di sistema portuale e al Mare di Sicilia occidentale rende il documento attinente al trasporto marittimo, indipendentemente dal fatto che l'ordine del giorno includa anche altri temi non marittimi.",
-    "estratto_rilevante": "Audizione dell'avvocato Annalisa Tardino nell'ambito della proposta di nomina a presidente dell'Autorità di sistema portuale del Mare di Sicilia occidentale\n\nSeguito dell'esame, ai sensi dell'articolo 139-bis del Regolamento, degli atti:\n1. Proposta di nomina dell'avvocato Annalisa Tardino a presidente dell'Autorità di sistema portuale del Mare di Sicilia occidentale"
+    "motivazione_finale": "Il documento è un ordine del giorno della 8ª Commissione con contenuti eterogenei, ma contiene in modo esplicito più punti riconducibili al perimetro marittimo. In particolare, è prevista l'audizione dell'avvocato Annalisa Tardino nell'ambito della proposta di nomina a presidente dell'Autorità di sistema portuale del Mare di Sicilia occidentale e, nella sezione consultiva su atti del Governo, il seguito dell'esame della proposta di nomina della stessa a presidente della medesima Autorità di sistema portuale. Il riferimento diretto ai porti e a un'Autorità di sistema portuale è sufficiente, secondo il criterio richiesto, a classificare il documento come attinente al trasporto marittimo.",
+    "estratto_rilevante": "Audizione dell'avvocato Annalisa Tardino nell'ambito della proposta di nomina a presidente dell'Autorità di sistema portuale del Mare di Sicilia occidentale (...) Proposta di nomina dell'avvocato Annalisa Tardino a presidente dell'Autorità di sistema portuale del Mare di Sicilia occidentale"
   },
   {
     "ramo": "Senato",
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "",
+    "numero": "1",
     "titolo": "1ª Affari Costituzionali, sedute n. 448, 449, 450, 451 (11/03/2026 - 12/03/2026)",
     "commissione": "1ª Affari Costituzionali",
     "seduta": "448,449,450,451",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446974.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Agenda della Commissione Affari costituzionali senza riferimenti testuali a industria o trasporti.",
+    "motivazione_preliminare": "Ordine del giorno di commissione costituzionale, senza indicazioni specifiche di impatto su industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -77,31 +77,34 @@
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "",
+    "numero": "5",
     "titolo": "5ª Bilancio, sedute n. 533, 534, 535, 536 (11/03/2026 - 12/03/2026)",
     "commissione": "5ª Bilancio",
     "seduta": "533,534,535,536",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446972.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La Commissione Bilancio può trattare misure economiche e finanziarie con impatti trasversali sull'industria, ma il contenuto specifico non è visibile nel testo pagina.",
+    "motivazione_preliminare": "La commissione bilancio può trattare misure finanziarie con impatto trasversale sul sistema produttivo, ma il titolo non consente maggiore specificazione.",
     "richiede_lettura_pdf": true,
     "categoria_finale": "Interesse trasporto marittimo",
-    "motivazione_finale": "Il documento è un ordine del giorno della 5ª Commissione Bilancio con contenuti eterogenei, ma contiene almeno alcuni punti espressamente riconducibili al perimetro marittimo. In particolare compaiono riferimenti diretti a: 'Valorizzazione della risorsa mare', 'Modifiche al codice della navigazione e altre disposizioni in materia di ordinamento amministrativo della navigazione e del lavoro marittimo' e 'manufatti e macchine per la pesca tradizionali esistenti sul demanio marittimo, lacuale e fluviale'. Poiché anche una sola parte del testo riguarda navigazione, lavoro marittimo o materie marittime, il documento va classificato almeno come 'Interesse trasporto marittimo'.",
-    "estratto_rilevante": "III. Seguito dell'esame degli emendamenti relativi ai disegni di legge: 1. Valorizzazione della risorsa mare ...; IV. Seguito dell'esame dei disegni di legge: 20. MALAN e altri – Modifiche al codice della navigazione e altre disposizioni in materia di ordinamento amministrativo della navigazione e del lavoro marittimo ...; 32. SIGISMONDI e altri – Disposizioni per la tutela e la salvaguardia dei manufatti e delle macchine per la pesca tradizionali esistenti sul demanio marittimo, lacuale e fluviale ..."
+    "motivazione_finale": "Il documento è un ordine del giorno della 5ª Commissione Bilancio con contenuti eterogenei. In base al criterio richiesto, basta anche un solo punto specificamente riferibile al perimetro marittimo per escludere la categoria 'Non attinenti' e classificare almeno come 'Interesse trasporto marittimo'. Nel testo compaiono più riferimenti espliciti a materie marittime, tra cui: 'Valorizzazione della risorsa mare', 'Modifiche al codice della navigazione e altre disposizioni in materia di ordinamento amministrativo della navigazione e del lavoro marittimo' e 'tutela e salvaguardia dei manufatti e delle macchine per la pesca tradizionali esistenti sul demanio marittimo, lacuale e fluviale'. Questi elementi attengono direttamente a navigazione, lavoro marittimo e ambiti del demanio marittimo.",
+    "estratto_rilevante": "III. Seguito dell'esame degli emendamenti relativi ai disegni di legge: 1. Valorizzazione della risorsa mare ...; IV. Seguito dell'esame dei disegni di legge: 20. MALAN e altri – Modifiche al codice della navigazione e altre disposizioni in materia di ordinamento amministrativo della navigazione e del lavoro marittimo - Relatore alla Commissione LIRIS (Parere alla 8ª Commissione); 32. SIGISMONDI e altri – Disposizioni per la tutela e la salvaguardia dei manufatti e delle macchine per la pesca tradizionali esistenti sul demanio marittimo, lacuale e fluviale ..."
   },
   {
     "ramo": "Senato",
     "data_pubblicazione": "2026-03-10",
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "",
+    "numero": "10",
     "titolo": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale, sedute n. 387, 388, 389, 390 (10/03/2026 - 12/03/2026)",
     "commissione": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
     "seduta": "387,388,389,390",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446975.pdf",
-    "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Temi sociali, sanitari e del lavoro; non vi sono riferimenti specifici a industria del trasporto o marittimo.",
-    "richiede_lettura_pdf": false
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "La presenza del tema lavoro pubblico e privato può avere ricadute generali sul mondo produttivo, ma non si rilevano riferimenti diretti a trasporti o marittimo.",
+    "richiede_lettura_pdf": true,
+    "categoria_finale": "Interesse industriale generale",
+    "motivazione_finale": "Il documento è un ordine del giorno della 10ª Commissione del Senato con materie prevalentemente sanitarie e sociali, ma contiene anche punti espressamente attinenti al diritto del lavoro e alle relazioni industriali in senso generale. In particolare figurano disegni di legge su salario minimo e rappresentanza delle parti sociali nella contrattazione collettiva, retribuzione proporzionata e sufficiente, fondi di solidarietà bilaterali, semplificazioni in materia di lavoro e legislazione sociale, nonché uno schema di decreto legislativo sulla parità di retribuzione tra uomini e donne. Questi riferimenti sono sufficienti, secondo i criteri indicati, a escludere la categoria 'Non attinenti'. Non emergono invece riferimenti specifici a trasporto marittimo, navigazione, porti, lavoro marittimo o ordinamento marittimo; quindi non ricorre la categoria 'Interesse trasporto marittimo', né risultano contenuti specificamente riferiti al settore dei trasporti tali da giustificare 'Interesse industria del trasporto'.",
+    "estratto_rilevante": "II. Seguito della discussione congiunta dei disegni di legge: 1. Maria Domenica CASTELLONE e altri – Disposizioni in materia di salario minimo e rappresentanza delle parti sociali nella contrattazione collettiva ... 2. MARTELLA e altri – Disposizioni in materia di retribuzione proporzionata e sufficiente ...; 2. SPERANZON e altri – Modifiche al decreto legislativo 14 settembre 2015, n. 148, in materia di fondi di solidarietà bilaterali ...; IN SEDE REFERENTE: 1. Paola MANCINI – Semplificazioni in materia di lavoro e legislazione sociale ...; IN SEDE CONSULTIVA SU ATTI DEL GOVERNO: 2. Schema di decreto legislativo recante attuazione della direttiva (UE) 2023/970, volta a rafforzare l'applicazione del principio della parità di retribuzione tra uomini e donne per uno stesso lavoro o per un lavoro di pari valore attraverso la trasparenza retributiva e i relativi meccanismi di applicazione ..."
   },
   {
     "ramo": "Senato",
@@ -114,7 +117,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442831.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Audizione nell'ambito della commissione d'inchiesta Orlandi e Gregori, materia non collegata a industria o trasporti.",
+    "motivazione_preliminare": "Audizione relativa alla commissione d'inchiesta sulla scomparsa Orlandi e Gregori; nessun collegamento con industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -128,7 +131,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442830.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Resoconto di audizione su caso Orlandi e Gregori; nessuna attinenza industriale o trasportistica.",
+    "motivazione_preliminare": "Audizione in commissione d'inchiesta su vicenda Orlandi-Gregori, non pertinente ai settori industriali o del trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -142,7 +145,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442642.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Resoconto d'audizione relativo a commissione d'inchiesta su persone scomparse; non pertinente ai settori richiesti.",
+    "motivazione_preliminare": "Resoconto di audizione in commissione d'inchiesta privo di connessioni con industria o trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -156,7 +159,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442641.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Audizione su vicenda Orlandi e Gregori; nessun collegamento con industria, trasporto o marittimo.",
+    "motivazione_preliminare": "Audizione nell'ambito di una commissione d'inchiesta su persone scomparse, non attinente ai settori richiesti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -170,7 +173,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442582.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Audizione nell'ambito della commissione d'inchiesta Orlandi e Gregori, non rilevante per le categorie industriali/trasporti.",
+    "motivazione_preliminare": "Resoconto di audizione in commissione d'inchiesta senza profili industriali o di trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -184,7 +187,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/442150.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Resoconto di audizione su tema estraneo ai comparti industriali e del trasporto.",
+    "motivazione_preliminare": "Audizione in commissione d'inchiesta su scomparsa Orlandi e Gregori; non collegata ai temi industriali o del trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -198,7 +201,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446978.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "DDL di riforma dell'assistenza territoriale e ospedaliera e del SSN; materia sanitaria, non industriale o trasportistica.",
+    "motivazione_preliminare": "Disegno di legge in materia sanitaria e organizzazione del SSN; non attinente a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -212,7 +215,7 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446967.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "DDL sul trattamento di fine servizio dei dipendenti pubblici; non emerge un legame specifico con industria o trasporti.",
+    "motivazione_preliminare": "Provvedimento sul trattamento di fine servizio dei dipendenti pubblici, privo di nesso diretto con i settori industriali o del trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -226,11 +229,11 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/423408.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La disciplina su gestione e destinazione dei beni sequestrati e confiscati può incidere anche su attività economiche e asset produttivi, pur non essendo specifica per trasporti o marittimo.",
+    "motivazione_preliminare": "La disciplina su gestione e destinazione dei beni sequestrati e confiscati può incidere su attività economiche e asset produttivi, ma non emerge un focus specifico sui trasporti.",
     "richiede_lettura_pdf": true,
-    "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il disegno di legge riguarda in modo specifico la gestione, amministrazione, affitto, cessione e destinazione dei beni sequestrati e confiscati alla criminalità organizzata, con modifiche al codice antimafia e alle norme di attuazione del codice di procedura penale. Non emergono riferimenti specifici al trasporto marittimo, alla navigazione, ai porti, al lavoro marittimo, né a settori del trasporto in senso industriale. I richiami al lavoro e ai rapporti aziendali sono generali e inseriti nel contesto delle imprese sequestrate/confiscate, non riferiti al comparto dei trasporti o marittimo.",
-    "estratto_rilevante": "«Il presente disegno di legge, apportando una serie di modifiche al codice antimafia e all’articolo 104-bis delle norme di attuazione del codice di procedura penale, in particolare per quanto concerne l’amministrazione giudiziaria dei beni connessi ad attività economiche e delle aziende, il controllo giudiziario delle aziende, la nomina e la revoca dell’amministratore giudiziario, i compiti dell’ANBSC, la gestione delle aziende e dei beni sequestrati, l’affitto o cessione di beni aziendali in costanza di procedura, la destinazione dei beni e delle somme...»"
+    "categoria_finale": "Interesse industriale generale",
+    "motivazione_finale": "Il disegno di legge riguarda la gestione e la destinazione dei beni sequestrati e confiscati alla criminalità organizzata, con numerose disposizioni sulla prosecuzione dell’attività d’impresa, sulla gestione delle aziende sequestrate, sui rapporti di lavoro, sui livelli occupazionali e sulla cessazione del rapporto di lavoro. Non emergono però riferimenti specifici al trasporto marittimo, alla navigazione, ai porti, al lavoro marittimo o all’ordinamento marittimo, né al settore del trasporto in senso specifico. Poiché il testo contiene comunque contenuti attinenti al lavoro e alla gestione delle imprese in generale, non può essere classificato come 'Non attinenti'.",
+    "estratto_rilevante": "3) il decreto legislativo n. 72 del 2018, in materia di tutela del lavoro nell’ambito delle imprese sequestrate e confiscate, che contiene una serie di misure di sostegno alle imprese e al reddito dei lavoratori dipendenti di aziende sequestrate o confiscate, sia in costanza di rapporto di lavoro, sia in caso di sua cessazione; (...) La scelta dell’affittuario o del cessionario deve tenere conto, oltre che dell’ammontare del canone o del prezzo offerto, delle garanzie prestate e dell’attendibilità del piano di prosecuzione delle attività imprenditoriali, avuto riguardo alla conservazione dei livelli occupazionali ove presenti. (...) il giudice delegato, anche su istanza dell’amministratore giudiziario, può sempre disporre l’allontanamento del dipendente per motivi di ordine pubblico e la contestuale cessazione del rapporto di lavoro."
   },
   {
     "ramo": "Senato",
@@ -243,11 +246,11 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446971.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Riforma del sistema sanzionatorio nel TUF, materia di regolazione dei mercati finanziari con impatto generale sul sistema economico e industriale.",
+    "motivazione_preliminare": "Riforma del sistema sanzionatorio nel quadro del TUF, con possibile impatto generale su imprese, mercati e operatori economici.",
     "richiede_lettura_pdf": true,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il documento riguarda la riforma del sistema sanzionatorio e delle procedure sanzionatorie del Testo unico della finanza (TUF), con riferimento a Consob, Banca d’Italia, abusi di mercato, sanzioni amministrative, confisca, procedimenti, settlement e contenzioso davanti al giudice amministrativo. Non emergono contenuti specificamente riferiti al trasporto marittimo, alla navigazione, ai porti, al lavoro marittimo, né più in generale al settore dei trasporti. Non tratta neppure temi di relazioni industriali o lavoro in senso generale. Pertanto il documento va classificato come non attinente.",
-    "estratto_rilevante": "«Schema di decreto legislativo recante attuazione della delega di cui all'articolo 19-bis della legge 5 marzo 2024, n. 21, per la riforma organica e il riordino del sistema sanzionatorio e di tutte le procedure sanzionatorie recati dal Testo unico di cui al decreto legislativo 24 febbraio 1998, n. 58»; «Il decreto legislativo in esame incide prevalentemente sulla disciplina del sistema sanzionatorio amministrativo contenuta nella Parte V del TUF»; «prevedere una revisione delle competenze giurisdizionali e del rito applicabile in materia di ricorsi avverso le sanzioni previste dal TUF»."
+    "motivazione_finale": "Il documento riguarda la riforma del sistema sanzionatorio e delle procedure sanzionatorie del Testo unico della finanza (TUF), con riferimento a Consob, Banca d’Italia, abusi di mercato, confisca, procedimenti sanzionatori, giurisdizione, impegni e settlement. Non emergono contenuti riconducibili al trasporto marittimo, alla navigazione, ai porti, al lavoro marittimo, né a materie del trasporto in generale. Inoltre non contiene temi di lavoro o relazioni industriali generali tali da farlo rientrare nell’“Interesse industriale generale”.",
+    "estratto_rilevante": "Schema di decreto legislativo recante attuazione della delega di cui all’articolo 19-bis della legge 5 marzo 2024, n. 21, per la riforma organica e il riordino del sistema sanzionatorio e di tutte le procedure sanzionatorie recati dal testo unico di cui al decreto legislativo 24 febbraio 1998, n. 58"
   },
   {
     "ramo": "Senato",
@@ -260,10 +263,10 @@
     "seduta": "",
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/446968.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Relazione Consob di analisi di impatto della regolamentazione; documento potenzialmente rilevante per il quadro regolatorio delle imprese e dei mercati.",
+    "motivazione_preliminare": "Relazione di impatto della regolamentazione della Consob, potenzialmente rilevante per il contesto normativo ed economico generale delle imprese.",
     "richiede_lettura_pdf": true,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il documento raccoglie relazioni AIR e atti Consob su operazioni di rafforzamento patrimoniale, rendicontazione di sostenibilità, lista del consiglio di amministrazione, crowdfunding, procedimento sanzionatorio e ammissione alle negoziazioni di OICR. Si tratta di materie di regolazione finanziaria, societaria e di vigilanza sui mercati, senza contenuti specificamente riferibili a trasporto marittimo, navigazione, porti, lavoro marittimo o ordinamento marittimo. Non emergono neppure temi di relazioni industriali generali tali da giustificare la classificazione come interesse industriale generale.",
-    "estratto_rilevante": "Titolo: Relazioni di analisi di impatto della regolamentazione ultimate nel 2025 ... Presentate dalla Commissione nazionale per le società e la borsa (Consob) ... 1. Operazioni di rafforzamento patrimoniale riservate ad un unico investitore ... 2. Modifiche alla normativa secondaria in materia di rendicontazione societaria di sostenibilità ... 4. Obblighi di comunicazione di dati e notizie e di trasmissione di atti e documenti da parte dei fornitori di servizi di crowdfunding nei confronti della Consob ... 5. Modifica al regolamento sul procedimento sanzionatorio della Consob ... 6. Modifica al regolamento Emittenti concernenti l’ammissione alle negoziazioni di OICR."
+    "motivazione_finale": "Il documento riguarda relazioni AIR della Consob su materie di regolazione finanziaria e dei mercati dei capitali: prestiti obbligazionari convertibili, rendicontazione di sostenibilità, lista del consiglio di amministrazione, crowdfunding, procedimento sanzionatorio Consob e ammissione alle negoziazioni di OICR. Non emergono contenuti riferibili al trasporto marittimo, ai porti, alla navigazione, al lavoro marittimo, né temi di lavoro/relazioni industriali generali tali da farlo rientrare nelle categorie residuali. Anche nelle varie sezioni e sottodocumenti non compaiono parti riconducibili al perimetro marittimo o industriale richiesto.",
+    "estratto_rilevante": "«Tipo atto: Relazione AIR»; indice: «Operazioni di rafforzamento patrimoniale…», «Modifiche alla normativa secondaria in materia di rendicontazione societaria di sostenibilità», «Disposizioni in materia di lista del consiglio di amministrazione», «Obblighi di comunicazione… dei fornitori di servizi di crowdfunding», «Modifica al regolamento sul procedimento sanzionatorio della Consob», «Modifica al regolamento Emittenti concernenti l’ammissione alle negoziazioni di OICR»."
   }
 ]
