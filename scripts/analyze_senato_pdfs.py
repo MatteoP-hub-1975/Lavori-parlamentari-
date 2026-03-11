@@ -128,6 +128,12 @@ def main():
             pdf_bytes = download_pdf(link)
 
             pdf_text = extract_pdf_text(pdf_bytes)
+            tipo_atto = str(item.get("tipo_atto", "")).lower()
+
+            if "o.d.g" not in tipo_atto and "ordine del giorno" not in tipo_atto:
+                MAX_CHARS = 20000
+                if len(pdf_text) > MAX_CHARS:
+                    pdf_text = pdf_text[:MAX_CHARS]
             print("LUNGHEZZA PDF TEXT:", len(pdf_text))
             print("TIPO ATTO:", item.get("tipo_atto"), "| TITOLO:", item.get("titolo"))
 
