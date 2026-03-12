@@ -73,123 +73,109 @@ def extract_page_text(html: str) -> str:
     lines = [compact_spaces(x) for x in text.splitlines()]
     lines = [x for x in lines if x]
     return "\n".join(lines)
-    
+
+
 def build_pdf_list_for_prompt(raw_entries):
     """
     Riduce l'elenco degli elementi trovati dallo scraper
-    alla sola lista di PDF da fornire al modello.
+    alla sola lista ordinata di PDF da fornire al modello.
     """
     pdf_list = []
 
-    for item in raw_entries:
+    for idx, item in enumerate(raw_entries, start=1):
         link = item.get("link")
-        titolo = item.get("titolo", "")
-        tipo = item.get("tipo_atto", "")
-
-        if link and link.endswith(".pdf"):
-            pdf_list.append({
-                "titolo": titolo,
-                "tipo_atto": tipo,
-                "link_pdf": link
-            })
+        if link:
+            pdf_list.append(
+                {
+                    "pdf_index": idx,
+                    "link_pdf": link,
+                }
+            )
 
     return json.dumps(pdf_list, ensure_ascii=False, indent=2)
 
-def build_prompt(item, pdf_text):
+
+def build_prompt(target_date_str: str, page_url: str, page_text: str, pdf_list_json: str) -> str:
     return f"""
-Analizza il seguente documento parlamentare del Senato.
+Analizza la seguente pagina del Senato italiano "Ultimi atti pubblicati" relativa alla data {target_date_str}.
 
-Tipo atto: {item["tipo_atto"]}
-Titolo: {item["titolo"]}
-Commissione: {item["commissione"]}
+URL della pagina:
+{page_url}
 
-Testo estratto dal PDF:
-<<<BEGIN_TEXT>>>
-{pdf_text}
-<<<END_TEXT>>>
+Testo della pagina:
+<<<BEGIN_PAGE_TEXT>>>
+{page_text}
+<<<END_PAGE_TEXT>>>
 
-CRITERIO DI ANALISI (IMPORTANTE):
+ELENCO ORDINATO DEI PDF TROVATI DALLO SCRAPER:
+<<<BEGIN_PDF_LIST>>>
+{pdf_list_json}
+<<<END_PDF_LIST>>>
 
-Molti documenti del Senato (in particolare ODG Assemblea e ODG Commissioni) sono documenti compositi che contengono molti punti diversi.
+Obiettivo:
+1. Individuare i singoli atti/documenti pubblicati quel giorno.
+2. Restituire una lista JSON di atti strutturati.
+3. Non riportare nell'output gli organi esclusi.
+4. NON assegnare direttamente il link PDF.
+5. Per ogni atto restituisci invece il campo "pdf_index", cioè la posizione numerica (1-based) del PDF corretto nell'elenco ordinato dei PDF fornito sopra.
 
-NON devi classificare il documento in base al tema prevalente.
+Regola fondamentale sui PDF:
+- L'elenco PDF fornito sopra è ordinato.
+- Devi usare quell'ordine.
+- Non devi scegliere il PDF per similarità semantica.
+- Devi associare ogni atto al suo PDF corretto tramite la posizione nell'elenco ordinato.
+- Il campo "pdf_index" deve essere un intero positivo.
+- Se non sei ragionevolmente sicuro della posizione, usa 0.
 
-Devi invece verificare se anche UNA SOLA PARTE del documento contiene riferimenti a:
+Regola di esclusione assoluta:
+Se un atto riguarda uno dei seguenti organi del Senato, non devi classificarlo né restituirlo nell'output JSON. Devi semplicemente ometterlo del tutto.
 
-• trasporto marittimo
-• navigazione
-• porti
-• autorità di sistema portuale
-• codice della navigazione
-• lavoro marittimo
-• demanio marittimo
-• economia del mare
+Organi da escludere:
+- Giunta Regolamento
+- Giunta elezioni e immunità parlamentari
+- Giunta provvisoria per la verifica dei poteri
+- Commissione biblioteca e archivio storico
+- Commissione straordinaria per il contrasto dei fenomeni di intolleranza, razzismo, antisemitismo e istigazione all'odio e alla violenza
+- Commissione straordinaria per la tutela e la promozione dei diritti umani
+- Commissione di inchiesta su scomparsa Orlandi e Gregori
+- Commissione contenziosa
+- Consiglio di garanzia
+- Comitato per la legislazione
 
-Se anche una sola parte del documento contiene questi riferimenti, la classificazione deve essere:
+Regole di classificazione preliminare:
+- Le categorie possibili sono SOLO queste:
+  1. "Non attinenti"
+  2. "Interesse industriale generale"
+  3. "Interesse industria del trasporto"
+  4. "Interesse trasporto marittimo"
 
-Interesse trasporto marittimo
+- Pesca e diporto vanno classificati come "Non attinenti".
+- La sanità NON va esclusa a priori.
+- Se c'è dubbio, scegli la categoria più rilevante.
+- Se un atto NON è chiaramente "Non attinenti", allora "richiede_lettura_pdf" deve essere true.
+- Gli ODG in linea generale richiedono lettura del PDF, salvo caso eccezionale di chiara non attinenza.
 
----
+Formato JSON richiesto:
 
-Se il documento contiene riferimenti a:
+[
+  {{
+    "ramo": "Senato",
+    "data_pubblicazione": "{target_date_str}",
+    "sezione": "",
+    "tipo_atto": "",
+    "numero": "",
+    "titolo": "",
+    "commissione": "",
+    "seduta": "",
+    "pdf_index": 0,
+    "categoria_preliminare": "",
+    "motivazione_preliminare": "",
+    "richiede_lettura_pdf": false
+  }}
+]
 
-• industria
-• politica industriale
-• imprese
-• energia
-• lavoro
-• occupazione
-• relazioni industriali
-• contrattazione collettiva
-• salario minimo
-• retribuzioni
-• CCNL
-• politiche per le imprese
-• transizione industriale
-• crisi industriali
-• sostegno alle imprese
-
-ma NON contiene riferimenti specifici al trasporto marittimo, allora la classificazione deve essere:
-
-Interesse industriale generale
-
----
-
-Solo se nel documento NON compare nessun riferimento a:
-• marittimo
-• trasporti
-• industria
-• lavoro
-• imprese
-
-allora la classificazione può essere:
-
-Non attinenti
-
----
-
-Categorie possibili (solo queste):
-
-- Non attinenti
-- Interesse industriale generale
-- Interesse industria del trasporto
-- Interesse trasporto marittimo
-
----
-
-Restituisci JSON:
-
-{{
- "categoria_finale": "...",
- "motivazione_finale": "...",
- "estratto_rilevante": "..."
-}}
-
-Regole finali:
-
-• cita sempre la parte del testo che giustifica la classificazione
-• se il documento è composito (ODG, calendario ecc.) cerca i singoli punti
-• restituisci SOLO JSON valido
+Restituisci SOLO JSON valido.
+Nessun testo prima o dopo il JSON.
 """.strip()
 
 
