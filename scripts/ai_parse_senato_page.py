@@ -73,7 +73,27 @@ def extract_page_text(html: str) -> str:
     lines = [compact_spaces(x) for x in text.splitlines()]
     lines = [x for x in lines if x]
     return "\n".join(lines)
+    
+def build_pdf_list_for_prompt(raw_entries):
+    """
+    Riduce l'elenco degli elementi trovati dallo scraper
+    alla sola lista di PDF da fornire al modello.
+    """
+    pdf_list = []
 
+    for item in raw_entries:
+        link = item.get("link")
+        titolo = item.get("titolo", "")
+        tipo = item.get("tipo_atto", "")
+
+        if link and link.endswith(".pdf"):
+            pdf_list.append({
+                "titolo": titolo,
+                "tipo_atto": tipo,
+                "link_pdf": link
+            })
+
+    return json.dumps(pdf_list, ensure_ascii=False, indent=2)
 
 def build_prompt(item, pdf_text):
     return f"""
