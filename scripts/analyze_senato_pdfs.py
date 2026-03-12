@@ -110,8 +110,9 @@ def main():
         if is_excluded_organ(item):
             continue
         categoria = item.get("categoria_preliminare")
+        tipo_atto = str(item.get("tipo_atto", "")).lower()
 
-        if categoria == "Non attinenti":
+        if categoria == "Non attinenti" and "odg" not in tipo_atto and "ordine del giorno" not in tipo_atto:
             results.append(item)
             continue
 
