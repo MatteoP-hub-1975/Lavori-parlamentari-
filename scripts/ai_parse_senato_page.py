@@ -43,11 +43,7 @@ def is_excluded_organ(item) -> bool:
         ]
     ).lower()
 
-    for organ in EXCLUDED_ORGANS:
-        if organ.lower() in searchable_text:
-            return True
-
-    return False
+    return any(organ.lower() in searchable_text for organ in EXCLUDED_ORGANS)
 
 
 def compact_spaces(text: str) -> str:
@@ -79,7 +75,19 @@ def extract_page_text(html: str) -> str:
     return "\n".join(lines)
 
 
-def build_prompt(target_date_str: str, page_url: str, page_text: str, raw_entries_json: str) -> str:
+def build_pdf_list_for_prompt(raw_entries: list[dict]) -> str:
+    pdf_items = []
+    for idx, entry in enumerate(raw_entries, start=1):
+        pdf_items.append(
+            {
+                "pdf_index": idx,
+                "link": entry.get("link", ""),
+            }
+        )
+    return json.dumps(pdf_items, ensure_ascii=False, indent=2)
+
+
+def build_prompt(target_date_str: str, page_url: str, page_text: str, pdf_list_json: str) -> str:
     return f"""
 Analizza la seguente pagina del Senato italiano "Ultimi atti pubblicati" relativa alla data {target_date_str}.
 
@@ -91,16 +99,25 @@ Testo della pagina:
 {page_text}
 <<<END_PAGE_TEXT>>>
 
-ELENCO DEI PDF TROVATI DALLO SCRAPER:
+ELENCO ORDINATO DEI PDF TROVATI DALLO SCRAPER:
 <<<BEGIN_PDF_LIST>>>
-{raw_entries_json}
+{pdf_list_json}
 <<<END_PDF_LIST>>>
 
 Obiettivo:
 1. Individuare i singoli atti/documenti pubblicati quel giorno.
 2. Restituire una lista JSON di atti strutturati.
-3. Associare il link_pdf più plausibile tra quelli forniti.
-4. Non riportare nell'output gli organi esclusi.
+3. Non riportare nell'output gli organi esclusi.
+4. NON assegnare direttamente il link PDF.
+5. Per ogni atto restituisci invece il campo "pdf_index", cioè la posizione numerica (1-based) del PDF corretto nell'elenco ordinato dei PDF fornito sopra.
+
+Regola fondamentale sui PDF:
+- L'elenco PDF fornito sopra è ordinato.
+- Devi usare quell'ordine.
+- Non devi scegliere il PDF per similarità semantica.
+- Devi associare ogni atto al suo PDF corretto tramite la posizione nell'elenco ordinato.
+- Il campo "pdf_index" deve essere un intero positivo.
+- Se non sei ragionevolmente sicuro della posizione, usa 0.
 
 Regola di esclusione assoluta:
 Se un atto riguarda uno dei seguenti organi del Senato, non devi classificarlo né restituirlo nell'output JSON. Devi semplicemente ometterlo del tutto.
@@ -130,16 +147,6 @@ Regole di classificazione preliminare:
 - Se un atto NON è chiaramente "Non attinenti", allora "richiede_lettura_pdf" deve essere true.
 - Gli ODG in linea generale richiedono lettura del PDF, salvo caso eccezionale di chiara non attinenza.
 
-Istruzioni di estrazione:
-- Lavora solo sulle informazioni realmente presenti nella pagina e nell'elenco PDF fornito.
-- Non inventare dati mancanti.
-- Se un campo non è disponibile, usa stringa vuota.
-- Il campo "link_pdf" deve contenere uno degli URL presenti nell'elenco PDF se l'associazione è plausibile; altrimenti stringa vuota.
-- Il campo "sezione" deve riflettere la macro-sezione della pagina.
-- Il campo "tipo_atto" deve essere sintetico.
-- Se il nome dell'organo/commissione compare nel titolo o in altri campi testuali, usalo correttamente per identificare l'atto.
-- Non restituire atti relativi agli organi esclusi anche se compaiono nella pagina o nell'elenco PDF.
-
 Formato JSON richiesto:
 
 [
@@ -152,7 +159,7 @@ Formato JSON richiesto:
     "titolo": "",
     "commissione": "",
     "seduta": "",
-    "link_pdf": "",
+    "pdf_index": 0,
     "categoria_preliminare": "",
     "motivazione_preliminare": "",
     "richiede_lettura_pdf": false
@@ -179,7 +186,7 @@ def extract_json_from_response(text: str):
     raise ValueError("La risposta del modello non contiene JSON valido.")
 
 
-def validate_items(items, target_date_str: str):
+def validate_items(items, target_date_str: str, raw_entries: list[dict]):
     allowed_categories = {
         "Non attinenti",
         "Interesse industriale generale",
@@ -193,6 +200,16 @@ def validate_items(items, target_date_str: str):
         if not isinstance(item, dict):
             continue
 
+        pdf_index_raw = item.get("pdf_index", 0)
+        try:
+            pdf_index = int(pdf_index_raw)
+        except Exception:
+            pdf_index = 0
+
+        link_pdf = ""
+        if 1 <= pdf_index <= len(raw_entries):
+            link_pdf = compact_spaces(str(raw_entries[pdf_index - 1].get("link", "")))
+
         normalized_item = {
             "ramo": "Senato",
             "data_pubblicazione": target_date_str,
@@ -202,7 +219,8 @@ def validate_items(items, target_date_str: str):
             "titolo": compact_spaces(str(item.get("titolo", ""))),
             "commissione": compact_spaces(str(item.get("commissione", ""))),
             "seduta": compact_spaces(str(item.get("seduta", ""))),
-            "link_pdf": compact_spaces(str(item.get("link_pdf", ""))),
+            "pdf_index": pdf_index,
+            "link_pdf": link_pdf,
             "categoria_preliminare": compact_spaces(str(item.get("categoria_preliminare", ""))),
             "motivazione_preliminare": compact_spaces(str(item.get("motivazione_preliminare", ""))),
             "richiede_lettura_pdf": bool(item.get("richiede_lettura_pdf", False)),
@@ -246,9 +264,9 @@ def main():
     with open(raw_json_path, "r", encoding="utf-8") as f:
         raw_entries = json.load(f)
 
-    raw_entries_json = json.dumps(raw_entries, ensure_ascii=False, indent=2)
+    pdf_list_json = build_pdf_list_for_prompt(raw_entries)
 
-    prompt = build_prompt(target_date_str, page_url, page_text, raw_entries_json)
+    prompt = build_prompt(target_date_str, page_url, page_text, pdf_list_json)
 
     response = client.responses.create(
         model="gpt-5.4",
@@ -257,7 +275,7 @@ def main():
 
     raw_text = response.output_text
     items = extract_json_from_response(raw_text)
-    items = validate_items(items, target_date_str)
+    items = validate_items(items, target_date_str, raw_entries)
 
     output_path = save_json(items, target_date_str)
 
