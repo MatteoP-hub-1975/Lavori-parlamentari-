@@ -6,7 +6,9 @@ from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
 from pathlib import Path
 
+
 OUTPUT_DIR = Path("data/senato")
+
 EXCLUDED_ORGANS = [
     "Giunta Regolamento",
     "Giunta elezioni e immunità parlamentari",
@@ -20,16 +22,23 @@ EXCLUDED_ORGANS = [
     "Comitato per la legislazione",
 ]
 
+
+def compact_spaces(text: str) -> str:
+    return " ".join((text or "").split()).strip()
+
+
 def is_excluded_organ(item) -> bool:
     text = " ".join(
         [
             str(item.get("commissione", "")),
             str(item.get("titolo", "")),
             str(item.get("tipo_atto", "")),
+            str(item.get("sezione", "")),
         ]
     ).lower()
 
     return any(org.lower() in text for org in EXCLUDED_ORGANS)
+
 
 def parse_target_date():
     if len(sys.argv) < 2:
@@ -43,8 +52,39 @@ def load_data(target_date):
         return json.load(f)
 
 
-def build_sections(items):
+def format_main_item(item):
+    categoria = item.get("categoria_finale") or item.get("categoria_preliminare")
 
+    titolo = compact_spaces(item.get("titolo", ""))
+    tipo = compact_spaces(item.get("tipo_atto", ""))
+    numero = compact_spaces(item.get("numero", ""))
+    commissione = compact_spaces(item.get("commissione", ""))
+    seduta = compact_spaces(item.get("seduta", ""))
+    data_seduta = compact_spaces(item.get("data_seduta", ""))
+    link = compact_spaces(item.get("link_pdf", ""))
+    motivazione = compact_spaces(
+        item.get("motivazione_finale") or item.get("motivazione_preliminare", "")
+    )
+
+    header = tipo
+    if numero:
+        header += f" {numero}"
+
+    seduta_line = f"Commissione: {commissione} | Seduta: {seduta}"
+    if data_seduta:
+        seduta_line += f" | Data seduta: {data_seduta}"
+
+    text = f"""{header}
+{titolo}
+{seduta_line}
+Motivazione: {motivazione}
+PDF: {link}
+"""
+
+    return categoria, text
+
+
+def build_sections(items):
     sections = {
         "Interesse trasporto marittimo": [],
         "Interesse industria del trasporto": [],
@@ -52,46 +92,92 @@ def build_sections(items):
         "Non attinenti": [],
     }
 
-    for item in items:
+    emendamenti = []
+    audizioni = []
+    resoconti_alert = []
 
+    for item in items:
         if is_excluded_organ(item):
             continue
-        categoria = item.get("categoria_finale") or item.get("categoria_preliminare")
 
-        titolo = item.get("titolo", "")
-        tipo = item.get("tipo_atto", "")
-        numero = item.get("numero", "")
-        commissione = item.get("commissione", "")
-        seduta = item.get("seduta", "")
-        link = item.get("link_pdf", "")
-        motivazione = item.get("motivazione_finale") or item.get("motivazione_preliminare")
-
-        header = tipo
-        if numero:
-            header += f" {numero}"
-
-        text = f"""{header}
-{titolo}
-Commissione: {commissione} | Seduta: {seduta}
-Motivazione: {motivazione}
-PDF: {link}
-"""
+        categoria, text = format_main_item(item)
 
         if categoria in sections:
             sections[categoria].append(text)
         else:
             sections["Non attinenti"].append(text)
 
-    return sections
+        titolo = compact_spaces(item.get("titolo", ""))
+        tipo = compact_spaces(item.get("tipo_atto", ""))
+        commissione = compact_spaces(item.get("commissione", ""))
+        seduta = compact_spaces(item.get("seduta", ""))
+        data_seduta = compact_spaces(item.get("data_seduta", ""))
+        link = compact_spaces(item.get("link_pdf", ""))
+
+        for snippet in item.get("termine_emendamenti", []) or []:
+            snippet = compact_spaces(str(snippet))
+            if snippet:
+                emendamenti.append(
+                    f"""{tipo}
+{titolo}
+Commissione: {commissione} | Seduta: {seduta}{f" | Data seduta: {data_seduta}" if data_seduta else ""}
+Segnalazione: {snippet}
+PDF: {link}
+"""
+                )
+
+        for snippet in item.get("audizioni", []) or []:
+            snippet = compact_spaces(str(snippet))
+            if snippet:
+                audizioni.append(
+                    f"""{tipo}
+{titolo}
+Commissione: {commissione} | Seduta: {seduta}{f" | Data seduta: {data_seduta}" if data_seduta else ""}
+Segnalazione: {snippet}
+PDF: {link}
+"""
+                )
+
+        if item.get("resoconto_alert"):
+            kws = ", ".join(item.get("resoconto_keywords_found", []) or [])
+            resoconti_alert.append(
+                f"""{tipo}
+{titolo}
+Commissione: {commissione} | Seduta: {seduta}
+Parole chiave trovate: {kws}
+PDF: {link}
+"""
+            )
+
+    return sections, emendamenti, audizioni, resoconti_alert
 
 
-def build_email_body(sections, date):
-
+def build_email_body(sections, emendamenti, audizioni, resoconti_alert, date):
     body = f"Monitor Parlamento – Senato – {date}\n\n"
 
-    for section, items in sections.items():
+    body += "=== SCADENZA EMENDAMENTI ===\n\n"
+    if emendamenti:
+        for item in emendamenti:
+            body += item + "\n"
+    else:
+        body += "Nessuna segnalazione.\n\n"
 
-        body += f"\n=== {section.upper()} ===\n\n"
+    body += "=== AUDIZIONI ===\n\n"
+    if audizioni:
+        for item in audizioni:
+            body += item + "\n"
+    else:
+        body += "Nessuna segnalazione.\n\n"
+
+    body += "=== RESOCONTI CON KEYWORD RILEVANTI ===\n\n"
+    if resoconti_alert:
+        for item in resoconti_alert:
+            body += item + "\n"
+    else:
+        body += "Nessuna segnalazione.\n\n"
+
+    for section, items in sections.items():
+        body += f"=== {section.upper()} ===\n\n"
 
         if not items:
             body += "Nessun atto.\n\n"
@@ -104,7 +190,6 @@ def build_email_body(sections, date):
 
 
 def send_email(subject, body):
-
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
 
@@ -126,19 +211,21 @@ def send_email(subject, body):
 
 
 def main():
-
     target_date = parse_target_date()
-
     items = load_data(target_date)
 
-    sections = build_sections(items)
+    sections, emendamenti, audizioni, resoconti_alert = build_sections(items)
 
     subject = f"Monitor Parlamento – Senato – {target_date}"
-
-    body = build_email_body(sections, target_date)
+    body = build_email_body(
+        sections,
+        emendamenti,
+        audizioni,
+        resoconti_alert,
+        target_date,
+    )
 
     send_email(subject, body)
-
     print("Email inviata.")
 
 
