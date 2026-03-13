@@ -26,6 +26,7 @@ EXCLUDED_ORGANS = [
     "Commissione straordinaria per il contrasto dei fenomeni di intolleranza, razzismo, antisemitismo e istigazione all'odio e alla violenza",
     "Commissione straordinaria per la tutela e la promozione dei diritti umani",
     "Commissione di inchiesta su scomparsa Orlandi e Gregori",
+    "Commissione di inchiesta su emergenza sanitaria epidemiologica da SARS-CoV-2",
     "Commissione contenziosa",
     "Consiglio di garanzia",
     "Comitato per la legislazione",
