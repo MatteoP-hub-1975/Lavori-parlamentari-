@@ -140,21 +140,29 @@ def extract_emendamenti_snippets(pdf_text: str) -> list[str]:
 
 def extract_audizioni_snippets(pdf_text: str) -> list[str]:
     snippets = []
+
     patterns = [
         r"audizione\s+di",
         r"audizione\s+del",
         r"audizione\s+della",
+        r"audizione\s+dei",
+        r"audizione\s+delle",
         r"audizioni",
-        r"audizione\s+informale",
     ]
 
     for pat in patterns:
         for match in re.finditer(pat, pdf_text, flags=re.IGNORECASE):
-            start = max(0, match.start() - 80)
-            end = min(len(pdf_text), match.end() + 260)
-            snippet = compact_spaces(pdf_text[start:end])
+
+            start = match.start()
+            end = min(len(pdf_text), match.end() + 300)
+
+            snippet = pdf_text[start:end]
+
+            snippet = compact_spaces(snippet)
+
             if snippet and snippet not in snippets:
                 snippets.append(snippet)
+
             if len(snippets) >= 5:
                 return snippets
 
