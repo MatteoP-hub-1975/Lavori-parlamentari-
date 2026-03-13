@@ -1,23 +1,11 @@
-from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
 import subprocess
 import sys
+from datetime import datetime, timedelta
+from zoneinfo import ZoneInfo
 
 
-ROME_TZ = ZoneInfo("Europe/Rome")
+ROME = ZoneInfo("Europe/Rome")
 
-def get_run_mode(now_rome: datetime) -> tuple[str, str]:
-    hour = now_rome.hour
-
-
-
-    if hour < 12:
-        run_mode = "morning"
-        target_date = (now_rome.date() - timedelta(days=1)).isoformat()
-    else:
-        run_mode = "afternoon"
-        target_date = now_rome.date().isoformat()
-    return run_mode, target_date
 
 def run_script(script_path: str, target_date: str) -> int:
     cmd = [sys.executable, script_path, target_date]
@@ -27,30 +15,27 @@ def run_script(script_path: str, target_date: str) -> int:
 
 
 def main():
-    now_rome = datetime.now(ROME_TZ)
-    run_mode, target_date = get_run_mode(now_rome)
+
+    now_rome = datetime.now(ROME)
 
     print(f"Ora Italia: {now_rome.isoformat()}")
-    print(f"Run mode: {run_mode}")
+
+    # Analizziamo sempre il giorno precedente
+    target_date = (now_rome.date() - timedelta(days=1)).isoformat()
+
     print(f"Data target: {target_date}")
 
-    exit_code = run_script("scripts/fetch_senato_atti.py", target_date)
-    if exit_code != 0:
-        raise SystemExit(exit_code)
+    scripts = [
+        "scripts/fetch_senato_atti.py",
+        "scripts/ai_parse_senato_page.py",
+        "scripts/analyze_senato_pdfs.py",
+        "scripts/send_report_email.py",
+    ]
 
-    exit_code = run_script("scripts/ai_parse_senato_page.py", target_date)
-    if exit_code != 0:
-        raise SystemExit(exit_code)
-        
-    exit_code = run_script("scripts/analyze_senato_pdfs.py", target_date)
-    if exit_code != 0:
-        raise SystemExit(exit_code)
-        
-    exit_code = run_script("scripts/send_report_email.py", target_date)
-    if exit_code != 0:
-        raise SystemExit(exit_code)
-
-    print("Monitor completato con successo.")
+    for script in scripts:
+        code = run_script(script, target_date)
+        if code != 0:
+            raise RuntimeError(f"Errore nello script {script}")
 
 
 if __name__ == "__main__":
