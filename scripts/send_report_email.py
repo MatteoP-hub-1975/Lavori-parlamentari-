@@ -52,6 +52,17 @@ def load_data(target_date):
         return json.load(f)
 
 
+def is_resoconto(item) -> bool:
+    text = " ".join(
+        [
+            str(item.get("tipo_atto", "")),
+            str(item.get("titolo", "")),
+            str(item.get("sezione", "")),
+        ]
+    ).lower()
+    return "resoconto" in text
+
+
 def format_main_item(item):
     categoria = item.get("categoria_finale") or item.get("categoria_preliminare")
 
@@ -84,6 +95,17 @@ PDF: {link}
     return categoria, text
 
 
+def dedupe_preserve_order(items):
+    seen = set()
+    out = []
+    for x in items:
+        key = compact_spaces(str(x))
+        if key and key not in seen:
+            seen.add(key)
+            out.append(x)
+    return out
+
+
 def build_sections(items):
     sections = {
         "Interesse trasporto marittimo": [],
@@ -100,13 +122,6 @@ def build_sections(items):
         if is_excluded_organ(item):
             continue
 
-        categoria, text = format_main_item(item)
-
-        if categoria in sections:
-            sections[categoria].append(text)
-        else:
-            sections["Non attinenti"].append(text)
-
         titolo = compact_spaces(item.get("titolo", ""))
         tipo = compact_spaces(item.get("tipo_atto", ""))
         commissione = compact_spaces(item.get("commissione", ""))
@@ -114,21 +129,24 @@ def build_sections(items):
         data_seduta = compact_spaces(item.get("data_seduta", ""))
         link = compact_spaces(item.get("link_pdf", ""))
 
-        for snippet in item.get("termine_emendamenti", []) or []:
-            snippet = compact_spaces(str(snippet))
-            if snippet:
-                emendamenti.append(
-                    f"""{tipo}
+        if item.get("termine_emendamenti"):
+            for snippet in item.get("termine_emendamenti", []) or []:
+                snippet = compact_spaces(str(snippet))
+                if snippet:
+                    emendamenti.append(
+                        f"""{tipo}
 {titolo}
 Commissione: {commissione} | Seduta: {seduta}{f" | Data seduta: {data_seduta}" if data_seduta else ""}
 Segnalazione: {snippet}
 PDF: {link}
 """
-                )
+                    )
 
-        for snippet in item.get("audizioni", []) or []:
-            snippet = compact_spaces(str(snippet))
-            if snippet:
+        if item.get("audizioni"):
+            for snippet in item.get("audizioni", []) or []:
+                snippet = compact_spaces(str(snippet))
+                if not snippet:
+                    continue
                 audizioni.append(
                     f"""{tipo}
 {titolo}
@@ -148,6 +166,23 @@ Parole chiave trovate: {kws}
 PDF: {link}
 """
             )
+
+        if is_resoconto(item):
+            continue
+
+        categoria, text = format_main_item(item)
+
+        if categoria in sections:
+            sections[categoria].append(text)
+        else:
+            sections["Non attinenti"].append(text)
+
+    emendamenti = dedupe_preserve_order(emendamenti)
+    audizioni = dedupe_preserve_order(audizioni)
+    resoconti_alert = dedupe_preserve_order(resoconti_alert)
+
+    for key in sections:
+        sections[key] = dedupe_preserve_order(sections[key])
 
     return sections, emendamenti, audizioni, resoconti_alert
 
@@ -178,11 +213,9 @@ def build_email_body(sections, emendamenti, audizioni, resoconti_alert, date):
 
     for section, items in sections.items():
         body += f"=== {section.upper()} ===\n\n"
-
         if not items:
             body += "Nessun atto.\n\n"
             continue
-
         for item in items:
             body += item + "\n"
 
@@ -201,7 +234,6 @@ def send_email(subject, body):
     msg["From"] = sender
     msg["To"] = recipient
     msg["Subject"] = subject
-
     msg.attach(MIMEText(body, "plain"))
 
     with smtplib.SMTP(smtp_server, smtp_port) as server:
