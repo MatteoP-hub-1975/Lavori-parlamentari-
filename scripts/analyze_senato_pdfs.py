@@ -44,8 +44,8 @@ RESOCONTO_KEYWORDS = [
     "logistica",
     "trasporto merci",
     "trasporti",
-    "fuelEU".lower(),
     "ets",
+    "fueleu",
 ]
 
 
@@ -102,10 +102,10 @@ def download_pdf(url: str) -> bytes:
 
 def extract_pdf_text(pdf_bytes: bytes) -> str:
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    text = []
+    parts = []
     for page in doc:
-        text.append(page.get_text())
-    return "\n".join(text)
+        parts.append(page.get_text())
+    return "\n".join(parts)
 
 
 def extract_seduta_date(pdf_text: str) -> str:
@@ -113,7 +113,7 @@ def extract_seduta_date(pdf_text: str) -> str:
         r"\b(lunedì|martedì|mercoledì|giovedì|venerdì|sabato|domenica)\s+\d{1,2}\s+[A-Za-zàèéìòù]+\s+\d{4}\b",
         flags=re.IGNORECASE,
     )
-    match = pattern.search(pdf_text[:15000])
+    match = pattern.search(pdf_text[:20000])
     return compact_spaces(match.group(0)) if match else ""
 
 
@@ -125,12 +125,11 @@ def extract_emendamenti_snippets(pdf_text: str) -> list[str]:
         r"termine\s+degli\s+emendamenti",
     ]
 
-    text = pdf_text
     for pat in patterns:
-        for match in re.finditer(pat, text, flags=re.IGNORECASE):
+        for match in re.finditer(pat, pdf_text, flags=re.IGNORECASE):
             start = max(0, match.start() - 120)
-            end = min(len(text), match.end() + 220)
-            snippet = compact_spaces(text[start:end])
+            end = min(len(pdf_text), match.end() + 220)
+            snippet = compact_spaces(pdf_text[start:end])
             if snippet and snippet not in snippets:
                 snippets.append(snippet)
             if len(snippets) >= 5:
@@ -149,12 +148,11 @@ def extract_audizioni_snippets(pdf_text: str) -> list[str]:
         r"audizione\s+informale",
     ]
 
-    text = pdf_text
     for pat in patterns:
-        for match in re.finditer(pat, text, flags=re.IGNORECASE):
+        for match in re.finditer(pat, pdf_text, flags=re.IGNORECASE):
             start = max(0, match.start() - 80)
-            end = min(len(text), match.end() + 260)
-            snippet = compact_spaces(text[start:end])
+            end = min(len(pdf_text), match.end() + 260)
+            snippet = compact_spaces(pdf_text[start:end])
             if snippet and snippet not in snippets:
                 snippets.append(snippet)
             if len(snippets) >= 5:
@@ -185,13 +183,11 @@ Testo estratto dal PDF:
 {pdf_text}
 <<<END_TEXT>>>
 
-CRITERIO DI ANALISI (IMPORTANTE):
+Regole di classificazione:
 
-Molti documenti del Senato, in particolare ODG Assemblea e ODG Commissioni, sono documenti compositi con molti punti diversi.
-
-NON devi classificare il documento in base al tema prevalente.
-
-Devi verificare se anche UNA SOLA PARTE del documento contiene riferimenti a:
+1. I documenti compositi, in particolare ODG Assemblea e ODG Commissioni, NON vanno classificati in base al tema prevalente.
+2. Devi cercare i singoli punti del documento.
+3. Se anche UNA SOLA PARTE contiene riferimenti espliciti e specifici a:
 - trasporto marittimo
 - navigazione
 - porti
@@ -200,14 +196,25 @@ Devi verificare se anche UNA SOLA PARTE del documento contiene riferimenti a:
 - lavoro marittimo
 - demanio marittimo
 - economia del mare
+- autostrade del mare
+- sea modal shift
 
-Se anche una sola parte del documento contiene questi riferimenti, la classificazione deve essere:
+allora la classificazione deve essere:
 Interesse trasporto marittimo
 
-Se il documento contiene riferimenti a:
-- industria
-- politica industriale
+4. Non basta una parola generica o ambigua da sola.
+Esempi di parole che DA SOLE non bastano:
+- concessioni
+- infrastrutture
+- ambiente
+- energia
+- trasporti
+- mare
+Devono esserci riferimenti più specifici e contestualizzati.
+
+5. Se il documento contiene riferimenti a:
 - imprese
+- politica industriale
 - energia
 - lavoro
 - occupazione
@@ -216,15 +223,21 @@ Se il documento contiene riferimenti a:
 - salario minimo
 - retribuzioni
 - CCNL
-- politiche per le imprese
-- transizione industriale
 - crisi industriali
 - sostegno alle imprese
+- previdenza di categorie economiche
+- logistica
+- spedizionieri
+- corrieri
+- filiera del trasporto
 
-ma NON contiene riferimenti specifici al trasporto marittimo, allora la classificazione deve essere:
+ma NON contiene riferimenti specifici al trasporto marittimo, allora la classificazione può essere:
 Interesse industriale generale
+oppure
+Interesse industria del trasporto
+se il focus è chiaramente su trasporto, logistica, spedizionieri, corrieri o filiera trasporto.
 
-DDL e atti che riguardano prevalentemente:
+6. DDL e atti che riguardano prevalentemente:
 - minori
 - famiglia
 - scuola
@@ -233,21 +246,9 @@ DDL e atti che riguardano prevalentemente:
 - giustizia
 - temi sociali non economici
 
-devono restare "Non attinenti", salvo che nel testo non emergano in modo chiaro profili di industria, imprese, lavoro, energia o trasporti.
+devono restare "Non attinenti", salvo che il testo contenga in modo chiaro e centrale profili di imprese, energia, lavoro, industria o trasporti.
 
-Solo se nel documento NON compare nessun riferimento a:
-- marittimo
-- trasporti
-- industria
-- lavoro
-- imprese
-
-allora la classificazione può essere:
-Non attinenti
-
-Per ODG e altri documenti compositi:
-- cerca i singoli punti
-- cita nella motivazione il punto o il contenuto che giustifica la classificazione
+7. Non classificare come "Interesse industriale generale" un atto solo perché coinvolge genericamente fornitori, piattaforme, sanzioni o soggetti economici. Serve un contenuto realmente attinente a impresa, lavoro, energia, politica industriale o trasporto.
 
 Categorie possibili (solo queste):
 - Non attinenti
@@ -255,7 +256,7 @@ Categorie possibili (solo queste):
 - Interesse industria del trasporto
 - Interesse trasporto marittimo
 
-Restituisci SOLO JSON valido nel seguente formato:
+Restituisci SOLO JSON valido nel formato:
 
 {{
   "categoria_finale": "...",
@@ -275,7 +276,7 @@ def extract_json_from_response(text: str):
     except json.JSONDecodeError:
         pass
 
-    match = re.search(r"(\{{.*\}})", text, flags=re.DOTALL)
+    match = re.search(r"(\{.*\})", text, flags=re.DOTALL)
     if match:
         return json.loads(match.group(1))
 
@@ -340,20 +341,6 @@ def main():
                 )
                 item["estratto_rilevante"] = parsed.get("estratto_rilevante", "")
 
-                ai_em = parsed.get("termine_emendamenti", [])
-                if isinstance(ai_em, list):
-                    for x in ai_em:
-                        x = compact_spaces(str(x))
-                        if x and x not in item["termine_emendamenti"]:
-                            item["termine_emendamenti"].append(x)
-
-                ai_aud = parsed.get("audizioni", [])
-                if isinstance(ai_aud, list):
-                    for x in ai_aud:
-                        x = compact_spaces(str(x))
-                        if x and x not in item["audizioni"]:
-                            item["audizioni"].append(x)
-
                 results.append(item)
                 continue
 
@@ -361,7 +348,7 @@ def main():
                 found = scan_resoconto_keywords(pdf_text)
                 item["resoconto_keywords_found"] = found
                 item["resoconto_alert"] = bool(found)
-                item["categoria_finale"] = categoria
+                item["categoria_finale"] = "Non attinenti"
                 item["motivazione_finale"] = item.get("motivazione_preliminare", "")
                 item["estratto_rilevante"] = ""
                 results.append(item)
