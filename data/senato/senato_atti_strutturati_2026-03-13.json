@@ -11,7 +11,7 @@
     "pdf_index": 3,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447023.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La commissione tratta energia, lavori pubblici, comunicazioni e innovazione tecnologica, ambiti con possibile rilievo industriale generale; per conferma del contenuto specifico occorre leggere il PDF.",
+    "motivazione_preliminare": "L'ordine del giorno della Commissione tratta materie come energia, lavori pubblici, comunicazioni e innovazione tecnologica, potenzialmente rilevanti per il sistema industriale in senso ampio.",
     "richiede_lettura_pdf": true
   },
   {
@@ -25,9 +25,9 @@
     "seduta": "334",
     "pdf_index": 4,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447022.pdf",
-    "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Le politiche UE possono coinvolgere normativa industriale, mercato interno, energia e trasporti; senza il dettaglio dell'ordine del giorno è necessaria la lettura del PDF.",
-    "richiede_lettura_pdf": true
+    "categoria_preliminare": "Non attinenti",
+    "motivazione_preliminare": "Dal solo titolo emerge un ordine del giorno di carattere generale sulle politiche UE, senza specifica evidenza di contenuti industriali o di trasporto.",
+    "richiede_lettura_pdf": false
   },
   {
     "ramo": "Senato",
@@ -35,14 +35,14 @@
     "sezione": "Resoconti",
     "tipo_atto": "Resoconto stenografico Assemblea",
     "numero": "399",
-    "titolo": "Resoconto stenografico Assemblea del 12/03/2026",
+    "titolo": "Resoconto stenografico Assemblea",
     "commissione": "",
     "seduta": "399",
     "pdf_index": 5,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447020.pdf",
-    "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Il resoconto dell'Assemblea può contenere discussioni su materie industriali o infrastrutturali, ma il contenuto specifico non è desumibile dal solo titolo; richiede lettura del PDF.",
-    "richiede_lettura_pdf": true
+    "categoria_preliminare": "Non attinenti",
+    "motivazione_preliminare": "Resoconto generale dei lavori dell'Assemblea; dal titolo non emerge una specifica attinenza industriale o ai trasporti.",
+    "richiede_lettura_pdf": false
   },
   {
     "ramo": "Senato",
@@ -55,9 +55,9 @@
     "seduta": "",
     "pdf_index": 6,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447011.pdf",
-    "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Il resoconto aggrega attività di diverse commissioni e potrebbe includere temi industriali, energetici o dei trasporti; occorre leggere il PDF per qualificare con precisione i contenuti.",
-    "richiede_lettura_pdf": true
+    "categoria_preliminare": "Non attinenti",
+    "motivazione_preliminare": "Resoconto sommario complessivo di giunte e commissioni; senza indicazione specifica di contenuti riconducibili ai settori richiesti.",
+    "richiede_lettura_pdf": false
   },
   {
     "ramo": "Senato",
@@ -70,9 +70,9 @@
     "seduta": "",
     "pdf_index": 7,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447010.pdf",
-    "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Supplemento ai resoconti delle Giunte e Commissioni, potenzialmente comprensivo di materie industriali o infrastrutturali; serve lettura del PDF.",
-    "richiede_lettura_pdf": true
+    "categoria_preliminare": "Non attinenti",
+    "motivazione_preliminare": "Supplemento di resoconto sommario generale; dal titolo non risultano elementi sufficienti per un collegamento diretto con industria o trasporti.",
+    "richiede_lettura_pdf": false
   },
   {
     "ramo": "Senato",
@@ -86,7 +86,7 @@
     "pdf_index": 8,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447025.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Provvedimento in materia sanitaria e LEA, privo di chiara attinenza con industria, trasporto o trasporto marittimo.",
+    "motivazione_preliminare": "Disegno di legge in materia sanitaria e assistenziale, privo di attinenza ai comparti industriali o dei trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -101,7 +101,7 @@
     "pdf_index": 9,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447024.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La disciplina della sfera digitale può incidere su servizi digitali, piattaforme e settore tecnologico, quindi presenta possibile rilievo industriale generale; per contenuti puntuali è utile il PDF.",
+    "motivazione_preliminare": "Il tema della sfera digitale può incidere su piattaforme, servizi digitali e regolazione tecnologica, con possibile rilievo per l'industria digitale in senso ampio.",
     "richiede_lettura_pdf": true
   },
   {
@@ -116,7 +116,7 @@
     "pdf_index": 10,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447019.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Il provvedimento riguarda il ricambio generazionale nelle imprese familiari, materia direttamente connessa al tessuto produttivo e imprenditoriale.",
+    "motivazione_preliminare": "Provvedimento riguardante la continuità e il ricambio nelle imprese familiari, con evidente rilievo economico-produttivo generale.",
     "richiede_lettura_pdf": true
   },
   {
@@ -131,7 +131,7 @@
     "pdf_index": 11,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447015.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo emerge una sentenza costituzionale senza indicazione di materia industriale o dei trasporti; non attinente in via preliminare.",
+    "motivazione_preliminare": "Sentenza della Corte costituzionale senza indicazione, nel titolo, di materia industriale o di trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -146,7 +146,7 @@
     "pdf_index": 12,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447018.pdf",
     "categoria_preliminare": "Interesse industria del trasporto",
-    "motivazione_preliminare": "Riguarda spedizionieri e corrieri, cioè attività strettamente collegate alla logistica e al trasporto merci.",
+    "motivazione_preliminare": "Il documento riguarda il fondo degli agenti spedizionieri e corrieri, settore direttamente connesso alla logistica e al trasporto merci.",
     "richiede_lettura_pdf": true
   },
   {
@@ -161,7 +161,7 @@
     "pdf_index": 13,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447016.pdf",
     "categoria_preliminare": "Interesse industria del trasporto",
-    "motivazione_preliminare": "Il documento riguarda una società operante in logistica, infrastrutture e trasporti, con chiara attinenza al settore del trasporto.",
+    "motivazione_preliminare": "Documento su società operante in logistica, infrastrutture e trasporti; attinenza diretta al settore del trasporto.",
     "richiede_lettura_pdf": true
   },
   {
@@ -176,7 +176,7 @@
     "pdf_index": 14,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447017.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento relativo a una fondazione culturale e festival operistico, senza attinenza evidente a industria del trasporto o trasporto marittimo.",
+    "motivazione_preliminare": "Relazione su fondazione culturale e festival lirico, senza nesso con industria o trasporti.",
     "richiede_lettura_pdf": false
   }
 ]
