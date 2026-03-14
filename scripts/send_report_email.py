@@ -17,6 +17,7 @@ EXCLUDED_ORGANS = [
     "Commissione straordinaria per il contrasto dei fenomeni di intolleranza, razzismo, antisemitismo e istigazione all'odio e alla violenza",
     "Commissione straordinaria per la tutela e la promozione dei diritti umani",
     "Commissione di inchiesta su scomparsa Orlandi e Gregori",
+    "Commissione di inchiesta su emergenza sanitaria epidemiologica da SARS-CoV-2",
     "Commissione contenziosa",
     "Consiglio di garanzia",
     "Comitato per la legislazione",
@@ -76,6 +77,7 @@ def format_main_item(item):
     motivazione = compact_spaces(
         item.get("motivazione_finale") or item.get("motivazione_preliminare", "")
     )
+    normative_hits = item.get("normative_hits", []) or []
 
     header = tipo
     if numero:
@@ -85,10 +87,14 @@ def format_main_item(item):
     if data_seduta:
         seduta_line += f" | Data seduta: {data_seduta}"
 
+    normative_line = ""
+    if normative_hits:
+        normative_line = f"Normative rilevanti trovate: {', '.join(normative_hits)}\n"
+
     text = f"""{header}
 {titolo}
 {seduta_line}
-Motivazione: {motivazione}
+{normative_line}Motivazione: {motivazione}
 PDF: {link}
 """
 
@@ -117,6 +123,7 @@ def build_sections(items):
     emendamenti = []
     audizioni = []
     resoconti_alert = []
+    normative_alert = []
 
     for item in items:
         if is_excluded_organ(item):
@@ -128,25 +135,23 @@ def build_sections(items):
         seduta = compact_spaces(item.get("seduta", ""))
         data_seduta = compact_spaces(item.get("data_seduta", ""))
         link = compact_spaces(item.get("link_pdf", ""))
+        normative_hits = item.get("normative_hits", []) or []
 
-        if item.get("termine_emendamenti"):
-            for snippet in item.get("termine_emendamenti", []) or []:
-                snippet = compact_spaces(str(snippet))
-                if snippet:
-                    emendamenti.append(
-                        f"""{tipo}
+        for snippet in item.get("termine_emendamenti", []) or []:
+            snippet = compact_spaces(str(snippet))
+            if snippet:
+                emendamenti.append(
+                    f"""{tipo}
 {titolo}
 Commissione: {commissione} | Seduta: {seduta}{f" | Data seduta: {data_seduta}" if data_seduta else ""}
 Segnalazione: {snippet}
 PDF: {link}
 """
-                    )
+                )
 
-        if item.get("audizioni"):
-            for snippet in item.get("audizioni", []) or []:
-                snippet = compact_spaces(str(snippet))
-                if not snippet:
-                    continue
+        for snippet in item.get("audizioni", []) or []:
+            snippet = compact_spaces(str(snippet))
+            if snippet:
                 audizioni.append(
                     f"""{tipo}
 {titolo}
@@ -167,6 +172,16 @@ PDF: {link}
 """
             )
 
+        if normative_hits:
+            normative_alert.append(
+                f"""{tipo}
+{titolo}
+Commissione: {commissione} | Seduta: {seduta}{f" | Data seduta: {data_seduta}" if data_seduta else ""}
+Normative rilevanti trovate: {", ".join(normative_hits)}
+PDF: {link}
+"""
+            )
+
         if is_resoconto(item):
             continue
 
@@ -180,14 +195,15 @@ PDF: {link}
     emendamenti = dedupe_preserve_order(emendamenti)
     audizioni = dedupe_preserve_order(audizioni)
     resoconti_alert = dedupe_preserve_order(resoconti_alert)
+    normative_alert = dedupe_preserve_order(normative_alert)
 
     for key in sections:
         sections[key] = dedupe_preserve_order(sections[key])
 
-    return sections, emendamenti, audizioni, resoconti_alert
+    return sections, emendamenti, audizioni, resoconti_alert, normative_alert
 
 
-def build_email_body(sections, emendamenti, audizioni, resoconti_alert, date):
+def build_email_body(sections, emendamenti, audizioni, resoconti_alert, normative_alert, date):
     body = f"Monitor Parlamento – Senato – {date}\n\n"
 
     body += "=== SCADENZA EMENDAMENTI ===\n\n"
@@ -200,6 +216,13 @@ def build_email_body(sections, emendamenti, audizioni, resoconti_alert, date):
     body += "=== AUDIZIONI ===\n\n"
     if audizioni:
         for item in audizioni:
+            body += item + "\n"
+    else:
+        body += "Nessuna segnalazione.\n\n"
+
+    body += "=== NORMATIVE RILEVANTI TROVATE ===\n\n"
+    if normative_alert:
+        for item in normative_alert:
             body += item + "\n"
     else:
         body += "Nessuna segnalazione.\n\n"
@@ -246,7 +269,7 @@ def main():
     target_date = parse_target_date()
     items = load_data(target_date)
 
-    sections, emendamenti, audizioni, resoconti_alert = build_sections(items)
+    sections, emendamenti, audizioni, resoconti_alert, normative_alert = build_sections(items)
 
     subject = f"Monitor Parlamento – Senato – {target_date}"
     body = build_email_body(
@@ -254,6 +277,7 @@ def main():
         emendamenti,
         audizioni,
         resoconti_alert,
+        normative_alert,
         target_date,
     )
 
