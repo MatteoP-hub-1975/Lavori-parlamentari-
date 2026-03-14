@@ -5,38 +5,13 @@
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
     "numero": "",
-    "titolo": "Commissione di inchiesta su emergenza sanitaria epidemiologica da SARS-CoV-2",
-    "commissione": "Commissione di inchiesta su emergenza sanitaria epidemiologica da SARS-CoV-2",
-    "seduta": "105",
-    "pdf_index": 2,
-    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447026.pdf",
-    "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Atto relativo a commissione d'inchiesta sull'emergenza sanitaria epidemiologica; dal titolo non emergono profili diretti di industria, trasporto o marittimo.",
-    "richiede_lettura_pdf": false,
-    "data_seduta": "martedì 17 marzo 2026",
-    "termine_emendamenti": [],
-    "audizioni": [
-      "uta: martedì 17 marzo 2026, ore 11,30 ORDINE DEL GIORNO PROCEDURE INFORMATIVE Audizione di rappresentanti di CONDAV ODV (Coordinamento nazionale danneggiati da vaccino - Associazione di Volontariato) SENATO DELLA REPUBBLICA CAMERA DEI DEPUTATI"
-    ],
-    "resoconto_keywords_found": [],
-    "resoconto_alert": false,
-    "categoria_finale": "Non attinenti",
-    "motivazione_finale": "L'ordine del giorno riguarda una seduta della Commissione parlamentare di inchiesta sulla gestione dell'emergenza sanitaria da SARS-CoV-2 e prevede l'audizione di rappresentanti di CONDAV ODV, associazione di volontariato dei danneggiati da vaccino. Nel testo non compaiono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, lavoro marittimo, demanio marittimo, economia del mare, né a temi industriali o della filiera del trasporto. Si tratta quindi di un atto di ambito sanitario/investigativo, da classificare come non attinente.",
-    "estratto_rilevante": "PROCEDURE INFORMATIVE Audizione di rappresentanti di CONDAV ODV (Coordinamento nazionale danneggiati da vaccino - Associazione di Volontariato)"
-  },
-  {
-    "ramo": "Senato",
-    "data_pubblicazione": "2026-03-13",
-    "sezione": "ODG e Calendario",
-    "tipo_atto": "O.D.G. Giunte e Commissioni",
-    "numero": "",
     "titolo": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
     "commissione": "8ª Ambiente, transizione ecologica, energia, lavori pubblici, comunicazioni, innovazione tecnologica",
     "seduta": "256",
     "pdf_index": 3,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447023.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La competenza su energia, lavori pubblici, comunicazioni e innovazione tecnologica può includere temi di interesse industriale generale; per un ODG serve verifica del contenuto specifico.",
+    "motivazione_preliminare": "La commissione tratta energia, lavori pubblici, comunicazioni e innovazione tecnologica, ambiti con possibile rilievo industriale generale; per conferma del contenuto specifico occorre leggere il PDF.",
     "richiede_lettura_pdf": true,
     "data_seduta": "martedì 17 marzo 2026",
     "termine_emendamenti": [],
@@ -44,7 +19,7 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il documento è un ordine del giorno della 8ª Commissione che elenca l'esame di un disegno di legge di conversione del decreto-legge n. 32/2026 su 'commissari straordinari e concessioni'. Nel testo estratto non compaiono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, demanio marittimo, lavoro marittimo o altri elementi richiesti per la classificazione come 'Interesse trasporto marittimo'. Inoltre, il contenuto disponibile non consente di attribuire con sufficiente certezza neppure un interesse industriale generale o dell'industria del trasporto, perché i termini presenti restano generici.",
+    "motivazione_finale": "Il documento è un ordine del giorno della Commissione che segnala l'esame del disegno di legge di conversione del decreto-legge n. 32 del 2026 su 'commissari straordinari e concessioni'. Nel testo estratto non compaiono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, demanio marittimo, lavoro marittimo o altri elementi richiesti per la classificazione come interesse del trasporto marittimo. Il termine 'concessioni' da solo, secondo le regole fornite, non è sufficiente. Inoltre, l'estratto non contiene elementi abbastanza specifici per classificarlo come interesse industriale generale o industria del trasporto.",
     "estratto_rilevante": "Esame del disegno di legge: Conversione in legge del decreto-legge 11 marzo 2026, n. 32, recante disposizioni urgenti in materia di commissari straordinari e concessioni"
   },
   {
@@ -59,7 +34,7 @@
     "pdf_index": 4,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447022.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Le politiche UE possono riguardare normativa industriale, mercato interno, energia, concorrenza o trasporti; il solo titolo non consente classificazione più precisa.",
+    "motivazione_preliminare": "Le politiche UE possono coinvolgere normativa industriale, mercato interno, energia e trasporti; senza il dettaglio dell'ordine del giorno è necessaria la lettura del PDF.",
     "richiede_lettura_pdf": true,
     "data_seduta": "martedì 17 marzo 2026",
     "termine_emendamenti": [],
@@ -67,8 +42,8 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Interesse industria del trasporto",
-    "motivazione_finale": "L'ordine del giorno è un documento composito e va valutato per singoli punti. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, demanio marittimo, lavoro marittimo o economia del mare, quindi non si applica la categoria marittima. Tuttavia sono presenti punti chiaramente attinenti al settore dei trasporti e della logistica in senso ampio, in particolare la proposta relativa alle infrastrutture energetiche transeuropee e soprattutto quella che istituisce un quadro di misure per agevolare il trasporto di materiali, merci e personale militari in tutta l'Unione. Per questo la classificazione corretta è quella relativa all'industria del trasporto.",
-    "estratto_rilevante": "7. Proposta di regolamento del Parlamento europeo e del Consiglio che istituisce un quadro di misure volte ad agevolare il trasporto di materiali, merci e personale militari in tutta l'Unione – Relatore alla Commissione TERZI DI SANT'AGATA\n\nProposta di regolamento del Parlamento europeo e del Consiglio sugli orientamenti per le infrastrutture energetiche transeuropee, che modifica i regolamenti (UE) 2019/942, (UE) 2019/943 e (UE) 2024/1789 e abroga il regolamento (UE) 2022/869"
+    "motivazione_finale": "Il documento è un ordine del giorno composito della 4ª Commissione e va valutato per singoli punti. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare, quindi non si applica la categoria 'Interesse trasporto marittimo'. Tuttavia sono presenti punti chiaramente attinenti al settore dei trasporti, in particolare: la proposta di regolamento sulle attività spaziali nell'Unione, quella sul trasporto di materiali, merci e personale militari in tutta l'Unione, e la proposta di regolamento sugli orientamenti per le infrastrutture energetiche transeuropee, che investe reti e infrastrutture connesse alla mobilità e alla logistica. Per questo il documento rientra in 'Interesse industria del trasporto'.",
+    "estratto_rilevante": "1. Proposta di regolamento del Parlamento europeo e del Consiglio sulla sicurezza, la resilienza e la sostenibilità delle attività spaziali nell'Unione ... 7. Proposta di regolamento del Parlamento europeo e del Consiglio che istituisce un quadro di misure volte ad agevolare il trasporto di materiali, merci e personale militari in tutta l'Unione ... Proposta di regolamento del Parlamento europeo e del Consiglio sugli orientamenti per le infrastrutture energetiche transeuropee..."
   },
   {
     "ramo": "Senato",
@@ -76,13 +51,13 @@
     "sezione": "Resoconti",
     "tipo_atto": "Resoconto stenografico Assemblea",
     "numero": "399",
-    "titolo": "Resoconto stenografico Assemblea del 12/03/2026, seduta n. 399",
+    "titolo": "Resoconto stenografico Assemblea del 12/03/2026",
     "commissione": "",
     "seduta": "399",
     "pdf_index": 5,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447020.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Il resoconto dell'Assemblea può contenere discussioni su molte materie, incluse questioni industriali o dei trasporti; è necessario leggere il PDF per verificarne l'attinenza specifica.",
+    "motivazione_preliminare": "Il resoconto dell'Assemblea può contenere discussioni su materie industriali o infrastrutturali, ma il contenuto specifico non è desumibile dal solo titolo; richiede lettura del PDF.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -97,7 +72,7 @@
     ],
     "resoconto_alert": true,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il resoconto dell'Assemblea può contenere discussioni su molte materie, incluse questioni industriali o dei trasporti; è necessario leggere il PDF per verificarne l'attinenza specifica.",
+    "motivazione_finale": "Il resoconto dell'Assemblea può contenere discussioni su materie industriali o infrastrutturali, ma il contenuto specifico non è desumibile dal solo titolo; richiede lettura del PDF.",
     "estratto_rilevante": ""
   },
   {
@@ -106,13 +81,13 @@
     "sezione": "Resoconti",
     "tipo_atto": "Resoconto sommario Giunte e Commissioni",
     "numero": "580",
-    "titolo": "Resoconto sommario Giunte e Commissioni n. 580 del 12/03/2026",
+    "titolo": "Resoconto sommario Giunte e Commissioni n. 580",
     "commissione": "",
     "seduta": "",
     "pdf_index": 6,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447011.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Il resoconto aggrega attività di commissioni e giunte, potenzialmente rilevanti per materie industriali o dei trasporti; serve lettura del PDF.",
+    "motivazione_preliminare": "Il resoconto aggrega attività di diverse commissioni e potrebbe includere temi industriali, energetici o dei trasporti; occorre leggere il PDF per qualificare con precisione i contenuti.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -120,7 +95,7 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il resoconto aggrega attività di commissioni e giunte, potenzialmente rilevanti per materie industriali o dei trasporti; serve lettura del PDF.",
+    "motivazione_finale": "Il resoconto aggrega attività di diverse commissioni e potrebbe includere temi industriali, energetici o dei trasporti; occorre leggere il PDF per qualificare con precisione i contenuti.",
     "estratto_rilevante": ""
   },
   {
@@ -129,13 +104,13 @@
     "sezione": "Resoconti",
     "tipo_atto": "Resoconto sommario Giunte e Commissioni",
     "numero": "579",
-    "titolo": "Resoconto sommario Giunte e Commissioni n. 579 del 11/03/2026 - Supplemento",
+    "titolo": "Resoconto sommario Giunte e Commissioni n. 579 - Supplemento",
     "commissione": "",
     "seduta": "",
     "pdf_index": 7,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447010.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Supplemento ai resoconti di giunte e commissioni con possibile contenuto su materie industriali o trasportistiche; necessaria lettura del PDF.",
+    "motivazione_preliminare": "Supplemento ai resoconti delle Giunte e Commissioni, potenzialmente comprensivo di materie industriali o infrastrutturali; serve lettura del PDF.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -152,7 +127,7 @@
     ],
     "resoconto_alert": true,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Supplemento ai resoconti di giunte e commissioni con possibile contenuto su materie industriali o trasportistiche; necessaria lettura del PDF.",
+    "motivazione_finale": "Supplemento ai resoconti delle Giunte e Commissioni, potenzialmente comprensivo di materie industriali o infrastrutturali; serve lettura del PDF.",
     "estratto_rilevante": ""
   },
   {
@@ -167,7 +142,7 @@
     "pdf_index": 8,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447025.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Disegno di legge in materia sanitaria e livelli essenziali di assistenza, senza profili diretti di industria, trasporto o marittimo dal titolo.",
+    "motivazione_preliminare": "Provvedimento in materia sanitaria e LEA, privo di chiara attinenza con industria, trasporto o trasporto marittimo.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -175,7 +150,7 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Disegno di legge in materia sanitaria e livelli essenziali di assistenza, senza profili diretti di industria, trasporto o marittimo dal titolo.",
+    "motivazione_finale": "Provvedimento in materia sanitaria e LEA, privo di chiara attinenza con industria, trasporto o trasporto marittimo.",
     "estratto_rilevante": ""
   },
   {
@@ -190,7 +165,7 @@
     "pdf_index": 9,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447024.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La regolazione della sfera digitale può incidere su servizi digitali, piattaforme e comparti tecnologici, con possibile rilievo industriale generale.",
+    "motivazione_preliminare": "La disciplina della sfera digitale può incidere su servizi digitali, piattaforme e settore tecnologico, quindi presenta possibile rilievo industriale generale; per contenuti puntuali è utile il PDF.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -198,8 +173,8 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il disegno di legge riguarda prevalentemente la tutela dei minori nella sfera digitale: verifica dell’età per l’accesso ai servizi della società dell’informazione, validità dei contratti con minori, consenso privacy, disciplina dei proventi derivanti dalla diffusione di immagini di minori e accesso al numero di emergenza 114. Pur coinvolgendo fornitori di servizi digitali e piattaforme online, il contenuto non presenta un focus su imprese, politica industriale, lavoro, energia, logistica o trasporti. Non vi sono inoltre riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo o lavoro marittimo.",
-    "estratto_rilevante": "Disposizioni in materia di tutela dei minori nella sfera digitale [...] Art. 2. (Disposizioni per la verifica dell’età dell’utente) [...] Art. 5. (Disciplina dei proventi derivanti dalla diffusione di immagini di minori) [...] Art. 6. (Accesso al numero di emergenza per l’infanzia «114»)"
+    "motivazione_finale": "Il disegno di legge riguarda la tutela dei minori nella sfera digitale: verifica dell’età per l’accesso ai servizi della società dell’informazione, validità dei contratti con minori, consenso privacy, disciplina dei proventi derivanti dalla diffusione di immagini di minori e accesso al numero di emergenza 114. Pur coinvolgendo piattaforme online e fornitori di servizi digitali, il contenuto è prevalentemente sociale, familiare e di protezione dei minori, non attinente a impresa, politica industriale, lavoro, logistica o trasporti. Non vi sono riferimenti specifici a trasporto marittimo, navigazione, porti, codice della navigazione, lavoro marittimo o economia del mare.",
+    "estratto_rilevante": "Disposizioni in materia di tutela dei minori nella sfera digitale [...] È necessario che anche il nostro Paese introduca nell’ordinamento misure volte a tutelare i minori nello spazio digitale [...] Art. 2. (Disposizioni per la verifica dell’età dell’utente) [...] Art. 5. (Disciplina dei proventi derivanti dalla diffusione di immagini di minori) [...] Art. 6. (Accesso al numero di emergenza per l’infanzia «114»)."
   },
   {
     "ramo": "Senato",
@@ -213,7 +188,7 @@
     "pdf_index": 10,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447019.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Misure sul passaggio generazionale nelle imprese familiari riguardano direttamente il tessuto produttivo e imprenditoriale.",
+    "motivazione_preliminare": "Il provvedimento riguarda il ricambio generazionale nelle imprese familiari, materia direttamente connessa al tessuto produttivo e imprenditoriale.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -221,8 +196,8 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Interesse industriale generale",
-    "motivazione_finale": "Il disegno di legge riguarda in modo diretto le imprese familiari e introduce misure di politica economica e di sostegno alle imprese per favorire il passaggio generazionale, tramite detrazioni fiscali, voucher formativi, premialità nei bandi pubblici e un osservatorio dedicato. Non contiene però riferimenti specifici al trasporto marittimo, alla navigazione, ai porti o ad altri profili della maritime economy, né un focus settoriale sulla logistica o sulla filiera del trasporto tale da ricondurlo all'industria del trasporto.",
-    "estratto_rilevante": "la presente legge promuove la continuità della proprietà e della governance nelle imprese familiari, favorendo il passaggio generazionale del patrimonio d’impresa, attraverso strumenti di formazione, consulenza e mentoring integrato, con approccio multidisciplinare. ... alle imprese familiari che si avvalgono di servizi professionali continuativi di accompagnamento finalizzato anche al passaggio generazionale, è riconosciuta una detrazione dall’imposta lorda pari al 30 per cento delle spese sostenute ... Le Camere di commercio ... promuovono bandi per l’assegnazione di voucher formativi a favore delle imprese familiari"
+    "motivazione_finale": "Il disegno di legge riguarda in modo diretto le imprese familiari, la continuità della proprietà e della governance, il passaggio generazionale del patrimonio d’impresa e misure di sostegno economico e organizzativo come detrazioni fiscali, voucher formativi, premialità nei bandi pubblici e un osservatorio dedicato. Si tratta quindi di un contenuto attinente a impresa e politica di sostegno al sistema produttivo. Non emergono invece riferimenti specifici e contestualizzati a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare.",
+    "estratto_rilevante": "Art. 1. (Finalità) 1. Al fine di valorizzare le competenze familiari e imprenditoriali, la presente legge promuove la continuità della proprietà e della governance nelle imprese familiari, favorendo il passaggio generazionale del patrimonio d’impresa, attraverso strumenti di formazione, consulenza e mentoring integrato, con approccio multidisciplinare. Art. 2. ... alle imprese familiari che si avvalgono di servizi professionali continuativi di accompagnamento finalizzato anche al passaggio generazionale, è riconosciuta una detrazione dall’imposta lorda pari al 30 per cento delle spese sostenute... Art. 3. ... voucher formativi a favore delle imprese familiari che presentano un piano triennale di accompagnamento al passaggio generazionale."
   },
   {
     "ramo": "Senato",
@@ -236,7 +211,7 @@
     "pdf_index": 11,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447015.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal titolo si tratta di trasmissione di sentenza della Corte costituzionale, senza indicazione di materia industriale o dei trasporti.",
+    "motivazione_preliminare": "Dal solo titolo emerge una sentenza costituzionale senza indicazione di materia industriale o dei trasporti; non attinente in via preliminare.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -244,7 +219,7 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Dal titolo si tratta di trasmissione di sentenza della Corte costituzionale, senza indicazione di materia industriale o dei trasporti.",
+    "motivazione_finale": "Dal solo titolo emerge una sentenza costituzionale senza indicazione di materia industriale o dei trasporti; non attinente in via preliminare.",
     "estratto_rilevante": ""
   },
   {
@@ -259,7 +234,7 @@
     "pdf_index": 12,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447018.pdf",
     "categoria_preliminare": "Interesse industria del trasporto",
-    "motivazione_preliminare": "Il riferimento ad agenti spedizionieri e corrieri attiene direttamente alla logistica e al trasporto merci.",
+    "motivazione_preliminare": "Riguarda spedizionieri e corrieri, cioè attività strettamente collegate alla logistica e al trasporto merci.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -267,8 +242,8 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Interesse industria del trasporto",
-    "motivazione_finale": "Il documento riguarda la relazione finanziaria del Fondo Agenti Spedizionieri e Corrieri (FASC), quindi una forma di previdenza riferita a una categoria economica direttamente collegata alla filiera del trasporto, della logistica, degli spedizionieri e dei corrieri. Nel testo non emergono però riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o autorità portuali. Per questo non rientra nell'\"Interesse trasporto marittimo\", ma è chiaramente attinente al comparto del trasporto in senso settoriale.",
-    "estratto_rilevante": "FONDO AGENTI SPEDIZIONIERI E CORRIERI (FASC) (Esercizio 2024) ... FONDAZIONE FONDO AGENTI SPEDIZIONIERI CORRIERI ... I crediti verso le aziende tenute al versamento della contribuzione ... Il valore dei conti di previdenza iscritti in bilancio ammonta complessivamente a € 1.022.258.319 ... I contributi versati nel 2024 e contabilizzati nel corrente bilancio secondo il principio della cassa ammontano a complessivi € 85.863.211."
+    "motivazione_finale": "Il documento riguarda la relazione della Corte dei conti sulla gestione finanziaria del Fondo Agenti Spedizionieri e Corrieri (FASC), cioè una forma di previdenza di categoria riferita a operatori della filiera del trasporto e della logistica. Il testo contiene riferimenti espliciti e ripetuti a spedizionieri, corrieri, contribuzione previdenziale delle aziende del settore e andamento dei conti degli iscritti. Non emergono però riferimenti specifici e contestualizzati a trasporto marittimo, porti, navigazione, demanio marittimo o lavoro marittimo. Per questo la classificazione corretta è quella relativa all'industria del trasporto, non al trasporto marittimo.",
+    "estratto_rilevante": "FONDO AGENTI SPEDIZIONIERI E CORRIERI (FASC) ... Il valore dei conti di previdenza iscritti in bilancio ammonta complessivamente a € 1.022.258.319 ... I contributi versati nel 2024 e contabilizzati nel corrente bilancio secondo il principio della cassa ammontano a complessivi € 85.863.211."
   },
   {
     "ramo": "Senato",
@@ -282,7 +257,7 @@
     "pdf_index": 13,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447016.pdf",
     "categoria_preliminare": "Interesse industria del trasporto",
-    "motivazione_preliminare": "Il soggetto riguarda logistica, infrastrutture e trasporti; atto chiaramente afferente al settore trasportistico.",
+    "motivazione_preliminare": "Il documento riguarda una società operante in logistica, infrastrutture e trasporti, con chiara attinenza al settore del trasporto.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -290,8 +265,8 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Interesse trasporto marittimo",
-    "motivazione_finale": "Il documento contiene riferimenti espliciti e specifici a profili del trasporto marittimo e portuale: richiama le \"Autostrade del mare\", il Piano strategico nazionale della portualità e della logistica, la Conferenza nazionale di coordinamento delle Autorità di sistema portuale, nonché la misura \"Sea Modal Shift\". In base alle regole, anche una sola parte con tali riferimenti determina la classificazione nel perimetro del trasporto marittimo.",
-    "estratto_rilevante": "La Società è stata costituita \"con lo scopo di promuovere l’attuazione del sistema di trasporto denominato Autostrade del mare\"; inoltre \"sostiene anche gli interventi al riguardo previsti nel Piano strategico nazionale della portualità e della logistica (Pnspl)\". Nell’indice compaiono inoltre: \"Il piano strategico nazionale della portualità e della logistica e conferenza nazionale di coordinamento delle Autorità di sistema portuale\" e \"SMS Sea Modal Shift\"."
+    "motivazione_finale": "Il documento contiene riferimenti espliciti e specifici a profili del trasporto marittimo e portuale. In particolare richiama le \"Autostrade del mare\", il \"Piano strategico nazionale della portualità e della logistica\", la \"Conferenza nazionale di coordinamento delle Autorità di sistema portuale\", nonché incentivi e misure come \"Sea Modal Shift\" e attività connesse al trasporto di merci per vie navigabili. In base alle regole fornite, è sufficiente anche una sola parte con tali riferimenti per classificare l'intero atto come di interesse per il trasporto marittimo.",
+    "estratto_rilevante": "È stata costituita nel 2004 ... con lo scopo di promuovere l’attuazione del sistema di trasporto denominato \"Autostrade del mare\" ...; Attualmente la Società ... sostiene anche gli interventi previsti nel Piano strategico nazionale della portualità e della logistica (Pnspl) ...; nell’indice: \"conferenza nazionale di coordinamento delle Autorità di sistema portuale\"; \"SMS Sea Modal Shift\"; \"Gli aiuti per la valorizzazione del trasporto di merci per vie navigabili interne e vie fluvio-...\""
   },
   {
     "ramo": "Senato",
@@ -305,7 +280,7 @@
     "pdf_index": 14,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447017.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione su fondazione culturale operante nel settore musicale, priva di evidenti profili industriali o trasportistici.",
+    "motivazione_preliminare": "Documento relativo a una fondazione culturale e festival operistico, senza attinenza evidente a industria del trasporto o trasporto marittimo.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -313,7 +288,7 @@
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Relazione su fondazione culturale operante nel settore musicale, priva di evidenti profili industriali o trasportistici.",
+    "motivazione_finale": "Documento relativo a una fondazione culturale e festival operistico, senza attinenza evidente a industria del trasporto o trasporto marittimo.",
     "estratto_rilevante": ""
   }
 ]
