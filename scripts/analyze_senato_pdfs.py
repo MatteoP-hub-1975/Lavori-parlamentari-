@@ -12,41 +12,18 @@ from openai import OpenAI
 OUTPUT_DIR = Path("data/senato")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-EXCLUDED_ORGANS = [
-    "Giunta Regolamento",
-    "Giunta elezioni e immunità parlamentari",
-    "Giunta provvisoria per la verifica dei poteri",
-    "Commissione biblioteca e archivio storico",
-    "Commissione straordinaria per il contrasto dei fenomeni di intolleranza, razzismo, antisemitismo e istigazione all'odio e alla violenza",
-    "Commissione straordinaria per la tutela e la promozione dei diritti umani",
-    "Commissione di inchiesta su scomparsa Orlandi e Gregori",
-    "Commissione contenziosa",
-    "Consiglio di garanzia",
-    "Comitato per la legislazione",
-]
+RULES_PATH = Path("config/senato_monitor_rules.json")
 
-RESOCONTO_KEYWORDS = [
-    "porto",
-    "porti",
-    "portuale",
-    "portualità",
-    "autorità di sistema portuale",
-    "marittimo",
-    "marittima",
-    "navigazione",
-    "codice della navigazione",
-    "lavoro marittimo",
-    "demanio marittimo",
-    "economia del mare",
-    "autostrade del mare",
-    "sea modal shift",
-    "shipping",
-    "logistica",
-    "trasporto merci",
-    "trasporti",
-    "ets",
-    "fueleu",
-]
+
+def load_rules():
+    with RULES_PATH.open("r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+RULES = load_rules()
+EXCLUDED_ORGANS = RULES["excluded_organs"]
+RESOCONTO_KEYWORDS = [x.lower() for x in RULES["resoconto_keywords"]]
+NORMATIVE_PATTERNS = RULES["normative_patterns"]
 
 
 def compact_spaces(text: str) -> str:
@@ -140,7 +117,6 @@ def extract_emendamenti_snippets(pdf_text: str) -> list[str]:
 
 def extract_audizioni_snippets(pdf_text: str) -> list[str]:
     snippets = []
-
     patterns = [
         r"audizione\s+di",
         r"audizione\s+del",
@@ -152,17 +128,11 @@ def extract_audizioni_snippets(pdf_text: str) -> list[str]:
 
     for pat in patterns:
         for match in re.finditer(pat, pdf_text, flags=re.IGNORECASE):
-
             start = match.start()
             end = min(len(pdf_text), match.end() + 300)
-
-            snippet = pdf_text[start:end]
-
-            snippet = compact_spaces(snippet)
-
+            snippet = compact_spaces(pdf_text[start:end])
             if snippet and snippet not in snippets:
                 snippets.append(snippet)
-
             if len(snippets) >= 5:
                 return snippets
 
@@ -175,6 +145,20 @@ def scan_resoconto_keywords(pdf_text: str) -> list[str]:
     for kw in RESOCONTO_KEYWORDS:
         if kw in lowered and kw not in found:
             found.append(kw)
+    return found
+
+
+def extract_normative_hits(pdf_text: str) -> list[str]:
+    lowered = pdf_text.lower()
+    found = []
+
+    for entry in NORMATIVE_PATTERNS:
+        for pat in entry["patterns"]:
+            if re.search(pat, lowered, flags=re.IGNORECASE):
+                if entry["label"] not in found:
+                    found.append(entry["label"])
+                break
+
     return found
 
 
@@ -194,7 +178,7 @@ Testo estratto dal PDF:
 Regole di classificazione:
 
 1. I documenti compositi, in particolare ODG Assemblea e ODG Commissioni, NON vanno classificati in base al tema prevalente.
-2. Devi cercare i singoli punti del documento.
+2. Devi cercare i singoli punti.
 3. Se anche UNA SOLA PARTE contiene riferimenti espliciti e specifici a:
 - trasporto marittimo
 - navigazione
@@ -317,6 +301,7 @@ def main():
         item["audizioni"] = []
         item["resoconto_keywords_found"] = []
         item["resoconto_alert"] = False
+        item["normative_hits"] = []
 
         if not link:
             item["categoria_finale"] = categoria
@@ -330,6 +315,7 @@ def main():
         try:
             pdf_bytes = download_pdf(link)
             pdf_text = extract_pdf_text(pdf_bytes)
+            item["normative_hits"] = extract_normative_hits(pdf_text)
 
             if is_odg(item):
                 item["data_seduta"] = extract_seduta_date(pdf_text)
