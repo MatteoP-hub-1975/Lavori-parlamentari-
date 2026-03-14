@@ -1,0 +1,187 @@
+{
+  "excluded_organs": [
+    "Giunta Regolamento",
+    "Giunta elezioni e immunità parlamentari",
+    "Giunta provvisoria per la verifica dei poteri",
+    "Commissione biblioteca e archivio storico",
+    "Commissione straordinaria per il contrasto dei fenomeni di intolleranza, razzismo, antisemitismo e istigazione all'odio e alla violenza",
+    "Commissione straordinaria per la tutela e la promozione dei diritti umani",
+    "Commissione di inchiesta su scomparsa Orlandi e Gregori",
+    "Commissione di inchiesta su emergenza sanitaria epidemiologica da SARS-CoV-2",
+    "Commissione contenziosa",
+    "Consiglio di garanzia",
+    "Comitato per la legislazione"
+  ],
+  "resoconto_keywords": [
+    "porto",
+    "porti",
+    "portuale",
+    "portualità",
+    "autorità di sistema portuale",
+    "marittimo",
+    "marittima",
+    "navigazione",
+    "codice della navigazione",
+    "lavoro marittimo",
+    "demanio marittimo",
+    "economia del mare",
+    "autostrade del mare",
+    "sea modal shift",
+    "shipping",
+    "logistica",
+    "trasporto merci",
+    "trasporti",
+    "ets",
+    "fueleu"
+  ],
+  "normative_patterns": [
+    {
+      "label": "SOLAS 1974",
+      "patterns": ["\\bsolas\\b", "safety of life at sea"]
+    },
+    {
+      "label": "MARPOL",
+      "patterns": ["\\bmarpol\\b"]
+    },
+    {
+      "label": "STCW",
+      "patterns": ["\\bstcw\\b"]
+    },
+    {
+      "label": "MLC 2006",
+      "patterns": ["\\bmlc\\b", "maritime labour convention"]
+    },
+    {
+      "label": "Direttiva 2009/45/CE",
+      "patterns": ["2009/45/ce"]
+    },
+    {
+      "label": "Direttiva 2009/16/CE",
+      "patterns": ["2009/16/ce", "port state control"]
+    },
+    {
+      "label": "Direttiva 2009/15/CE",
+      "patterns": ["2009/15/ce"]
+    },
+    {
+      "label": "Regolamento (CE) n. 391/2009",
+      "patterns": ["391/2009"]
+    },
+    {
+      "label": "Direttiva 2002/59/CE",
+      "patterns": ["2002/59/ce", "vessel traffic monitoring"]
+    },
+    {
+      "label": "Direttiva (UE) 2017/2110",
+      "patterns": ["2017/2110"]
+    },
+    {
+      "label": "Direttiva 2005/35/CE",
+      "patterns": ["2005/35/ce"]
+    },
+    {
+      "label": "Direttiva (UE) 2019/883",
+      "patterns": ["2019/883"]
+    },
+    {
+      "label": "Direttiva (UE) 2016/802",
+      "patterns": ["2016/802"]
+    },
+    {
+      "label": "FuelEU Maritime / Regolamento (UE) 2023/1805",
+      "patterns": ["2023/1805", "fueleu maritime", "\\bfueleu\\b"]
+    },
+    {
+      "label": "EU ETS / Direttiva 2003/87/CE",
+      "patterns": ["2003/87/ce", "\\beu ets\\b", "\\bets\\b"]
+    },
+    {
+      "label": "MRV Maritime / Regolamento (UE) 2015/757",
+      "patterns": ["2015/757", "\\bmrv\\b"]
+    },
+    {
+      "label": "Direttiva 2008/106/CE",
+      "patterns": ["2008/106/ce"]
+    },
+    {
+      "label": "Direttiva 2012/35/UE",
+      "patterns": ["2012/35/ue"]
+    },
+    {
+      "label": "Direttiva 2009/13/CE",
+      "patterns": ["2009/13/ce"]
+    },
+    {
+      "label": "Direttiva (UE) 2018/131",
+      "patterns": ["2018/131"]
+    },
+    {
+      "label": "Regolamento (UE) 2017/352",
+      "patterns": ["2017/352"]
+    },
+    {
+      "label": "Regolamento (CEE) n. 3577/92",
+      "patterns": ["3577/92"]
+    },
+    {
+      "label": "Regolamento (CE) n. 392/2009",
+      "patterns": ["392/2009"]
+    },
+    {
+      "label": "Regolamento (UE) n. 1177/2010",
+      "patterns": ["1177/2010"]
+    },
+    {
+      "label": "Codice della navigazione",
+      "patterns": ["codice della navigazione"]
+    },
+    {
+      "label": "Legge 84/1994",
+      "patterns": ["legge\\s+n\\.?\\s*84/1994", "legge\\s+n\\.?\\s*84\\s+del\\s+1994", "\\b84/1994\\b"]
+    },
+    {
+      "label": "D.Lgs. 169/2016",
+      "patterns": ["d\\.?\\s*lgs\\.?\\s*169/2016", "\\b169/2016\\b"]
+    },
+    {
+      "label": "D.Lgs. 232/2017",
+      "patterns": ["d\\.?\\s*lgs\\.?\\s*232/2017", "\\b232/2017\\b"]
+    },
+    {
+      "label": "D.L. 457/1997",
+      "patterns": ["d\\.?\\s*l\\.?\\s*457/1997", "\\b457/1997\\b"]
+    },
+    {
+      "label": "Legge 30/1998",
+      "patterns": ["legge\\s+n\\.?\\s*30/1998", "\\b30/1998\\b"]
+    },
+    {
+      "label": "D.Lgs. 202/2007",
+      "patterns": ["d\\.?\\s*lgs\\.?\\s*202/2007", "\\b202/2007\\b"]
+    },
+    {
+      "label": "D.Lgs. 182/2003",
+      "patterns": ["d\\.?\\s*lgs\\.?\\s*182/2003", "\\b182/2003\\b"]
+    },
+    {
+      "label": "D.Lgs. 47/2020",
+      "patterns": ["d\\.?\\s*lgs\\.?\\s*47/2020", "\\b47/2020\\b"]
+    },
+    {
+      "label": "D.Lgs. 50/2017",
+      "patterns": ["d\\.?\\s*lgs\\.?\\s*50/2017", "\\b50/2017\\b"]
+    },
+    {
+      "label": "D.Lgs. 271/1999",
+      "patterns": ["d\\.?\\s*lgs\\.?\\s*271/1999", "\\b271/1999\\b"]
+    },
+    {
+      "label": "Autostrade del mare",
+      "patterns": ["autostrade del mare"]
+    },
+    {
+      "label": "Sea Modal Shift",
+      "patterns": ["sea modal shift"]
+    }
+  ]
+}
