@@ -1,0 +1,39 @@
+name: Camera manual test
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_date:
+        description: "Data da analizzare (YYYY-MM-DD)"
+        required: true
+        default: "2026-03-16"
+
+jobs:
+  camera-test:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4 openai pymupdf
+
+      - name: Run Camera fetch
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python scripts/fetch_camera_atti.py "${{ github.event.inputs.target_date }}"
+
+      - name: Run Camera AI parse
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python scripts/ai_parse_camera_page.py "${{ github.event.inputs.target_date }}"
