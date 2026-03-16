@@ -32,8 +32,21 @@ jobs:
         run: |
           python scripts/fetch_camera_atti.py "${{ github.event.inputs.target_date }}"
 
-      - name: Run Camera AI parse
+      - name: Run Camera parse
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           python scripts/ai_parse_camera_page.py "${{ github.event.inputs.target_date }}"
+
+      - name: Run Camera PDF analysis
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python scripts/analyze_camera_pdfs.py "${{ github.event.inputs.target_date }}"
+
+      - name: Upload Camera output artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: camera-output-${{ github.event.inputs.target_date }}
+          path: data/camera/*.json
+          if-no-files-found: warn
