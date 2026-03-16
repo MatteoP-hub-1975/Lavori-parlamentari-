@@ -77,10 +77,6 @@ def extract_page_text(html: str) -> str:
 
 
 def build_pdf_list_for_prompt(raw_entries):
-    """
-    Riduce l'elenco degli elementi trovati dallo scraper
-    alla sola lista ordinata di PDF da fornire al modello.
-    """
     pdf_list = []
 
     for idx, item in enumerate(raw_entries, start=1):
@@ -262,19 +258,24 @@ def main():
     target_date = parse_target_date()
     target_date_str = target_date.isoformat()
 
+    raw_json_path = OUTPUT_DIR / f"senato_atti_{target_date_str}.json"
+
+    with open(raw_json_path, "r", encoding="utf-8") as f:
+        raw_entries = json.load(f)
+
+    if not raw_entries:
+        print("Nessun atto trovato per questa data. Salto analisi AI.")
+        output_path = save_json([], target_date_str)
+        print(f"File salvato in: {output_path}")
+        return
+
     page_url = build_day_url(target_date)
     print(f"Analizzo con AI la pagina Senato del giorno {target_date_str}")
 
     html = fetch_html(page_url)
     page_text = extract_page_text(html)
 
-    raw_json_path = OUTPUT_DIR / f"senato_atti_{target_date_str}.json"
-
-    with open(raw_json_path, "r", encoding="utf-8") as f:
-        raw_entries = json.load(f)
-
     pdf_list_json = build_pdf_list_for_prompt(raw_entries)
-
     prompt = build_prompt(target_date_str, page_url, page_text, pdf_list_json)
 
     response = client.responses.create(
