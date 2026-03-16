@@ -113,6 +113,7 @@ def dedupe_preserve_order(items):
 
 
 def build_sections(items):
+
     sections = {
         "Interesse trasporto marittimo": [],
         "Interesse industria del trasporto": [],
@@ -123,9 +124,9 @@ def build_sections(items):
     emendamenti = []
     audizioni = []
     resoconti_alert = []
-    normative_alert = []
 
     for item in items:
+
         if is_excluded_organ(item):
             continue
 
@@ -135,11 +136,13 @@ def build_sections(items):
         seduta = compact_spaces(item.get("seduta", ""))
         data_seduta = compact_spaces(item.get("data_seduta", ""))
         link = compact_spaces(item.get("link_pdf", ""))
-        normative_hits = item.get("normative_hits", []) or []
 
         for snippet in item.get("termine_emendamenti", []) or []:
+
             snippet = compact_spaces(str(snippet))
+
             if snippet:
+
                 emendamenti.append(
                     f"""{tipo}
 {titolo}
@@ -150,8 +153,11 @@ PDF: {link}
                 )
 
         for snippet in item.get("audizioni", []) or []:
+
             snippet = compact_spaces(str(snippet))
+
             if snippet:
+
                 audizioni.append(
                     f"""{tipo}
 {titolo}
@@ -162,22 +168,14 @@ PDF: {link}
                 )
 
         if item.get("resoconto_alert"):
+
             kws = ", ".join(item.get("resoconto_keywords_found", []) or [])
+
             resoconti_alert.append(
                 f"""{tipo}
 {titolo}
 Commissione: {commissione} | Seduta: {seduta}
 Parole chiave trovate: {kws}
-PDF: {link}
-"""
-            )
-
-        if normative_hits:
-            normative_alert.append(
-                f"""{tipo}
-{titolo}
-Commissione: {commissione} | Seduta: {seduta}{f" | Data seduta: {data_seduta}" if data_seduta else ""}
-Normative rilevanti trovate: {", ".join(normative_hits)}
 PDF: {link}
 """
             )
@@ -195,16 +193,31 @@ PDF: {link}
     emendamenti = dedupe_preserve_order(emendamenti)
     audizioni = dedupe_preserve_order(audizioni)
     resoconti_alert = dedupe_preserve_order(resoconti_alert)
-    normative_alert = dedupe_preserve_order(normative_alert)
 
     for key in sections:
         sections[key] = dedupe_preserve_order(sections[key])
 
-    return sections, emendamenti, audizioni, resoconti_alert, normative_alert
+    return sections, emendamenti, audizioni, resoconti_alert
 
 
-def build_email_body(sections, emendamenti, audizioni, resoconti_alert, normative_alert, date):
+def build_email_body(sections, emendamenti, audizioni, resoconti_alert, date):
+
     body = f"Monitor Parlamento – Senato – {date}\n\n"
+
+    body += "=== INTERESSE TRASPORTO MARITTIMO ===\n\n"
+    for item in sections["Interesse trasporto marittimo"]:
+        body += item + "\n"
+
+    body += "=== RESOCONTI CON KEYWORD RILEVANTI ===\n\n"
+    if resoconti_alert:
+        for item in resoconti_alert:
+            body += item + "\n"
+    else:
+        body += "Nessuna segnalazione.\n\n"
+
+    body += "=== INTERESSE INDUSTRIA DEL TRASPORTO ===\n\n"
+    for item in sections["Interesse industria del trasporto"]:
+        body += item + "\n"
 
     body += "=== SCADENZA EMENDAMENTI ===\n\n"
     if emendamenti:
@@ -220,32 +233,19 @@ def build_email_body(sections, emendamenti, audizioni, resoconti_alert, normativ
     else:
         body += "Nessuna segnalazione.\n\n"
 
-    body += "=== NORMATIVE RILEVANTI TROVATE ===\n\n"
-    if normative_alert:
-        for item in normative_alert:
-            body += item + "\n"
-    else:
-        body += "Nessuna segnalazione.\n\n"
+    body += "=== INTERESSE INDUSTRIALE GENERALE ===\n\n"
+    for item in sections["Interesse industriale generale"]:
+        body += item + "\n"
 
-    body += "=== RESOCONTI CON KEYWORD RILEVANTI ===\n\n"
-    if resoconti_alert:
-        for item in resoconti_alert:
-            body += item + "\n"
-    else:
-        body += "Nessuna segnalazione.\n\n"
-
-    for section, items in sections.items():
-        body += f"=== {section.upper()} ===\n\n"
-        if not items:
-            body += "Nessun atto.\n\n"
-            continue
-        for item in items:
-            body += item + "\n"
+    body += "=== NON ATTINENTI ===\n\n"
+    for item in sections["Non attinenti"]:
+        body += item + "\n"
 
     return body
 
 
 def send_email(subject, body):
+
     smtp_server = "smtp.gmail.com"
     smtp_port = 587
 
@@ -257,6 +257,7 @@ def send_email(subject, body):
     msg["From"] = sender
     msg["To"] = recipient
     msg["Subject"] = subject
+
     msg.attach(MIMEText(body, "plain"))
 
     with smtplib.SMTP(smtp_server, smtp_port) as server:
@@ -266,22 +267,25 @@ def send_email(subject, body):
 
 
 def main():
+
     target_date = parse_target_date()
+
     items = load_data(target_date)
 
-    sections, emendamenti, audizioni, resoconti_alert, normative_alert = build_sections(items)
+    sections, emendamenti, audizioni, resoconti_alert = build_sections(items)
 
     subject = f"Monitor Parlamento – Senato – {target_date}"
+
     body = build_email_body(
         sections,
         emendamenti,
         audizioni,
         resoconti_alert,
-        normative_alert,
         target_date,
     )
 
     send_email(subject, body)
+
     print("Email inviata.")
 
 
