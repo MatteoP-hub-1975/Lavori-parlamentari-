@@ -24,6 +24,7 @@ RULES = load_rules()
 EXCLUDED_ORGANS = RULES["excluded_organs"]
 RESOCONTO_KEYWORDS = [x.lower() for x in RULES["resoconto_keywords"]]
 NORMATIVE_PATTERNS = RULES["normative_patterns"]
+CONFITARMA_KB = RULES.get("confitarma_kb", {})
 
 
 def compact_spaces(text: str) -> str:
@@ -160,6 +161,74 @@ def extract_normative_hits(pdf_text: str) -> list[str]:
                 break
 
     return found
+
+
+def extract_confitarma_kb_hits(pdf_text: str) -> dict:
+    lowered = pdf_text.lower()
+
+    result = {
+        "keyword_categories": [],
+        "keyphrases": [],
+        "norm_refs_italia": [],
+        "norm_refs_ue_internazionale": [],
+        "programs_tools": [],
+        "entities": [],
+    }
+
+    for category, values in CONFITARMA_KB.get("keywords", {}).items():
+        for value in values:
+            if value.lower() in lowered:
+                result["keyword_categories"].append(category)
+                break
+
+    for value in CONFITARMA_KB.get("keyphrases", []):
+        if value.lower() in lowered:
+            result["keyphrases"].append(value)
+
+    for value in CONFITARMA_KB.get("norm_refs", {}).get("italia", []):
+        if value.lower() in lowered:
+            result["norm_refs_italia"].append(value)
+
+    for value in CONFITARMA_KB.get("norm_refs", {}).get("ue_internazionale", []):
+        if value.lower() in lowered:
+            result["norm_refs_ue_internazionale"].append(value)
+
+    for value in CONFITARMA_KB.get("programs_tools", []):
+        if value.lower() in lowered:
+            result["programs_tools"].append(value)
+
+    for value in CONFITARMA_KB.get("entities", []):
+        if value.lower() in lowered:
+            result["entities"].append(value)
+
+    for key in result:
+        seen = set()
+        deduped = []
+        for x in result[key]:
+            if x not in seen:
+                seen.add(x)
+                deduped.append(x)
+        result[key] = deduped
+
+    return result
+
+
+def merge_normative_hits(item: dict) -> list[str]:
+    merged = []
+
+    for x in item.get("normative_hits", []) or []:
+        if x not in merged:
+            merged.append(x)
+
+    kb_hits = item.get("confitarma_kb_hits", {}) or {}
+    for x in kb_hits.get("norm_refs_italia", []):
+        if x not in merged:
+            merged.append(x)
+    for x in kb_hits.get("norm_refs_ue_internazionale", []):
+        if x not in merged:
+            merged.append(x)
+
+    return merged
 
 
 def build_pdf_prompt(item, pdf_text):
@@ -302,6 +371,14 @@ def main():
         item["resoconto_keywords_found"] = []
         item["resoconto_alert"] = False
         item["normative_hits"] = []
+        item["confitarma_kb_hits"] = {
+            "keyword_categories": [],
+            "keyphrases": [],
+            "norm_refs_italia": [],
+            "norm_refs_ue_internazionale": [],
+            "programs_tools": [],
+            "entities": [],
+        }
 
         if not link:
             item["categoria_finale"] = categoria
@@ -315,7 +392,10 @@ def main():
         try:
             pdf_bytes = download_pdf(link)
             pdf_text = extract_pdf_text(pdf_bytes)
+
             item["normative_hits"] = extract_normative_hits(pdf_text)
+            item["confitarma_kb_hits"] = extract_confitarma_kb_hits(pdf_text)
+            item["normative_hits"] = merge_normative_hits(item)
 
             if is_odg(item):
                 item["data_seduta"] = extract_seduta_date(pdf_text)
