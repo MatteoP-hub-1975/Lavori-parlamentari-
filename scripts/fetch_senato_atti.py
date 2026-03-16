@@ -1,9 +1,8 @@
 import json
-import re
 import sys
+import time
 from datetime import datetime
 from pathlib import Path
-from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
@@ -17,9 +16,13 @@ HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; SenatoMonitor/1.0)"
 }
 
+TIMEOUT = 60
+MAX_RETRIES = 3
+RETRY_WAIT_SECONDS = 3
+
 
 def compact_spaces(text: str) -> str:
-    return re.sub(r"\s+", " ", (text or "")).strip()
+    return " ".join((text or "").split()).strip()
 
 
 def parse_target_date():
@@ -34,72 +37,115 @@ def build_day_url(target_date) -> str:
 
 
 def fetch_html(url: str) -> str:
-    response = requests.get(url, headers=HEADERS, timeout=60)
-    response.raise_for_status()
-    return response.text
+    last_response = None
+    last_error = None
+
+    for attempt in range(1, MAX_RETRIES + 1):
+        try:
+            response = requests.get(url, headers=HEADERS, timeout=TIMEOUT)
+            last_response = response
+
+            if response.status_code == 200:
+                return response.text
+
+            if response.status_code in {500, 502, 503, 504}:
+                print(
+                    f"Tentativo {attempt}/{MAX_RETRIES}: server Senato ha risposto "
+                    f"{response.status_code}. Ritento tra {RETRY_WAIT_SECONDS} secondi..."
+                )
+                if attempt < MAX_RETRIES:
+                    time.sleep(RETRY_WAIT_SECONDS)
+                    continue
+
+                print(
+                    f"Server Senato ancora in errore ({response.status_code}) "
+                    "dopo i retry. Tratto il giorno come senza atti disponibili."
+                )
+                return ""
+
+            response.raise_for_status()
+
+        except requests.RequestException as e:
+            last_error = e
+            print(
+                f"Tentativo {attempt}/{MAX_RETRIES}: errore HTTP/rete: {e}. "
+                f"Ritento tra {RETRY_WAIT_SECONDS} secondi..."
+            )
+            if attempt < MAX_RETRIES:
+                time.sleep(RETRY_WAIT_SECONDS)
+                continue
+
+    if last_response is not None:
+        last_response.raise_for_status()
+
+    if last_error is not None:
+        raise last_error
+
+    return ""
 
 
-def extract_entries(page_url: str, html: str, target_date: str):
+def parse_html(html: str):
+    if not html.strip():
+        return []
+
     soup = BeautifulSoup(html, "html.parser")
+    items = []
 
-    entries = []
-    seen_links = set()
-
-    for a in soup.find_all("a", href=True):
-        href = a["href"].strip()
-        full_url = urljoin(page_url, href)
-
-        if "/PDF/" not in full_url:
+    for link in soup.find_all("a", href=True):
+        href = link["href"].strip()
+        if "/service/PDF/PDFServer/" not in href:
             continue
 
-        if full_url in seen_links:
-            continue
+        full_link = href if href.startswith("http") else f"{BASE_URL}{href}"
+        text = compact_spaces(link.get_text(" ", strip=True))
 
-        seen_links.add(full_url)
+        parent_text = ""
+        parent = link.parent
+        if parent is not None:
+            parent_text = compact_spaces(parent.get_text(" ", strip=True))
 
-        parent = a.parent
-        parent_text = compact_spaces(parent.get_text(" ", strip=True)) if parent else ""
-        context_text = parent_text or compact_spaces(a.get_text(" ", strip=True))
+        grandparent_text = ""
+        if parent is not None and parent.parent is not None:
+            grandparent_text = compact_spaces(parent.parent.get_text(" ", strip=True))
 
-        tipo_atto = "Documento"
-        numero = ""
-        titolo = context_text
-        commissione = ""
-        seduta = ""
+        combined_title = text
+        if not combined_title:
+            combined_title = parent_text
+        if not combined_title:
+            combined_title = grandparent_text
+        if not combined_title:
+            combined_title = "pdf"
 
-        m_ddl = re.search(r"Disegno di legge\s+(\d+)", context_text, flags=re.IGNORECASE)
-        if m_ddl:
-            tipo_atto = "DDL"
-            numero = m_ddl.group(1)
-        elif re.search(r"O\.D\.G\.|Ordine del giorno", context_text, flags=re.IGNORECASE):
-            tipo_atto = "ODG"
-            m_seduta = re.search(r"seduta(?:/e)?\s*n\.\s*([0-9]+)", context_text, flags=re.IGNORECASE)
-            if m_seduta:
-                seduta = m_seduta.group(1)
-                numero = seduta
-        elif re.search(r"Risposte scritte", context_text, flags=re.IGNORECASE):
-            tipo_atto = "Risposte scritte"
-
-        entries.append(
+        items.append(
             {
                 "ramo": "Senato",
-                "tipo_atto": tipo_atto,
-                "numero": numero,
-                "titolo": titolo,
-                "data": target_date,
-                "link": full_url,
-                "commissione": commissione,
-                "seduta": seduta,
+                "tipo_atto": "Documento",
+                "numero": "",
+                "titolo": combined_title,
+                "data": "",
+                "link": full_link,
+                "commissione": "",
+                "seduta": "",
             }
         )
 
-    return entries
+    dedup = []
+    seen = set()
+
+    for item in items:
+        key = item["link"]
+        if key in seen:
+            continue
+        seen.add(key)
+        dedup.append(item)
+
+    return dedup
 
 
-def save_json(entries, target_date: str):
-    output_path = OUTPUT_DIR / f"senato_atti_{target_date}.json"
+def save_json(items, target_date_str: str) -> Path:
+    output_path = OUTPUT_DIR / f"senato_atti_{target_date_str}.json"
     with output_path.open("w", encoding="utf-8") as f:
-        json.dump(entries, f, ensure_ascii=False, indent=2)
+        json.dump(items, f, ensure_ascii=False, indent=2)
     return output_path
 
 
@@ -108,15 +154,19 @@ def main():
     target_date_str = target_date.isoformat()
 
     page_url = build_day_url(target_date)
+
     print(f"Recupero atti Senato del giorno {target_date_str}")
     print(f"URL: {page_url}")
 
     html = fetch_html(page_url)
-    entries = extract_entries(page_url, html, target_date_str)
+    items = parse_html(html)
 
-    output_path = save_json(entries, target_date_str)
+    for item in items:
+        item["data"] = target_date_str
 
-    print(f"Atti trovati: {len(entries)}")
+    output_path = save_json(items, target_date_str)
+
+    print(f"Atti trovati: {len(items)}")
     print(f"File salvato in: {output_path}")
 
 
