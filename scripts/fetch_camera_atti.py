@@ -31,12 +31,20 @@ def fetch_html(url: str) -> str:
 
 def normalize_link(href: str) -> str:
     href = (href or "").strip()
-    if href.startswith("http"):
+
+    if not href:
+        return ""
+
+    if href.startswith("http://") or href.startswith("https://"):
         return href
+
+    if href.startswith("//"):
+        return "https:" + href
+
     if href.startswith("/"):
         return BASE_URL + href
-    return BASE_URL + "/" + href.lstrip("/")
 
+    return BASE_URL + "/" + href.lstrip("/")
 
 def extract_documents(html: str):
     soup = BeautifulSoup(html, "html.parser")
