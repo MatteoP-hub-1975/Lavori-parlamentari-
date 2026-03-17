@@ -57,6 +57,19 @@ def is_resoconto(item) -> bool:
     ).lower()
     return "resoconto" in text
 
+def is_real_camera_pdf_url(url: str) -> bool:
+    url = (url or "").strip().lower()
+
+    if not url:
+        return False
+
+    if url.endswith(".pdf"):
+        return True
+
+    if "documenti.camera.it" in url and "tipodoc=pdf" in url:
+        return True
+
+    return False
 
 def download_pdf(url: str) -> bytes:
     r = requests.get(url, timeout=60)
