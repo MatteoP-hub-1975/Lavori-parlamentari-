@@ -396,7 +396,6 @@ def main():
             results.append(item)
             continue
 
-        print("Analizzo PDF:", link)
         # SKIP come Senato: non analizzare PDF inutili
         if categoria == "Non attinenti" and not is_odg(item) and not is_resoconto(item):
             item["categoria_finale"] = categoria
@@ -407,7 +406,8 @@ def main():
             item["estratto_rilevante"] = ""
             results.append(item)
             continue
-            
+        print("Analizzo PDF:", link)
+        
         try:
             pdf_bytes = download_pdf(link)
             pdf_text = extract_pdf_text(pdf_bytes)
