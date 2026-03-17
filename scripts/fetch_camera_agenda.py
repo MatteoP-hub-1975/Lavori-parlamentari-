@@ -32,11 +32,53 @@ def extract_agenda_items(html: str, target_date_str: str):
     items = []
 
     # ⚠️ versione iniziale semplice: prendiamo tutte le righe lista
-    for li in soup.find_all("li"):
-        text = li.get_text(strip=True)
+for li in soup.find_all("li"):
+    text = li.get_text(strip=True)
 
-        if not text or len(text) < 20:
-            continue
+    if not text or len(text) < 30:
+        continue
+
+    # filtro rumore (menu sito)
+    blacklist = [
+        "home",
+        "la camera",
+        "lavori",
+        "deputati",
+        "documenti",
+        "comunicazione",
+        "servizi",
+        "agenda",
+        "notizie",
+        "temi dell'attività parlamentare",
+        "amministrazione trasparente",
+        "registro dei rappresentanti",
+        "relazioni con i cittadini",
+        "portale storico",
+        "english",
+    ]
+
+    text_lower = text.lower()
+
+    if any(b in text_lower for b in blacklist):
+        continue
+
+    # tieni solo righe "parlamentari"
+    keywords = [
+        "proposta di legge",
+        "disegno di legge",
+        "ddl",
+        "audizione",
+        "interrogazione",
+        "interpellanza",
+        "risoluzione",
+        "ordine del giorno",
+        "esame",
+        "discussione",
+        "conversione in legge",
+    ]
+
+    if not any(k in text_lower for k in keywords):
+        continue
 
         items.append({
             "ramo": "Camera",
