@@ -31,14 +31,6 @@ def extract_agenda_items(html: str, target_date_str: str):
 
     items = []
 
-    # ⚠️ versione iniziale semplice: prendiamo tutte le righe lista
-for li in soup.find_all("li"):
-    text = li.get_text(strip=True)
-
-    if not text or len(text) < 30:
-        continue
-
-    # filtro rumore (menu sito)
     blacklist = [
         "home",
         "la camera",
@@ -57,12 +49,6 @@ for li in soup.find_all("li"):
         "english",
     ]
 
-    text_lower = text.lower()
-
-    if any(b in text_lower for b in blacklist):
-        continue
-
-    # tieni solo righe "parlamentari"
     keywords = [
         "proposta di legge",
         "disegno di legge",
@@ -77,19 +63,32 @@ for li in soup.find_all("li"):
         "conversione in legge",
     ]
 
-    if not any(k in text_lower for k in keywords):
-        continue
+    for li in soup.find_all("li"):
+        text = li.get_text(strip=True)
 
-        items.append({
-            "ramo": "Camera",
-            "data": target_date_str,
-            "organo": "Aula",
-            "tipo": "ODG",
-            "titolo": text,
-            "numero": "",
-            "link": "",
-            "fonte": "agenda_camera"
-        })
+        if not text or len(text) < 30:
+            continue
+
+        text_lower = text.lower()
+
+        if any(b in text_lower for b in blacklist):
+            continue
+
+        if not any(k in text_lower for k in keywords):
+            continue
+
+        items.append(
+            {
+                "ramo": "Camera",
+                "data": target_date_str,
+                "organo": "Aula",
+                "tipo": "ODG",
+                "titolo": text,
+                "numero": "",
+                "link": "",
+                "fonte": "agenda_camera",
+            }
+        )
 
     return items
 
@@ -105,7 +104,6 @@ def main():
     target_date = parse_target_date()
     target_date_str = target_date.isoformat()
 
-    # ⚠️ URL base agenda Camera (poi lo raffiniamo)
     url = "https://www.camera.it/leg19/410"
 
     print("Scarico agenda Camera:", url)
