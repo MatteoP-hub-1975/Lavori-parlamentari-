@@ -383,9 +383,15 @@ def main():
             "entities": [],
         }
 
-        if not link:
+        if not link or not is_real_camera_pdf_url(link):
             item["categoria_finale"] = categoria
-            item["motivazione_finale"] = item.get("motivazione_preliminare", "")
+            if not link:
+                item["motivazione_finale"] = item.get("motivazione_preliminare", "")
+            else:
+                item["motivazione_finale"] = (
+                    item.get("motivazione_preliminare", "")
+                    + " Link non riconosciuto come PDF diretto Camera: analisi PDF saltata."
+                ).strip()
             item["estratto_rilevante"] = ""
             results.append(item)
             continue
