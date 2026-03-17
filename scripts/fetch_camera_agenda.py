@@ -26,63 +26,60 @@ def fetch_html(url: str) -> str:
     return response.text
 
 
+def compact(text: str) -> str:
+    return " ".join((text or "").split()).strip()
+
+
 def extract_agenda_items(html: str, target_date_str: str):
     soup = BeautifulSoup(html, "html.parser")
 
-    items = []
-
-    blacklist = [
-        "home",
-        "la camera",
-        "lavori",
-        "deputati",
-        "documenti",
-        "comunicazione",
-        "servizi",
-        "agenda",
-        "notizie",
-        "temi dell'attività parlamentare",
-        "amministrazione trasparente",
-        "registro dei rappresentanti",
-        "relazioni con i cittadini",
-        "portale storico",
-        "english",
-    ]
-
-    keywords = [
-        "proposta di legge",
-        "disegno di legge",
-        "ddl",
-        "audizione",
-        "interrogazione",
-        "interpellanza",
-        "risoluzione",
+    wanted_labels = {
         "ordine del giorno",
-        "esame",
-        "discussione",
-        "conversione in legge",
-    ]
+        "calendario dei lavori",
+        "calendario settimanale",
+        "resoconti",
+        "audizioni",
+        "oggi in commissione",
+        "interrogazioni, interpellanze, mozioni, risoluzioni e odg",
+        "audizioni e comunicazioni in commissione",
+        "comunicazioni e informative urgenti in assemblea",
+        "atti del governo e proposte di nomina sottoposti a parere",
+        "atti di indirizzo e controllo",
+        "indagini conoscitive",
+        "giunte e commissioni",
+        "assemblea",
+        "commissioni",
+    }
 
-    for li in soup.find_all("li"):
-        text = li.get_text(strip=True)
+    items = []
+    seen = set()
 
-        if not text or len(text) < 30:
+    for a in soup.find_all("a"):
+        text = compact(a.get_text(" ", strip=True))
+        if not text:
             continue
 
         text_lower = text.lower()
 
-        if any(b in text_lower for b in blacklist):
+        if text_lower not in wanted_labels:
             continue
 
-        if not any(k in text_lower for k in keywords):
+        if text_lower in seen:
             continue
+        seen.add(text_lower)
+
+        organo = "Camera"
+        if "commission" in text_lower or "giunte e commissioni" in text_lower:
+            organo = "Commissioni"
+        elif "assemblea" in text_lower:
+            organo = "Assemblea"
 
         items.append(
             {
                 "ramo": "Camera",
                 "data": target_date_str,
-                "organo": "Aula",
-                "tipo": "ODG",
+                "organo": organo,
+                "tipo": "AGENDA",
                 "titolo": text,
                 "numero": "",
                 "link": "",
