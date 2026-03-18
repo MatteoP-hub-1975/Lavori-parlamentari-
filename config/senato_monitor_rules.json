@@ -31,7 +31,6 @@
     "logistica",
     "trasporto merci",
     "trasporti",
-    "ets",
     "fueleu"
   ],
   "normative_patterns": [
@@ -88,8 +87,14 @@
       "patterns": ["2016/802"]
     },
     {
-      "label": "FuelEU Maritime / Regolamento (UE) 2023/1805",
-      "patterns": ["2023/1805", "fueleu maritime", "\\bfueleu\\b"]
+      "label": "EU ETS / Direttiva 2003/87/CE",
+      "patterns": [
+        "2003/87/ce",
+        "\\beu ets\\b",
+        "\\bets marittimo\\b",
+        "emission trading system",
+        "direttiva\\s+2003/87"
+      ]
     },
     {
       "label": "EU ETS / Direttiva 2003/87/CE",
@@ -390,7 +395,11 @@
         "rete dei nautici d'italia",
         "simulatori addestrativi",
         "dual education",
-        "training centers imo"
+        "training centers imo",
+        "formazione marittimi",
+        "formazione della gente di mare",
+        "addestramento marittimo",
+        "maritime training"
       ]
     },
     "keyphrases": [
@@ -481,7 +490,6 @@
         "art. 108 tfue",
         "reg. 852/2020",
         "regolamento 852/2020",
-        "ets",
         "fueleu maritime",
         "uk ets",
         "fit for 55",
