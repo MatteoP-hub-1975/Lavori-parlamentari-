@@ -100,17 +100,19 @@ def find_target_section(soup: BeautifulSoup, label: str):
 
 def extract_documents(section_tag: Tag, section_label: str):
     documents = []
-
     current_doc = None
 
     for el in section_tag.next_elements:
 
         if isinstance(el, Tag):
-            text = compact(el.get_text(" ", strip=True))
 
-            # STOP quando cambia sezione
-            if text.lower().startswith("documenti stampati") and text != section_label:
+            # STOP cambio sezione
+            text_full = compact(el.get_text(" ", strip=True))
+            if text_full.lower().startswith("documenti stampati") and text_full != section_label:
                 break
+
+            # SOLO testo diretto (evita duplicazioni e PDF)
+            text = compact(el.get_text(strip=True))
 
             # NUOVO DOC
             if re.match(r"^Doc\.\s", text):
@@ -121,6 +123,7 @@ def extract_documents(section_tag: Tag, section_label: str):
                     "titolo": "",
                     "data": "",
                     "link": "",
+                    "link_label": "link documento",
                     "commissione": "",
                     "seduta": "",
                     "fonte": "documenti_stampati",
@@ -129,25 +132,27 @@ def extract_documents(section_tag: Tag, section_label: str):
                 documents.append(current_doc)
                 continue
 
-            # TITOLO
-            if current_doc and text and not text.lower().startswith("documenti stampati"):
-                if not text.lower().startswith("pdf") and not text.startswith("("):
-                    current_doc["titolo"] += " " + text
+            # TITOLO (filtrato)
+            if current_doc and text:
+                if (
+                    not text.lower().startswith("pdf")
+                    and "[" not in text
+                    and "(" not in text
+                    and not text.lower().startswith("documenti stampati")
+                ):
+                    if text not in current_doc["titolo"]:
+                        current_doc["titolo"] += " " + text
 
             # LINK PDF
             if el.name == "a" and el.has_attr("href") and current_doc:
                 url = normalize_link(el["href"])
-
                 if is_pdf_link(url) and not current_doc["link"]:
                     current_doc["link"] = url
 
-    # pulizia
     for d in documents:
         d["titolo"] = compact(d["titolo"])
 
-    # solo quelli con link
     return [d for d in documents if d["link"]]
-
 
 # ---------------------------
 # MAIN
