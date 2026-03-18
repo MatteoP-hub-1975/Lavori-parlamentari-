@@ -90,11 +90,64 @@ def is_real_camera_pdf_url(url: str) -> bool:
 
     return False
 
-def download_pdf(url: str) -> bytes:
-    r = requests.get(url, timeout=60)
-    r.raise_for_status()
-    return r.content
+import requests
 
+HEADERS = {
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "application/pdf,application/octet-stream,*/*"
+}
+
+
+def download_pdf(url: str) -> bytes:
+    url = (url or "").strip()
+
+    if not url:
+        raise ValueError("URL vuoto")
+
+    # 🔁 NORMALIZZAZIONE LINK CAMERA
+    if "documenti.camera.it" in url.lower():
+        url = url.replace("tipoDoc=documento", "tipoDoc=pdf")
+        url = url.replace("doc=intero", "doc=INTERO")
+
+    # ❌ link non scaricabili (es. votazioni)
+    if "votazioni" in url.lower():
+        raise ValueError("Link non PDF (pagina votazioni)")
+
+    print("Download URL finale:", url)
+
+    response = requests.get(url, headers=HEADERS, timeout=60)
+
+    if response.status_code != 200:
+        raise ValueError(f"Errore HTTP {response.status_code}")
+
+    content_type = response.headers.get("Content-Type", "").lower()
+
+    # 🔥 Caso 1: è già PDF
+    if "application/pdf" in content_type:
+        return response.content
+
+    # 🔁 Caso 2: è HTML → prova a trovare link PDF dentro
+    if "text/html" in content_type:
+        from bs4 import BeautifulSoup
+
+        soup = BeautifulSoup(response.text, "html.parser")
+
+        for a in soup.find_all("a", href=True):
+            href = a["href"]
+            if ".pdf" in href.lower():
+                if href.startswith("/"):
+                    href = "https://documenti.camera.it" + href
+
+                print("Trovato PDF dentro pagina:", href)
+
+                r2 = requests.get(href, headers=HEADERS, timeout=60)
+                if r2.status_code == 200:
+                    return r2.content
+
+        raise ValueError("HTML senza PDF interno")
+
+    # fallback
+    return response.content
 
 def extract_pdf_text(pdf_bytes: bytes) -> str:
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
