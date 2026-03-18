@@ -57,8 +57,27 @@ def is_resoconto(item) -> bool:
     ).lower()
     return "resoconto" in text
 
+def normalize_camera_pdf_candidate(url: str) -> str:
+    url = (url or "").strip()
+
+    if not url:
+        return ""
+
+    lowered = url.lower()
+
+    if "documenti.camera.it" not in lowered:
+        return url
+
+    if "tipodoc=documento" in lowered:
+        url = re.sub(r"tipoDoc=documento", "tipoDoc=pdf", url, flags=re.IGNORECASE)
+
+    if "doc=intero" in lowered:
+        url = re.sub(r"doc=intero\b", "doc=INTERO", url, flags=re.IGNORECASE)
+
+    return url
+
 def is_real_camera_pdf_url(url: str) -> bool:
-    url = (url or "").strip().lower()
+    url = normalize_camera_pdf_candidate(url).lower()
 
     if not url:
         return False
