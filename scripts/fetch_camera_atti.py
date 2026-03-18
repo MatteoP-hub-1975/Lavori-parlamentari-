@@ -5,7 +5,7 @@ from datetime import datetime
 from pathlib import Path
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 
 BASE_URL = "https://www.camera.it"
@@ -47,51 +47,43 @@ def normalize_link(href: str) -> str:
     return BASE_URL + "/" + href.lstrip("/")
 
 
-def extract_documents(html: str):
-    soup = BeautifulSoup(html, "html.parser")
-    lines = [compact_spaces(x) for x in soup.get_text("\n", strip=True).splitlines()]
+def is_useful_document_link(url: str) -> bool:
+    url_l = (url or "").lower()
+
+    if not url_l:
+        return False
+
+    if "votazioni" in url_l:
+        return False
+
+    if "documenti.camera.it" in url_l and "getdocumento.ashx" in url_l:
+        return True
+
+    if url_l.endswith(".pdf"):
+        return True
+
+    return False
+
+
+def find_first_documenti_stampati_header(soup: BeautifulSoup):
+    for tag in soup.find_all(["h1", "h2", "h3", "h4", "strong", "p", "div", "span"]):
+        text = compact_spaces(tag.get_text(" ", strip=True))
+        if text.lower().startswith("documenti stampati "):
+            return tag, text
+    return None, ""
+
+
+def extract_doc_blocks_from_text(first_section_text: str, section_label: str):
+    lines = [compact_spaces(x) for x in first_section_text.splitlines()]
     lines = [x for x in lines if x]
 
-    # Estrae tutti i link PDF/doc nell'ordine in cui compaiono
-    raw_links = []
-    for a in soup.find_all("a", href=True):
-        label = compact_spaces(a.get_text(" ", strip=True)).lower()
-        href = a["href"]
-        full = normalize_link(href)
-
-        if (
-            "[pdf]" in label
-            or label == "pdf"
-            or "documenti.camera.it" in full.lower()
-        ):
-            raw_links.append(full)
-
-    seen = set()
-    raw_links = [x for x in raw_links if not (x in seen or seen.add(x))]
-
     documents = []
-    current_date_label = ""
-    first_date_label = None
-    stop_after_first_section = False
-
     i = 0
+
     while i < len(lines):
         line = lines[i]
 
-        if line.lower().startswith("documenti stampati "):
-            if first_date_label is None:
-                first_date_label = line
-                current_date_label = line
-            elif line != first_date_label:
-                stop_after_first_section = True
-                break
-            i += 1
-            continue
-
         if re.match(r"^Doc\.\s", line):
-            if stop_after_first_section:
-                break
-
             tipo_num = line
             titolo_parts = []
 
@@ -113,15 +105,10 @@ def extract_documents(html: str):
 
             titolo = compact_spaces(" ".join(titolo_parts))
 
-            tipo_atto = ""
-            numero = ""
-
             m = re.match(r"^(Doc\.\s*[A-Z0-9.\-–—]+)", tipo_num, flags=re.IGNORECASE)
-            if m:
-                tipo_atto = compact_spaces(m.group(1))
-            else:
-                tipo_atto = tipo_num
+            tipo_atto = compact_spaces(m.group(1)) if m else tipo_num
 
+            numero = ""
             m_num = re.search(r"\bn\.\s*([0-9]+)\b", titolo, flags=re.IGNORECASE)
             if m_num:
                 numero = m_num.group(1)
@@ -137,7 +124,7 @@ def extract_documents(html: str):
                     "commissione": "",
                     "seduta": "",
                     "fonte": "documenti_stampati",
-                    "sezione": current_date_label,
+                    "sezione": section_label,
                 }
             )
 
@@ -146,12 +133,62 @@ def extract_documents(html: str):
 
         i += 1
 
+    return documents
+
+
+def extract_links_from_first_section(header_tag: Tag):
+    links = []
+
+    for el in header_tag.next_elements:
+        if isinstance(el, Tag):
+            text = compact_spaces(el.get_text(" ", strip=True)).lower()
+            if text.startswith("documenti stampati ") and el is not header_tag:
+                break
+
+            if el.name == "a" and el.has_attr("href"):
+                url = normalize_link(el["href"])
+                if is_useful_document_link(url):
+                    links.append(url)
+
+    seen = set()
+    deduped = []
+    for x in links:
+        if x not in seen:
+            seen.add(x)
+            deduped.append(x)
+
+    return deduped
+
+
+def extract_documents(html: str):
+    soup = BeautifulSoup(html, "html.parser")
+
+    header_tag, section_label = find_first_documenti_stampati_header(soup)
+    if not header_tag:
+        return []
+
+    # testo solo della prima sezione
+    section_parts = [section_label]
+
+    for el in header_tag.next_elements:
+        if isinstance(el, Tag):
+            text = compact_spaces(el.get_text(" ", strip=True))
+            if text.lower().startswith("documenti stampati ") and text != section_label:
+                break
+
+            if text:
+                section_parts.append(text)
+
+    first_section_text = "\n".join(section_parts)
+    documents = extract_doc_blocks_from_text(first_section_text, section_label)
+    links = extract_links_from_first_section(header_tag)
+
+    # abbina in ordine, ma usando solo link utili della stessa sezione
     for idx, doc in enumerate(documents):
-        if idx < len(raw_links):
-            doc["link"] = raw_links[idx]
+        if idx < len(links):
+            doc["link"] = links[idx]
 
     documents = [x for x in documents if x.get("link")]
-
     return documents
 
 
