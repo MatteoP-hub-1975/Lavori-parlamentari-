@@ -6,6 +6,7 @@ from pathlib import Path
 
 import fitz  # PyMuPDF
 import requests
+from bs4 import BeautifulSoup
 from openai import OpenAI
 
 
@@ -13,6 +14,11 @@ OUTPUT_DIR = Path("data/camera")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 RULES_PATH = Path("config/senato_monitor_rules.json")
+
+HEADERS = {
+    "User-Agent": "Mozilla/5.0",
+    "Accept": "application/pdf,application/octet-stream,text/html,*/*",
+}
 
 
 def load_rules():
@@ -57,6 +63,7 @@ def is_resoconto(item) -> bool:
     ).lower()
     return "resoconto" in text
 
+
 def normalize_camera_pdf_candidate(url: str) -> str:
     url = (url or "").strip()
 
@@ -68,13 +75,11 @@ def normalize_camera_pdf_candidate(url: str) -> str:
     if "documenti.camera.it" not in lowered:
         return url
 
-    if "tipodoc=documento" in lowered:
-        url = re.sub(r"tipoDoc=documento", "tipoDoc=pdf", url, flags=re.IGNORECASE)
-
-    if "doc=intero" in lowered:
-        url = re.sub(r"doc=intero\b", "doc=INTERO", url, flags=re.IGNORECASE)
+    url = re.sub(r"tipoDoc=documento", "tipoDoc=pdf", url, flags=re.IGNORECASE)
+    url = re.sub(r"doc=intero\b", "doc=INTERO", url, flags=re.IGNORECASE)
 
     return url
+
 
 def is_real_camera_pdf_url(url: str) -> bool:
     url = normalize_camera_pdf_candidate(url).lower()
@@ -82,7 +87,13 @@ def is_real_camera_pdf_url(url: str) -> bool:
     if not url:
         return False
 
+    if "votazioni" in url:
+        return False
+
     if url.endswith(".pdf"):
+        return True
+
+    if "documenti.camera.it" in url and "getdocumento.ashx" in url:
         return True
 
     if "documenti.camera.it" in url and "tipodoc=pdf" in url:
@@ -90,64 +101,57 @@ def is_real_camera_pdf_url(url: str) -> bool:
 
     return False
 
-import requests
-
-HEADERS = {
-    "User-Agent": "Mozilla/5.0",
-    "Accept": "application/pdf,application/octet-stream,*/*"
-}
-
 
 def download_pdf(url: str) -> bytes:
-    url = (url or "").strip()
+    url = normalize_camera_pdf_candidate(url)
 
     if not url:
         raise ValueError("URL vuoto")
 
-    # 🔁 NORMALIZZAZIONE LINK CAMERA
-    if "documenti.camera.it" in url.lower():
-        url = url.replace("tipoDoc=documento", "tipoDoc=pdf")
-        url = url.replace("doc=intero", "doc=INTERO")
-
-    # ❌ link non scaricabili (es. votazioni)
     if "votazioni" in url.lower():
         raise ValueError("Link non PDF (pagina votazioni)")
 
     print("Download URL finale:", url)
 
-    response = requests.get(url, headers=HEADERS, timeout=60)
+    response = requests.get(url, headers=HEADERS, timeout=60, allow_redirects=True)
 
     if response.status_code != 200:
         raise ValueError(f"Errore HTTP {response.status_code}")
 
     content_type = response.headers.get("Content-Type", "").lower()
 
-    # 🔥 Caso 1: è già PDF
     if "application/pdf" in content_type:
         return response.content
 
-    # 🔁 Caso 2: è HTML → prova a trovare link PDF dentro
-    if "text/html" in content_type:
-        from bs4 import BeautifulSoup
+    if url.lower().endswith(".pdf"):
+        return response.content
 
+    if "text/html" in content_type or "<html" in response.text[:500].lower():
         soup = BeautifulSoup(response.text, "html.parser")
 
         for a in soup.find_all("a", href=True):
             href = a["href"]
-            if ".pdf" in href.lower():
-                if href.startswith("/"):
-                    href = "https://documenti.camera.it" + href
+            href_lower = href.lower()
 
+            if ".pdf" in href_lower or "tipodoc=pdf" in href_lower:
+                if href.startswith("//"):
+                    href = "https:" + href
+                elif href.startswith("/"):
+                    href = "https://documenti.camera.it" + href
+                elif not href.startswith("http"):
+                    href = "https://documenti.camera.it/" + href.lstrip("/")
+
+                href = normalize_camera_pdf_candidate(href)
                 print("Trovato PDF dentro pagina:", href)
 
-                r2 = requests.get(href, headers=HEADERS, timeout=60)
+                r2 = requests.get(href, headers=HEADERS, timeout=60, allow_redirects=True)
                 if r2.status_code == 200:
                     return r2.content
 
         raise ValueError("HTML senza PDF interno")
 
-    # fallback
     return response.content
+
 
 def extract_pdf_text(pdf_bytes: bytes) -> str:
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
@@ -302,6 +306,179 @@ def merge_normative_hits(item: dict) -> list[str]:
     return merged
 
 
+def first_excerpt_from_terms(text: str, terms: list[str], radius: int = 220) -> str:
+    lowered = text.lower()
+    for term in terms:
+        term_l = term.lower()
+        idx = lowered.find(term_l)
+        if idx != -1:
+            start = max(0, idx - radius)
+            end = min(len(text), idx + len(term) + radius)
+            return compact_spaces(text[start:end])
+    return ""
+
+
+def analyze_with_kb(item: dict, pdf_text: str) -> dict:
+    titolo = compact_spaces(item.get("titolo", ""))
+    combined = f"{titolo}\n{pdf_text[:50000]}"
+    combined_lower = combined.lower()
+
+    normative_hits = extract_normative_hits(combined)
+    kb_hits = extract_confitarma_kb_hits(combined)
+
+    all_terms_for_excerpt = []
+    all_terms_for_excerpt.extend(normative_hits)
+    all_terms_for_excerpt.extend(kb_hits.get("keyphrases", []))
+    all_terms_for_excerpt.extend(kb_hits.get("norm_refs_italia", []))
+    all_terms_for_excerpt.extend(kb_hits.get("norm_refs_ue_internazionale", []))
+    all_terms_for_excerpt.extend(kb_hits.get("entities", []))
+
+    keyword_categories = set(kb_hits.get("keyword_categories", []))
+
+    maritime_categories = {
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "sanita_marittima_sanita_di_bordo",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "sicurezza_marittima_cyber_security",
+        "relazioni_internazionali_rotte_sanzioni_compliance",
+        "finanza_fiscalita_aiuti_tassonomia",
+        "education_capitale_umano",
+    }
+
+    maritime_title_terms = [
+        "trasporto marittimo",
+        "marittim",
+        "navigaz",
+        "porto",
+        "portual",
+        "adsp",
+        "autorità di sistema portuale",
+        "demanio marittimo",
+        "codice della navigazione",
+        "economia del mare",
+        "autostrade del mare",
+        "sea modal shift",
+        "gente di mare",
+        "lavoro marittimo",
+        "fueleu maritime",
+        "ets marittimo",
+        "cold ironing",
+        "shore power",
+    ]
+
+    transport_title_terms = [
+        "trasporto",
+        "trasporti",
+        "logistica",
+        "spedizion",
+        "corrier",
+        "mobilità",
+        "rete transeuropea",
+        "ten-t",
+        "infrastrutture",
+        "autostrad",
+        "gallerie stradali",
+    ]
+
+    industrial_general_terms = [
+        "imprese",
+        "impresa",
+        "industria",
+        "industriale",
+        "energia",
+        "lavoro",
+        "occupazione",
+        "internazionalizzazione",
+        "sistema produttivo",
+        "pnrr",
+        "made in italy",
+        "aiuti di stato",
+        "fondo",
+        "previdenza",
+        "cassa depositi e prestiti",
+    ]
+
+    maritime_hit = bool(keyword_categories & maritime_categories) or any(
+        term in combined_lower for term in maritime_title_terms
+    )
+
+    transport_hit = any(term in combined_lower for term in transport_title_terms)
+    industrial_hit = any(term in combined_lower for term in industrial_general_terms)
+
+    excerpt = first_excerpt_from_terms(
+        combined,
+        all_terms_for_excerpt
+        + maritime_title_terms
+        + transport_title_terms
+        + industrial_general_terms,
+    )
+
+    if maritime_hit:
+        reasons = []
+        if keyword_categories & maritime_categories:
+            reasons.append(
+                "categorie KB rilevate: " + ", ".join(sorted(keyword_categories & maritime_categories))
+            )
+        if normative_hits:
+            reasons.append("normative rilevate: " + ", ".join(normative_hits[:5]))
+
+        motivazione = (
+            "Il documento contiene riferimenti coerenti con il perimetro marittimo individuato dal KB Confitarma"
+        )
+        if reasons:
+            motivazione += " (" + "; ".join(reasons) + ")."
+        else:
+            motivazione += "."
+
+        return {
+            "categoria_finale": "Interesse trasporto marittimo",
+            "motivazione_finale": motivazione,
+            "estratto_rilevante": excerpt,
+            "normative_hits": normative_hits,
+            "confitarma_kb_hits": kb_hits,
+        }
+
+    if transport_hit:
+        motivazione = (
+            "Il documento contiene riferimenti al comparto trasporti/logistica, "
+            "ma non emergono elementi specifici sufficienti per il perimetro marittimo."
+        )
+        return {
+            "categoria_finale": "Interesse industria del trasporto",
+            "motivazione_finale": motivazione,
+            "estratto_rilevante": excerpt,
+            "normative_hits": normative_hits,
+            "confitarma_kb_hits": kb_hits,
+        }
+
+    if industrial_hit:
+        motivazione = (
+            "Il documento presenta profili di impresa, industria, energia, lavoro o sistema produttivo, "
+            "senza specifica connotazione marittima o di trasporto."
+        )
+        return {
+            "categoria_finale": "Interesse industriale generale",
+            "motivazione_finale": motivazione,
+            "estratto_rilevante": excerpt,
+            "normative_hits": normative_hits,
+            "confitarma_kb_hits": kb_hits,
+        }
+
+    return {
+        "categoria_finale": "Non attinenti",
+        "motivazione_finale": (
+            "Dalla lettura del PDF e dalla verifica con KB/normative non emergono riferimenti sufficienti "
+            "al perimetro marittimo, del trasporto o industriale rilevante per il monitor."
+        ),
+        "estratto_rilevante": excerpt,
+        "normative_hits": normative_hits,
+        "confitarma_kb_hits": kb_hits,
+    }
+
+
 def build_pdf_prompt(item, pdf_text):
     return f"""
 Analizza il seguente documento parlamentare della Camera dei deputati.
@@ -415,10 +592,7 @@ def extract_json_from_response(text: str):
 
 
 def main():
-    if not os.environ.get("OPENAI_API_KEY"):
-        raise RuntimeError("OPENAI_API_KEY mancante")
-
-    client = OpenAI()
+    client = OpenAI() if os.environ.get("OPENAI_API_KEY") else None
     target_date = parse_target_date()
 
     input_file = OUTPUT_DIR / f"camera_atti_strutturati_{target_date}.json"
@@ -437,7 +611,7 @@ def main():
     results = []
 
     for item in items:
-        categoria = item.get("categoria_preliminare", "Non attinenti")
+        categoria_preliminare = item.get("categoria_preliminare", "Non attinenti")
         link = normalize_camera_pdf_candidate(item.get("link_pdf", ""))
         item["link_pdf"] = link
 
@@ -455,9 +629,10 @@ def main():
             "programs_tools": [],
             "entities": [],
         }
+        item["estratto_rilevante"] = ""
 
         if not link or not is_real_camera_pdf_url(link):
-            item["categoria_finale"] = categoria
+            item["categoria_finale"] = categoria_preliminare
             if not link:
                 item["motivazione_finale"] = item.get("motivazione_preliminare", "")
             else:
@@ -465,48 +640,21 @@ def main():
                     item.get("motivazione_preliminare", "")
                     + " Link non riconosciuto come PDF diretto Camera: analisi PDF saltata."
                 ).strip()
-            item["estratto_rilevante"] = ""
             results.append(item)
             continue
 
-        # SKIP come Senato: non analizzare PDF inutili
-        if categoria == "Non attinenti" and not is_odg(item) and not is_resoconto(item):
-            item["categoria_finale"] = categoria
-            item["motivazione_finale"] = (
-                item.get("motivazione_preliminare", "")
-                + " PDF non analizzato: documento non rilevante (logica Senato)."
-            ).strip()
-            item["estratto_rilevante"] = ""
-            results.append(item)
-            continue
         print("Analizzo PDF:", link)
-        
+
         try:
             pdf_bytes = download_pdf(link)
             pdf_text = extract_pdf_text(pdf_bytes)
 
-            item["normative_hits"] = extract_normative_hits(pdf_text)
-            item["confitarma_kb_hits"] = extract_confitarma_kb_hits(pdf_text)
-            item["normative_hits"] = merge_normative_hits(item)
-
-            if is_odg(item):
-                item["data_seduta"] = extract_seduta_date(pdf_text)
-                item["termine_emendamenti"] = extract_emendamenti_snippets(pdf_text)
-                item["audizioni"] = extract_audizioni_snippets(pdf_text)
-
-                prompt = build_pdf_prompt(item, pdf_text)
-                response = client.responses.create(
-                    model="gpt-5.4",
-                    input=prompt,
-                )
-                parsed = extract_json_from_response(response.output_text)
-
-                item["categoria_finale"] = parsed.get("categoria_finale", categoria)
-                item["motivazione_finale"] = parsed.get(
-                    "motivazione_finale", item.get("motivazione_preliminare", "")
-                )
-                item["estratto_rilevante"] = parsed.get("estratto_rilevante", "")
-
+            if not compact_spaces(pdf_text):
+                item["categoria_finale"] = "Non attinenti"
+                item["motivazione_finale"] = (
+                    item.get("motivazione_preliminare", "")
+                    + " PDF vuoto o non leggibile."
+                ).strip()
                 results.append(item)
                 continue
 
@@ -514,38 +662,54 @@ def main():
                 found = scan_resoconto_keywords(pdf_text)
                 item["resoconto_keywords_found"] = found
                 item["resoconto_alert"] = bool(found)
+                item["normative_hits"] = extract_normative_hits(pdf_text)
+                item["confitarma_kb_hits"] = extract_confitarma_kb_hits(pdf_text)
+                item["normative_hits"] = merge_normative_hits(item)
                 item["categoria_finale"] = "Non attinenti"
                 item["motivazione_finale"] = item.get("motivazione_preliminare", "")
-                item["estratto_rilevante"] = ""
                 results.append(item)
                 continue
 
-            if categoria == "Non attinenti":
-                item["categoria_finale"] = categoria
-                item["motivazione_finale"] = item.get("motivazione_preliminare", "")
-                item["estratto_rilevante"] = ""
-                results.append(item)
-                continue
+            kb_analysis = analyze_with_kb(item, pdf_text)
+            item["normative_hits"] = kb_analysis.get("normative_hits", [])
+            item["confitarma_kb_hits"] = kb_analysis.get("confitarma_kb_hits", {})
+            item["normative_hits"] = merge_normative_hits(item)
 
-            MAX_CHARS = 20000
-            if len(pdf_text) > MAX_CHARS:
-                pdf_text = pdf_text[:MAX_CHARS]
-
-            prompt = build_pdf_prompt(item, pdf_text)
-            response = client.responses.create(
-                model="gpt-5.4",
-                input=prompt,
+            item["categoria_finale"] = kb_analysis.get("categoria_finale", categoria_preliminare)
+            item["motivazione_finale"] = kb_analysis.get(
+                "motivazione_finale",
+                item.get("motivazione_preliminare", ""),
             )
-            parsed = extract_json_from_response(response.output_text)
+            item["estratto_rilevante"] = kb_analysis.get("estratto_rilevante", "")
 
-            item["categoria_finale"] = parsed.get("categoria_finale", categoria)
-            item["motivazione_finale"] = parsed.get(
-                "motivazione_finale", item.get("motivazione_preliminare", "")
-            )
-            item["estratto_rilevante"] = parsed.get("estratto_rilevante", "")
+            if is_odg(item):
+                item["data_seduta"] = extract_seduta_date(pdf_text)
+                item["termine_emendamenti"] = extract_emendamenti_snippets(pdf_text)
+                item["audizioni"] = extract_audizioni_snippets(pdf_text)
+
+                if client is not None:
+                    prompt = build_pdf_prompt(item, pdf_text[:20000])
+                    response = client.responses.create(
+                        model="gpt-5.4",
+                        input=prompt,
+                    )
+                    parsed = extract_json_from_response(response.output_text)
+
+                    item["categoria_finale"] = parsed.get(
+                        "categoria_finale",
+                        item["categoria_finale"],
+                    )
+                    item["motivazione_finale"] = parsed.get(
+                        "motivazione_finale",
+                        item["motivazione_finale"],
+                    )
+                    item["estratto_rilevante"] = parsed.get(
+                        "estratto_rilevante",
+                        item["estratto_rilevante"],
+                    )
 
         except Exception as e:
-            item["categoria_finale"] = categoria
+            item["categoria_finale"] = categoria_preliminare
             item["motivazione_finale"] = f"Errore analisi PDF: {e}"
             item["estratto_rilevante"] = ""
 
