@@ -1,5 +1,6 @@
 import json
 import sys
+import re
 from datetime import datetime
 from pathlib import Path
 
@@ -15,6 +16,52 @@ def compact(text):
     return str(text).strip()
 
 
+def clean_text(text):
+    if not text:
+        return ""
+
+    text = str(text)
+
+    # spazio dopo i due punti
+    text = re.sub(r":([A-Za-zÀ-ÖØ-öø-ÿ])", r": \1", text)
+
+    # spazio tra minuscola e maiuscola
+    text = re.sub(r"([a-zàèéìòù])([A-ZÀ-ÖØ-Þ])", r"\1 \2", text)
+
+    # fix ricorrenti Camera
+    text = re.sub(r"(atto)(Relatrice)", r"\1 \2", text)
+    text = re.sub(r"(Presidenza)(il)", r"\1 \2", text)
+
+    # normalizza spazi
+    text = re.sub(r"\s+", " ", text)
+
+    return text.strip()
+
+
+def clean_tipo_atto(text):
+    text = clean_text(text)
+
+    # Doc. XCIIIn. 3 -> Doc. XCIII n. 3
+    text = re.sub(r"(?<!\s)(n\.\s*\d+)", r" \1", text)
+
+    # Doc. XXII-bisn. 5 -> Doc. XXII-bis n. 5
+    text = re.sub(r"(bis)(n\.\s*\d+)", r"\1 \2", text)
+
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
+def clean_title(text):
+    text = clean_text(text)
+
+    # rimuove residui tipo [PDF], (123 kb)
+    text = re.sub(r"\[PDF\]", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\(\s*\d+\s*kb\s*\)", "", text, flags=re.IGNORECASE)
+
+    text = re.sub(r"\s+", " ", text).strip()
+    return text
+
+
 def parse_target_date():
     if len(sys.argv) < 2:
         raise ValueError("Devi passare una data YYYY-MM-DD")
@@ -22,7 +69,6 @@ def parse_target_date():
 
 
 def load_raw(target_date_str):
-
     path = INPUT_DIR / f"camera_atti_{target_date_str}.json"
 
     if not path.exists():
@@ -34,18 +80,16 @@ def load_raw(target_date_str):
 
 
 def normalize_items(items, target_date_str):
-
     normalized = []
 
     for item in items:
-
         normalized_item = {
             "ramo": "Camera",
             "data_pubblicazione": target_date_str,
             "sezione": compact(item.get("sezione")),
-            "tipo_atto": compact(item.get("tipo_atto")),
+            "tipo_atto": clean_tipo_atto(item.get("tipo_atto")),
             "numero": compact(item.get("numero")),
-            "titolo": compact(item.get("titolo")),
+            "titolo": clean_title(item.get("titolo")),
             "commissione": "",
             "seduta": "",
             "link_pdf": compact(item.get("link")),
@@ -60,7 +104,6 @@ def normalize_items(items, target_date_str):
 
 
 def save_json(items, target_date_str):
-
     path = OUTPUT_DIR / f"camera_atti_strutturati_{target_date_str}.json"
 
     with open(path, "w", encoding="utf-8") as f:
@@ -70,7 +113,6 @@ def save_json(items, target_date_str):
 
 
 def main():
-
     target_date = parse_target_date()
     target_date_str = target_date.isoformat()
 
