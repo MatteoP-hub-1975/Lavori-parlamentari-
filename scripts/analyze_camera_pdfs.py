@@ -385,7 +385,8 @@ def main():
 
     for item in items:
         categoria = item.get("categoria_preliminare", "Non attinenti")
-        link = item.get("link_pdf", "")
+        link = normalize_camera_pdf_candidate(item.get("link_pdf", ""))
+        item["link_pdf"] = link
 
         item["data_seduta"] = ""
         item["termine_emendamenti"] = []
