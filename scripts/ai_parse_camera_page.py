@@ -22,17 +22,15 @@ def clean_text(text):
 
     text = str(text)
 
-    # spazio dopo i due punti
     text = re.sub(r":([A-Za-zÀ-ÖØ-öø-ÿ])", r": \1", text)
-
-    # spazio tra minuscola e maiuscola
     text = re.sub(r"([a-zàèéìòù])([A-ZÀ-ÖØ-Þ])", r"\1 \2", text)
+    text = re.sub(r"([A-ZÀ-ÖØ-Þ]{2,})([A-ZÀ-ÖØ-Þ][a-zàèéìòù])", r"\1 \2", text)
 
-    # fix ricorrenti Camera
     text = re.sub(r"(atto)(Relatrice)", r"\1 \2", text)
     text = re.sub(r"(Presidenza)(il)", r"\1 \2", text)
 
-    # normalizza spazi
+    text = re.sub(r"\[PDF\]", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\(\s*\d+\s*kb\s*\)", "", text, flags=re.IGNORECASE)
     text = re.sub(r"\s+", " ", text)
 
     return text.strip()
@@ -40,26 +38,85 @@ def clean_text(text):
 
 def clean_tipo_atto(text):
     text = clean_text(text)
-
-    # Doc. XCIIIn. 3 -> Doc. XCIII n. 3
     text = re.sub(r"(?<!\s)(n\.\s*\d+)", r" \1", text)
-
-    # Doc. XXII-bisn. 5 -> Doc. XXII-bis n. 5
     text = re.sub(r"(bis)(n\.\s*\d+)", r"\1 \2", text)
-
     text = re.sub(r"\s+", " ", text).strip()
     return text
 
 
-def clean_title(text):
+def parse_title_fields(text):
     text = clean_text(text)
 
-    # rimuove residui tipo [PDF], (123 kb)
-    text = re.sub(r"\[PDF\]", "", text, flags=re.IGNORECASE)
-    text = re.sub(r"\(\s*\d+\s*kb\s*\)", "", text, flags=re.IGNORECASE)
+    patterns = [
+        r"\bRelatrice:\s*",
+        r"\bRelatore:\s*",
+        r"\bPresentata dal\b",
+        r"\bPresentato dal\b",
+        r"\bPresentata dalla\b",
+        r"\bPresentato dalla\b",
+        r"\bTrasmessa alla Presidenza\b",
+        r"\bTrasmesso alla Presidenza\b",
+        r"\bComunicato alla Presidenza\b",
+        r"\bApprovato\b",
+    ]
 
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+    first_idx = len(text)
+    for pat in patterns:
+        m = re.search(pat, text, flags=re.IGNORECASE)
+        if m and m.start() < first_idx:
+            first_idx = m.start()
+
+    titolo = text[:first_idx].strip() if first_idx < len(text) else text.strip()
+    resto = text[first_idx:].strip() if first_idx < len(text) else ""
+
+    titolo = re.sub(r"^(bis)\s+", "", titolo, flags=re.IGNORECASE).strip()
+
+    relatrice = ""
+    presentazione = ""
+    trasmissione = ""
+    comunicazione = ""
+    approvazione = ""
+    altri = []
+
+    if resto:
+        split_points = []
+        for pat in patterns:
+            for m in re.finditer(pat, resto, flags=re.IGNORECASE):
+                split_points.append((m.start(), m.group(0)))
+
+        split_points = sorted(split_points, key=lambda x: x[0])
+
+        chunks = []
+        for idx, (start, marker) in enumerate(split_points):
+            end = split_points[idx + 1][0] if idx + 1 < len(split_points) else len(resto)
+            chunk = resto[start:end].strip()
+            if chunk:
+                chunks.append(chunk)
+
+        for chunk in chunks:
+            lower = chunk.lower()
+            if lower.startswith("relatrice:") or lower.startswith("relatore:"):
+                relatrice = chunk
+            elif lower.startswith("presentata") or lower.startswith("presentato"):
+                presentazione = chunk
+            elif lower.startswith("trasmessa") or lower.startswith("trasmesso"):
+                trasmissione = chunk
+            elif lower.startswith("comunicato"):
+                comunicazione = chunk
+            elif lower.startswith("approvato"):
+                approvazione = chunk
+            else:
+                altri.append(chunk)
+
+    return {
+        "titolo": titolo,
+        "relatrice": relatrice,
+        "presentazione": presentazione,
+        "trasmissione": trasmissione,
+        "comunicazione": comunicazione,
+        "approvazione": approvazione,
+        "altri_dettagli": " | ".join(altri),
+    }
 
 
 def parse_target_date():
@@ -83,13 +140,22 @@ def normalize_items(items, target_date_str):
     normalized = []
 
     for item in items:
+        tipo = clean_tipo_atto(item.get("tipo_atto", ""))
+        parsed = parse_title_fields(item.get("titolo", ""))
+
         normalized_item = {
             "ramo": "Camera",
             "data_pubblicazione": target_date_str,
             "sezione": compact(item.get("sezione")),
-            "tipo_atto": clean_tipo_atto(item.get("tipo_atto")),
+            "tipo_atto": tipo,
             "numero": compact(item.get("numero")),
-            "titolo": clean_title(item.get("titolo")),
+            "titolo": parsed["titolo"],
+            "relatrice": parsed["relatrice"],
+            "presentazione": parsed["presentazione"],
+            "trasmissione": parsed["trasmissione"],
+            "comunicazione": parsed["comunicazione"],
+            "approvazione": parsed["approvazione"],
+            "altri_dettagli": parsed["altri_dettagli"],
             "commissione": "",
             "seduta": "",
             "link_pdf": compact(item.get("link")),
