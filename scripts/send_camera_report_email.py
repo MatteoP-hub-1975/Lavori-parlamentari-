@@ -39,9 +39,15 @@ def build_sections(items):
     for item in items:
         categoria = item.get("categoria_finale") or item.get("categoria_preliminare") or "Non attinenti"
 
-        titolo = compact_spaces(item.get("titolo", ""))
         tipo = compact_spaces(item.get("tipo_atto", ""))
         numero = compact_spaces(item.get("numero", ""))
+        titolo = compact_spaces(item.get("titolo", ""))
+        relatrice = compact_spaces(item.get("relatrice", ""))
+        presentazione = compact_spaces(item.get("presentazione", ""))
+        trasmissione = compact_spaces(item.get("trasmissione", ""))
+        comunicazione = compact_spaces(item.get("comunicazione", ""))
+        approvazione = compact_spaces(item.get("approvazione", ""))
+        altri_dettagli = compact_spaces(item.get("altri_dettagli", ""))
         commissione = compact_spaces(item.get("commissione", ""))
         seduta = compact_spaces(item.get("seduta", ""))
         data_seduta = compact_spaces(item.get("data_seduta", ""))
@@ -55,7 +61,22 @@ def build_sections(items):
         if numero:
             header += f" {numero}"
 
-        lines = [f"<b>{header}</b>", titolo]
+        lines = [f"<b>{header}</b>"]
+
+        if titolo:
+            lines.append(titolo)
+        if relatrice:
+            lines.append(relatrice)
+        if presentazione:
+            lines.append(presentazione)
+        if trasmissione:
+            lines.append(trasmissione)
+        if comunicazione:
+            lines.append(comunicazione)
+        if approvazione:
+            lines.append(approvazione)
+        if altri_dettagli:
+            lines.append(altri_dettagli)
 
         seduta_line = f"Commissione: {commissione} | Seduta: {seduta}"
         if data_seduta:
@@ -124,8 +145,6 @@ def send_email(subject, body):
     msg["From"] = sender
     msg["To"] = recipient
     msg["Subject"] = subject
-
-    # HTML email
     msg.attach(MIMEText(body, "html"))
 
     with smtplib.SMTP(smtp_server, smtp_port) as server:
