@@ -37,12 +37,19 @@ def clean_text(text):
 
 
 def clean_tipo_atto(text):
-    text = clean_text(text)
-    text = re.sub(r"(?<!\s)(n\.\s*\d+)", r" \1", text)
-    text = re.sub(r"(bis)(n\.\s*\d+)", r"\1 \2", text)
-    text = re.sub(r"\s+", " ", text).strip()
-    return text
+    text = compact(text)
 
+    # inserisce spazio prima di "n." solo quando manca
+    # es: "Doc. XCIIIn. 3" -> "Doc. XCIII n. 3"
+    text = re.sub(r"(?<=\S)(n\.\s*\d+)", r" \1", text)
+
+    # sistema il caso "bisn. 5" -> "bis n. 5"
+    text = re.sub(r"(bis)(n\.\s*\d+)", r"\1 \2", text, flags=re.IGNORECASE)
+
+    # normalizza spazi
+    text = re.sub(r"\s+", " ", text).strip()
+
+    return text
 
 def parse_title_fields(text):
     text = clean_text(text)
