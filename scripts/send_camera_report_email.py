@@ -55,7 +55,7 @@ def build_sections(items):
         if numero:
             header += f" {numero}"
 
-        lines = [header, titolo]
+        lines = [f"<b>{header}</b>", titolo]
 
         seduta_line = f"Commissione: {commissione} | Seduta: {seduta}"
         if data_seduta:
@@ -66,9 +66,13 @@ def build_sections(items):
             lines.append(f"Normative rilevanti trovate: {', '.join(normative_hits)}")
 
         lines.append(f"Motivazione: {motivazione}")
-        lines.append(f"PDF: {link}")
 
-        text = "\n".join(lines) + "\n"
+        if link:
+            lines.append(f'PDF: <a href="{link}">link documento</a>')
+        else:
+            lines.append("PDF: -")
+
+        text = "<br>".join(lines) + "<br><br>"
 
         if categoria in sections:
             sections[categoria].append(text)
@@ -79,35 +83,31 @@ def build_sections(items):
 
 
 def build_email_body(sections, date):
-    body = f"Monitor Parlamento – Camera – {date}\n\n"
+    body = f"<b>Monitor Parlamento – Camera – {date}</b><br><br>"
 
-    body += "=== INTERESSE TRASPORTO MARITTIMO ===\n\n"
+    body += "<b>=== INTERESSE TRASPORTO MARITTIMO ===</b><br><br>"
     if sections["Interesse trasporto marittimo"]:
-        for item in sections["Interesse trasporto marittimo"]:
-            body += item + "\n"
+        body += "".join(sections["Interesse trasporto marittimo"])
     else:
-        body += "Nessun atto.\n\n"
+        body += "Nessun atto.<br><br>"
 
-    body += "=== INTERESSE INDUSTRIA DEL TRASPORTO ===\n\n"
+    body += "<b>=== INTERESSE INDUSTRIA DEL TRASPORTO ===</b><br><br>"
     if sections["Interesse industria del trasporto"]:
-        for item in sections["Interesse industria del trasporto"]:
-            body += item + "\n"
+        body += "".join(sections["Interesse industria del trasporto"])
     else:
-        body += "Nessun atto.\n\n"
+        body += "Nessun atto.<br><br>"
 
-    body += "=== INTERESSE INDUSTRIALE GENERALE ===\n\n"
+    body += "<b>=== INTERESSE INDUSTRIALE GENERALE ===</b><br><br>"
     if sections["Interesse industriale generale"]:
-        for item in sections["Interesse industriale generale"]:
-            body += item + "\n"
+        body += "".join(sections["Interesse industriale generale"])
     else:
-        body += "Nessun atto.\n\n"
+        body += "Nessun atto.<br><br>"
 
-    body += "=== NON ATTINENTI ===\n\n"
+    body += "<b>=== NON ATTINENTI ===</b><br><br>"
     if sections["Non attinenti"]:
-        for item in sections["Non attinenti"]:
-            body += item + "\n"
+        body += "".join(sections["Non attinenti"])
     else:
-        body += "Nessun atto.\n\n"
+        body += "Nessun atto.<br><br>"
 
     return body
 
@@ -124,7 +124,9 @@ def send_email(subject, body):
     msg["From"] = sender
     msg["To"] = recipient
     msg["Subject"] = subject
-    msg.attach(MIMEText(body, "plain"))
+
+    # HTML email
+    msg.attach(MIMEText(body, "html"))
 
     with smtplib.SMTP(smtp_server, smtp_port) as server:
         server.starttls()
