@@ -50,7 +50,7 @@ def normalize_items(items, target_date_str):
             "seduta": "",
             "link_pdf": compact(item.get("link")),
             "categoria_preliminare": "Non attinenti",
-            "motivazione_preliminare": "Documento stampato Camera: classificazione preliminare automatica.",
+            "motivazione_preliminare": "Documento stampato Camera",
             "richiede_lettura_pdf": True
         }
 
