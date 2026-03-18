@@ -46,36 +46,52 @@ def normalize_link(href: str) -> str:
 
     return BASE_URL + "/" + href.lstrip("/")
 
+
 def extract_documents(html: str):
     soup = BeautifulSoup(html, "html.parser")
     lines = [compact_spaces(x) for x in soup.get_text("\n", strip=True).splitlines()]
     lines = [x for x in lines if x]
 
-    pdf_links = []
+    # Estrae tutti i link PDF/doc nell'ordine in cui compaiono
+    raw_links = []
     for a in soup.find_all("a", href=True):
         label = compact_spaces(a.get_text(" ", strip=True)).lower()
         href = a["href"]
         full = normalize_link(href)
 
-        if "[pdf]" in label or label == "pdf" or "documenti.camera.it" in full.lower():
-            pdf_links.append(full)
+        if (
+            "[pdf]" in label
+            or label == "pdf"
+            or "documenti.camera.it" in full.lower()
+        ):
+            raw_links.append(full)
 
     seen = set()
-    pdf_links = [x for x in pdf_links if not (x in seen or seen.add(x))]
+    raw_links = [x for x in raw_links if not (x in seen or seen.add(x))]
 
     documents = []
     current_date_label = ""
+    first_date_label = None
+    stop_after_first_section = False
 
     i = 0
     while i < len(lines):
         line = lines[i]
 
         if line.lower().startswith("documenti stampati "):
-            current_date_label = line
+            if first_date_label is None:
+                first_date_label = line
+                current_date_label = line
+            elif line != first_date_label:
+                stop_after_first_section = True
+                break
             i += 1
             continue
 
         if re.match(r"^Doc\.\s", line):
+            if stop_after_first_section:
+                break
+
             tipo_num = line
             titolo_parts = []
 
@@ -131,8 +147,8 @@ def extract_documents(html: str):
         i += 1
 
     for idx, doc in enumerate(documents):
-        if idx < len(pdf_links):
-            doc["link"] = pdf_links[idx]
+        if idx < len(raw_links):
+            doc["link"] = raw_links[idx]
 
     documents = [x for x in documents if x.get("link")]
 
