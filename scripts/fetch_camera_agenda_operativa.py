@@ -37,36 +37,33 @@ def normalize_link(href, base_url=URL):
     return urljoin(base_url, href)
 
 
+def compact(text: str) -> str:
+    return re.sub(r"\s+", " ", (text or "")).strip()
+
+
 def extract_page_title(html):
     soup = BeautifulSoup(html, "html.parser")
     if soup.title:
-        return " ".join(soup.title.get_text(" ", strip=True).split()).strip()
+        return compact(soup.title.get_text(" ", strip=True))
     return ""
 
 
 def extract_odg_details(html):
     soup = BeautifulSoup(html, "html.parser")
-    text = soup.get_text(" ", strip=True)
-    text = " ".join(text.split())
+    text = compact(soup.get_text(" ", strip=True))
 
     match = re.search(
         r"Ordine del giorno della seduta n\.?\s*\d+\s+del\s+\d{1,2}\s+\w+\s+\d{4}",
         text,
         flags=re.IGNORECASE,
     )
-
     if match:
-        return " ".join(match.group(0).split())
+        return compact(match.group(0))
 
     return ""
 
 
 def enrich_link(url):
-    """
-    Restituisce:
-    - link finale risolto
-    - titolo pagina finale se disponibile
-    """
     url = (url or "").strip()
     if not url:
         return "", ""
@@ -95,7 +92,7 @@ def extract_odg(soup):
     results = []
 
     for a in soup.find_all("a", href=True):
-        text = " ".join(a.get_text(" ", strip=True).split()).strip()
+        text = compact(a.get_text(" ", strip=True))
 
         if "Ordine del giorno" in text:
             raw_link = normalize_link(a.get("href"))
@@ -115,37 +112,78 @@ def extract_odg(soup):
     return results
 
 
+def find_commissioni_permanenti_block(soup):
+    markers = soup.find_all(string=re.compile(r"Commissioni permanenti", re.IGNORECASE))
+    if not markers:
+        return None
+
+    marker = markers[0]
+    current = marker.parent
+
+    # risale un po' per prendere un contenitore utile
+    for _ in range(4):
+        if current is None:
+            break
+        if current.name in {"section", "div", "article"}:
+            text = compact(current.get_text(" ", strip=True))
+            if "Commissioni permanenti" in text:
+                return current
+        current = current.parent
+
+    return marker.parent
+
+
+def is_excluded_commission_link(text, link):
+    combined = f"{text} {link}".lower()
+
+    excluded_terms = [
+        "bicamerali",
+        "inchiesta",
+        "giunte",
+        "delegazioni",
+        "comitato per la legislazione",
+        "comitato legislazione",
+        "speciali",
+    ]
+
+    return any(term in combined for term in excluded_terms)
+
+
 def extract_commissioni(soup):
     results = []
 
-    for a in soup.find_all("a", href=True):
-        text = " ".join(a.get_text(" ", strip=True).split()).strip()
+    block = find_commissioni_permanenti_block(soup)
+    if block is None:
+        return results
 
-        if "Convocazione" in text:
-            raw_link = normalize_link(a.get("href"))
-            final_link, page_title = enrich_link(raw_link)
+    seen = set()
 
-            link_check = final_link.lower()
+    for a in block.find_all("a", href=True):
+        text = compact(a.get_text(" ", strip=True))
 
-            if any(x in link_check for x in [
-                "bicamerali",
-                "inchiesta",
-                "giunte",
-                "delegazioni",
-                "comitato",
-                "speciali",
-            ]):
-                continue
+        if "Convocazione" not in text:
+            continue
 
-            titolo = text
-            if page_title:
-                titolo = page_title
+        raw_link = normalize_link(a.get("href"))
+        final_link, page_title = enrich_link(raw_link)
 
-            results.append({
-                "tipo": "Convocazione Commissione",
-                "titolo": titolo,
-                "link": final_link,
-            })
+        if is_excluded_commission_link(text, final_link):
+            continue
+
+        key = (text, final_link)
+        if key in seen:
+            continue
+        seen.add(key)
+
+        titolo = text
+        if page_title:
+            titolo = page_title
+
+        results.append({
+            "tipo": "Convocazione Commissione permanente",
+            "titolo": titolo,
+            "link": final_link,
+        })
 
     return results
 
