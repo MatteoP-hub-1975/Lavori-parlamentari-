@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      - name: Set target date
+        id: set_target_date
+        run: echo "target_date=$(date -d 'yesterday' +%F)" >> $GITHUB_OUTPUT
+
       - name: Checkout repository
         uses: actions/checkout@v4
 
@@ -30,27 +34,27 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python scripts/fetch_camera_atti.py "${{ github.event.inputs.target_date }}"
+          python scripts/fetch_camera_atti.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera ODG fetch
         run: |
-          python scripts/fetch_camera_odg.py "${{ github.event.inputs.target_date }}"
+          python scripts/fetch_camera_odg.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera agenda fetch
         run: |
-          python scripts/fetch_camera_agenda.py "${{ github.event.inputs.target_date }}"
+          python scripts/fetch_camera_agenda.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera parse
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python scripts/ai_parse_camera_page.py "${{ github.event.inputs.target_date }}"
+          python scripts/ai_parse_camera_page.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera PDF analysis
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python scripts/analyze_camera_pdfs.py "${{ github.event.inputs.target_date }}"
+          python scripts/analyze_camera_pdfs.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Send Camera email
         env:
@@ -58,11 +62,11 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SMTP_TO: ${{ secrets.SMTP_TO }}
         run: |
-          python scripts/send_camera_report_email.py "${{ github.event.inputs.target_date }}"
+          python scripts/send_camera_report_email.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Upload Camera output artifacts
         uses: actions/upload-artifact@v4
         with:
-          name: camera-output-${{ github.event.inputs.target_date }}
+          name: camera-output-${{ steps.set_target_date.outputs.target_date }}
           path: data/camera/*.json
           if-no-files-found: warn
