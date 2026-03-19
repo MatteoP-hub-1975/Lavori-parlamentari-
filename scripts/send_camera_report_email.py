@@ -84,7 +84,7 @@ def build_sections(items):
         lines.append(seduta_line)
 
         if categoria != "Non attinenti" and normative_hits:
-        lines.append(f"Normative rilevanti trovate: {', '.join(normative_hits)}")
+            lines.append(f"Normative rilevanti trovate: {', '.join(normative_hits)}")
 
         lines.append(f"Motivazione: {motivazione}")
 
