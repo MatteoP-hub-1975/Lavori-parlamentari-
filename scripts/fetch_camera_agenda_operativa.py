@@ -1,4 +1,5 @@
 import json
+import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import urljoin
@@ -36,23 +37,27 @@ def normalize_link(href, base_url=URL):
     return urljoin(base_url, href)
 
 
-def resolve_final_link(url):
-    url = (url or "").strip()
-    if not url:
-        return ""
-
-    try:
-        r = requests.get(url, headers=HEADERS, timeout=60, allow_redirects=True)
-        r.raise_for_status()
-        return r.url
-    except Exception:
-        return url
-
-
 def extract_page_title(html):
     soup = BeautifulSoup(html, "html.parser")
     if soup.title:
         return " ".join(soup.title.get_text(" ", strip=True).split()).strip()
+    return ""
+
+
+def extract_odg_details(html):
+    soup = BeautifulSoup(html, "html.parser")
+    text = soup.get_text(" ", strip=True)
+    text = " ".join(text.split())
+
+    match = re.search(
+        r"Ordine del giorno della seduta n\.?\s*\d+\s+del\s+\d{1,2}\s+\w+\s+\d{4}",
+        text,
+        flags=re.IGNORECASE,
+    )
+
+    if match:
+        return " ".join(match.group(0).split())
+
     return ""
 
 
@@ -72,11 +77,14 @@ def enrich_link(url):
         final_url = r.url
 
         content_type = (r.headers.get("Content-Type") or "").lower()
+        page_title = ""
 
         if "text/html" in content_type:
-            page_title = extract_page_title(r.text)
-        else:
-            page_title = ""
+            odg_title = extract_odg_details(r.text)
+            if odg_title:
+                page_title = odg_title
+            else:
+                page_title = extract_page_title(r.text)
 
         return final_url, page_title
     except Exception:
