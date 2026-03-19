@@ -28,6 +28,38 @@ def load_analyzed_data(target_date):
         return json.load(f)
 
 
+def load_agenda_operativa_data(target_date):
+    file_path = OUTPUT_DIR / f"camera_agenda_operativa_{target_date}.json"
+    if not file_path.exists():
+        return []
+    with open(file_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
+def build_agenda_section(items):
+    blocks = []
+
+    for item in items:
+        tipo = compact_spaces(item.get("tipo_atto", ""))
+        titolo = compact_spaces(item.get("titolo", ""))
+        link = compact_spaces(item.get("link_pdf", ""))
+        motivazione = compact_spaces(item.get("motivazione_preliminare", ""))
+
+        lines = []
+        if tipo:
+            lines.append(f"<b>{tipo}</b>")
+        if titolo and titolo != tipo:
+            lines.append(titolo)
+        if motivazione:
+            lines.append(f"Motivazione: {motivazione}")
+        if link:
+            lines.append(f'Link: <a href="{link}">link documento</a>')
+
+        blocks.append("<br>".join(lines) + "<br><br>")
+
+    return blocks
+
+
 def build_sections(items):
     sections = {
         "Interesse trasporto marittimo": [],
@@ -102,8 +134,14 @@ def build_sections(items):
     return sections
 
 
-def build_email_body(sections, date):
+def build_email_body(agenda_blocks, sections, date):
     body = f"<b>Monitor Parlamento – Camera – {date}</b><br><br>"
+
+    body += "<b>=== AGENDA LAVORI CAMERA ===</b><br><br>"
+    if agenda_blocks:
+        body += "".join(agenda_blocks)
+    else:
+        body += "Nessuna segnalazione.<br><br>"
 
     body += "<b>=== INTERESSE TRASPORTO MARITTIMO ===</b><br><br>"
     if sections["Interesse trasporto marittimo"]:
@@ -154,12 +192,15 @@ def send_email(subject, body):
 
 def main():
     target_date = parse_target_date()
-    items = load_analyzed_data(target_date)
 
-    sections = build_sections(items)
+    analyzed_items = load_analyzed_data(target_date)
+    agenda_items = load_agenda_operativa_data(target_date)
+
+    agenda_blocks = build_agenda_section(agenda_items)
+    sections = build_sections(analyzed_items)
 
     subject = f"Monitor Parlamento – Camera – {target_date}"
-    body = build_email_body(sections, target_date)
+    body = build_email_body(agenda_blocks, sections, target_date)
 
     send_email(subject, body)
     print("Email Camera inviata.")
