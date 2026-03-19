@@ -32,6 +32,10 @@ jobs:
         run: |
           python scripts/fetch_camera_atti.py "${{ github.event.inputs.target_date }}"
 
+      - name: Run Camera ODG fetch
+        run: |
+          python scripts/fetch_camera_odg.py "${{ github.event.inputs.target_date }}"
+
       - name: Run Camera agenda fetch
         run: |
           python scripts/fetch_camera_agenda.py "${{ github.event.inputs.target_date }}"
