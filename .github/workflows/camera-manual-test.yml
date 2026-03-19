@@ -2,7 +2,7 @@ name: Camera manual test
 
 on:
   workflow_dispatch:
-    
+
 jobs:
   camera-test:
     runs-on: ubuntu-latest
@@ -31,9 +31,9 @@ jobs:
         run: |
           python scripts/fetch_camera_atti.py "${{ steps.set_target_date.outputs.target_date }}"
 
-      - name: Run Camera ODG fetch
+      - name: Fetch agenda Camera operativa
         run: |
-          python scripts/fetch_camera_odg.py "${{ steps.set_target_date.outputs.target_date }}"
+          python scripts/fetch_camera_agenda_operativa.py
 
       - name: Run Camera agenda fetch
         run: |
