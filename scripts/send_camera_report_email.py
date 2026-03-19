@@ -83,8 +83,8 @@ def build_sections(items):
             seduta_line += f" | Data seduta: {data_seduta}"
         lines.append(seduta_line)
 
-        if normative_hits:
-            lines.append(f"Normative rilevanti trovate: {', '.join(normative_hits)}")
+        if categoria != "Non attinenti" and normative_hits:
+        lines.append(f"Normative rilevanti trovate: {', '.join(normative_hits)}")
 
         lines.append(f"Motivazione: {motivazione}")
 
