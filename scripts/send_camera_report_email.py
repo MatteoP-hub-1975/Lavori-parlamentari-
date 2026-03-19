@@ -49,7 +49,6 @@ def build_sections(items):
         approvazione = compact_spaces(item.get("approvazione", ""))
         altri_dettagli = compact_spaces(item.get("altri_dettagli", ""))
         commissione = compact_spaces(item.get("commissione", ""))
-        seduta = compact_spaces(item.get("seduta", ""))
         data_seduta = compact_spaces(item.get("data_seduta", ""))
         link = compact_spaces(item.get("link_pdf", ""))
         motivazione = compact_spaces(
@@ -78,10 +77,10 @@ def build_sections(items):
         if altri_dettagli:
             lines.append(altri_dettagli)
 
-        seduta_line = f"Commissione: {commissione} | Seduta: {seduta}"
+        if commissione:
+            lines.append(f"Commissione: {commissione}")
         if data_seduta:
-            seduta_line += f" | Data seduta: {data_seduta}"
-        lines.append(seduta_line)
+            lines.append(f"Data seduta: {data_seduta}")
 
         if categoria != "Non attinenti" and normative_hits:
             lines.append(f"Normative rilevanti trovate: {', '.join(normative_hits)}")
