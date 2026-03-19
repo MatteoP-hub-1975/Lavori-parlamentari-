@@ -2,12 +2,7 @@ name: Camera manual test
 
 on:
   workflow_dispatch:
-    inputs:
-      target_date:
-        description: "Data da analizzare (YYYY-MM-DD)"
-        required: true
-        default: "2026-03-16"
-
+    
 jobs:
   camera-test:
     runs-on: ubuntu-latest
