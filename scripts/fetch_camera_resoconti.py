@@ -1,42 +1,75 @@
+import json
+from datetime import datetime, timedelta
+from pathlib import Path
+from urllib.parse import urljoin
+
 import requests
 from bs4 import BeautifulSoup
 
-URLS = [
-    "https://www.camera.it/leg19/410?tipo=alfabetico_stenografico",
-    "https://www.camera.it/leg19/410?tipo=sommario",
-]
+BASE_URL = "https://www.camera.it"
+URL = "https://www.camera.it/leg19/207"
+
+OUTPUT_DIR = Path("data/camera")
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 
-def compact(text):
-    return " ".join((text or "").split()).strip()
+def get_target_date():
+    yesterday = datetime.today() - timedelta(days=1)
+    return yesterday.date().isoformat()
 
 
-for url in URLS:
-    print("\n" + "=" * 80)
-    print("URL:", url)
-    print("=" * 80)
-
-    r = requests.get(url, headers=HEADERS, timeout=60)
+def fetch_html():
+    r = requests.get(URL, headers=HEADERS, timeout=60)
     r.raise_for_status()
+    return r.text
 
-    soup = BeautifulSoup(r.text, "html.parser")
 
-    found = 0
+def normalize_link(href):
+    return urljoin(BASE_URL, href or "")
+
+
+def main():
+    target_date = get_target_date()
+
+    print("Scarico resoconti Camera (reali)...")
+
+    html = fetch_html()
+    soup = BeautifulSoup(html, "html.parser")
+
+    items = []
+
     for a in soup.find_all("a", href=True):
-        text = compact(a.get_text(" ", strip=True))
-        href = a.get("href", "").strip()
+        text = " ".join(a.get_text(" ", strip=True).split())
 
-        if not text and not href:
-            continue
+        # filtro intelligente
+        if any(x in text.lower() for x in [
+            "resoconto",
+            "stenografico",
+            "sommario"
+        ]):
+            items.append({
+                "ramo": "Camera",
+                "data": target_date,
+                "tipo_atto": "Resoconto",
+                "titolo": text,
+                "link_pdf": normalize_link(a["href"]),
+                "categoria_preliminare": "Interesse istituzionale",
+                "motivazione_preliminare": "Resoconto Camera"
+            })
 
-        print("TEXT:", text)
-        print("HREF:", href)
-        print("-" * 40)
+    output_path = OUTPUT_DIR / f"camera_resoconti_{target_date}.json"
 
-        found += 1
-        if found >= 40:
-            break
+    with open(output_path, "w", encoding="utf-8") as f:
+        json.dump(items, f, ensure_ascii=False, indent=2)
 
-    print("Link stampati:", found)
+    print("Trovati:", len(items))
+    print("Salvato:", output_path)
+
+    for item in items[:5]:
+        print("-", item["titolo"])
+
+
+if __name__ == "__main__":
+    main()
