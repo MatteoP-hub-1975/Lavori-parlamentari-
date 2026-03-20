@@ -87,11 +87,23 @@ def extract_tipo(text: str) -> str:
 
 
 def build_title(context_text: str, idx: int) -> str:
-    context_text = clean_context_text(context_text)
-    if context_text:
-        return context_text
-    return f"Resoconto Camera #{idx}"
+    text = context_text
 
+    # estrai seduta
+    seduta = extract_seduta(text)
+
+    # estrai data leggibile
+    data = extract_date(text)
+
+    titolo = "Resoconto Camera"
+
+    if seduta:
+        titolo += f" – {seduta}"
+
+    if data:
+        titolo += f" – {data}"
+
+    return titolo
 
 def dedupe(items):
     seen = set()
