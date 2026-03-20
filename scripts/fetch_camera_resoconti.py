@@ -1,5 +1,4 @@
 import json
-import re
 from datetime import datetime, timedelta
 from pathlib import Path
 from urllib.parse import urljoin
@@ -10,8 +9,8 @@ from bs4 import BeautifulSoup
 
 BASE_URL = "https://www.camera.it"
 
-URL_ASSEMBLEA = "https://www.camera.it/leg19/410"
-URL_COMMISSIONI = "https://www.camera.it/leg19/824"
+URL_STENOGRAFICO = "https://www.camera.it/leg19/410?tipo=alfabetico_stenografico"
+URL_SOMMARIO = "https://www.camera.it/leg19/410?tipo=sommario"
 
 OUTPUT_DIR = Path("data/camera")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -20,132 +19,77 @@ HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 
 def get_target_date():
-    yesterday = datetime.today() - timedelta(days=1)
-    return yesterday.date().isoformat()
+    return (datetime.today() - timedelta(days=1)).date().isoformat()
 
 
 def fetch_html(url):
-    r = requests.get(url, headers=HEADERS, timeout=60, allow_redirects=True)
+    r = requests.get(url, headers=HEADERS, timeout=60)
     r.raise_for_status()
     return r.text
 
 
-def normalize_link(href, base_url):
-    href = (href or "").strip()
+def normalize_link(href, base):
     if not href:
         return ""
-    return urljoin(base_url, href)
+    return urljoin(base, href)
 
 
 def compact(text):
     return " ".join((text or "").split()).strip()
 
 
-def is_good_resoconto_text(text):
-    text_l = text.lower()
-
-    positive = [
-        "resoconto stenografico",
-        "resoconto sommario",
-        "resoconto",
-        "sommario",
-        "stenografico",
-    ]
-
-    negative = [
-        "parlamento in seduta comune",
-        "documenti di seduta",
-        "ordine del giorno",
-        "agenda dei lavori",
-        "calendario dei lavori",
-        "programma dei lavori",
-    ]
-
-    if any(x in text_l for x in negative):
-        return False
-
-    return any(x in text_l for x in positive)
-
-
-def is_good_resoconto_link(link):
-    link_l = link.lower()
-
-    # escludi link troppo generici o di navigazione
-    negative = [
-        "/leg19/76",
-        "/leg19/187",
-        "/leg19/410",
-        "/leg19/824",
-    ]
-
-    if any(x == link_l for x in negative):
-        return False
-
-    # includi solo link che sembrano davvero resoconti/documenti di seduta
-    positive = [
-        "resoconto",
-        "stenografico",
-        "sommario",
-        "documentiparlamentari",
-        "getdocumento.ashx",
-    ]
-
-    return any(x in link_l for x in positive)
-
-
-def dedupe(items):
-    seen = set()
-    out = []
-
-    for item in items:
-        key = (item["tipo"], item["titolo"], item["link"])
-        if key in seen:
-            continue
-        seen.add(key)
-        out.append(item)
-
-    return out
-
-
-def extract_resoconti(url, tipo):
+def extract_latest_resoconto(url, tipo):
     html = fetch_html(url)
     soup = BeautifulSoup(html, "html.parser")
 
     results = []
 
     for a in soup.find_all("a", href=True):
-        text = compact(a.get_text(" ", strip=True))
-        if not text:
+        text = compact(a.get_text())
+
+        # filtro forte
+        if not any(x in text.lower() for x in ["seduta", "resoconto"]):
             continue
 
         link = normalize_link(a.get("href"), url)
 
-        if not is_good_resoconto_text(text):
-            continue
-
-        if not is_good_resoconto_link(link):
+        # deve essere documento vero, non pagina indice
+        if not any(x in link.lower() for x in [
+            "stenografico",
+            "sommario",
+            "pdf",
+            "resoconto"
+        ]):
             continue
 
         results.append({
             "tipo": tipo,
             "titolo": text,
-            "link": link,
+            "link": link
         })
 
-    return dedupe(results)
+    # prendiamo solo i primi (più recenti)
+    return results[:5]
 
 
 def main():
     target_date = get_target_date()
 
-    print("Scarico resoconti Camera...")
+    print("Scarico resoconti Camera (Assemblea)...")
 
-    assemblea = extract_resoconti(URL_ASSEMBLEA, "Resoconto Assemblea")
-    commissioni = extract_resoconti(URL_COMMISSIONI, "Resoconto Commissione")
+    stenografici = extract_latest_resoconto(
+        URL_STENOGRAFICO,
+        "Resoconto Assemblea (stenografico)"
+    )
+
+    sommari = extract_latest_resoconto(
+        URL_SOMMARIO,
+        "Resoconto Assemblea (sommario)"
+    )
 
     items = []
 
-    for x in assemblea + commissioni:
+    for x in stenografici + sommari:
         items.append({
             "ramo": "Camera",
             "data": target_date,
@@ -164,8 +108,8 @@ def main():
     print("Trovati:", len(items))
     print("Salvato:", output_path)
 
-    for item in items[:10]:
-        print("-", item["tipo_atto"], "|", item["titolo"], "|", item["link_pdf"])
+    for i in items:
+        print("-", i["tipo_atto"], "|", i["titolo"])
 
 
 if __name__ == "__main__":
