@@ -43,6 +43,10 @@ jobs:
         run: |
           python scripts/fetch_camera_agenda.py "${{ steps.set_target_date.outputs.target_date }}"
 
+      - name: Run Camera SPARQL probe
+        run: |
+          python scripts/fetch_camera_sparql_probe.py
+
       - name: Run Camera parse
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
