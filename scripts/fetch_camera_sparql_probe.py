@@ -12,162 +12,155 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def get_target_date():
-    yesterday = datetime.today() - timedelta(days=1)
-    return yesterday.date().isoformat()
+    return (datetime.today() - timedelta(days=1)).date()
+
+
+def get_date_filter(days=5):
+    today = datetime.today().date()
+    start = today - timedelta(days=days)
+    return start.isoformat()
 
 
 def run_query(query):
-    headers = {
-        "Accept": "application/sparql-results+json"
-    }
+    headers = {"Accept": "application/sparql-results+json"}
 
-    response = requests.get(
+    r = requests.get(
         SPARQL_ENDPOINT,
         params={"query": query},
         headers=headers,
         timeout=60
     )
+    r.raise_for_status()
+    return r.json()
 
-    response.raise_for_status()
-    return response.json()
 
-
-def extract_bindings(data):
+def extract(data):
     return data.get("results", {}).get("bindings", [])
 
 
-# =========================
-# QUERY 1 → RESOCONTI
-# =========================
-QUERY_RESOCONTI = """
-PREFIX ocd: <http://dati.camera.it/ocd/>
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
-
-SELECT DISTINCT ?dataSeduta ?titoloDiscussione ?organo ?resoconto
-WHERE {
-  ?seduta a ocd:seduta ;
-          dc:date ?dataSeduta .
-
-  ?discussione a ocd:discussione ;
-               ocd:rif_seduta ?seduta ;
-               dc:title ?titoloDiscussione .
-
-  OPTIONAL {
-    ?seduta ocd:rif_organo ?o .
-    ?o dc:title ?organo .
-  }
-
-  OPTIONAL {
-    ?seduta dc:relation ?resoconto .
-    FILTER(REGEX(STR(?resoconto), "pdf", "i"))
-  }
-}
-ORDER BY DESC(?dataSeduta)
-LIMIT 50
-"""
+def val(x, key):
+    return x.get(key, {}).get("value", "")
 
 
 # =========================
-# QUERY 2 → AUDIZIONI
+# QUERY RESOCONTI (FILTRATI)
 # =========================
-QUERY_AUDIZIONI = """
-PREFIX ocd: <http://dati.camera.it/ocd/>
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
+def build_query_resoconti(date_from):
+    return f"""
+    PREFIX ocd: <http://dati.camera.it/ocd/>
+    PREFIX dc: <http://purl.org/dc/elements/1.1/>
 
-SELECT DISTINCT ?dataSeduta ?organo ?titoloDiscussione ?resoconto
-WHERE {
-  ?seduta a ocd:seduta ;
-          dc:date ?dataSeduta .
+    SELECT DISTINCT ?dataSeduta ?titolo ?organo ?resoconto
+    WHERE {{
+      ?seduta a ocd:seduta ;
+              dc:date ?dataSeduta .
 
-  ?discussione a ocd:discussione ;
-               ocd:rif_seduta ?seduta ;
-               dc:title ?titoloDiscussione .
+      FILTER(?dataSeduta >= "{date_from}"^^xsd:date)
 
-  FILTER(REGEX(LCASE(STR(?titoloDiscussione)), "audizion"))
+      ?discussione a ocd:discussione ;
+                   ocd:rif_seduta ?seduta ;
+                   dc:title ?titolo .
 
-  OPTIONAL {
-    ?seduta ocd:rif_organo ?o .
-    ?o dc:title ?organo .
-  }
+      OPTIONAL {{
+        ?seduta ocd:rif_organo ?o .
+        ?o dc:title ?organo .
+      }}
 
-  OPTIONAL {
-    ?seduta dc:relation ?resoconto .
-    FILTER(REGEX(STR(?resoconto), "pdf", "i"))
-  }
-}
-ORDER BY DESC(?dataSeduta)
-LIMIT 50
-"""
-
-
-# =========================
-# QUERY 3 → ODG
-# =========================
-QUERY_ODG = """
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
-
-SELECT DISTINCT ?titolo
-WHERE {
-  ?s dc:title ?titolo .
-  FILTER(REGEX(LCASE(STR(?titolo)), "ordine del giorno"))
-}
-LIMIT 50
-"""
+      OPTIONAL {{
+        ?seduta dc:relation ?resoconto .
+        FILTER(REGEX(STR(?resoconto), "pdf", "i"))
+      }}
+    }}
+    ORDER BY DESC(?dataSeduta)
+    LIMIT 50
+    """
 
 
 # =========================
-# QUERY 4 → EMENDAMENTI
+# QUERY AUDIZIONI (FILTRATE)
 # =========================
-QUERY_EMENDAMENTI = """
-PREFIX dc: <http://purl.org/dc/elements/1.1/>
+def build_query_audizioni(date_from):
+    return f"""
+    PREFIX ocd: <http://dati.camera.it/ocd/>
+    PREFIX dc: <http://purl.org/dc/elements/1.1/>
 
-SELECT DISTINCT ?titolo
-WHERE {
-  ?s dc:title ?titolo .
-  FILTER(REGEX(LCASE(STR(?titolo)), "emendament"))
-}
-LIMIT 50
-"""
+    SELECT DISTINCT ?dataSeduta ?titolo ?organo ?resoconto
+    WHERE {{
+      ?seduta a ocd:seduta ;
+              dc:date ?dataSeduta .
+
+      FILTER(?dataSeduta >= "{date_from}"^^xsd:date)
+
+      ?discussione a ocd:discussione ;
+                   ocd:rif_seduta ?seduta ;
+                   dc:title ?titolo .
+
+      FILTER(REGEX(LCASE(STR(?titolo)), "audizion"))
+
+      OPTIONAL {{
+        ?seduta ocd:rif_organo ?o .
+        ?o dc:title ?organo .
+      }}
+
+      OPTIONAL {{
+        ?seduta dc:relation ?resoconto .
+        FILTER(REGEX(STR(?resoconto), "pdf", "i"))
+      }}
+    }}
+    ORDER BY DESC(?dataSeduta)
+    LIMIT 50
+    """
 
 
 def main():
     target_date = get_target_date()
+    date_from = get_date_filter(5)
 
-    print("Eseguo SPARQL probe Camera...")
-
-    results = {}
+    print("SPARQL Camera V2...")
+    print("Filtro da:", date_from)
 
     # ---- RESOCONTI
     print("Query resoconti...")
-    data = run_query(QUERY_RESOCONTI)
-    results["resoconti"] = extract_bindings(data)
+    q1 = build_query_resoconti(date_from)
+    resoconti_raw = extract(run_query(q1))
+
+    resoconti = []
+    for r in resoconti_raw:
+        resoconti.append({
+            "data": val(r, "dataSeduta"),
+            "titolo": val(r, "titolo"),
+            "organo": val(r, "organo"),
+            "pdf": val(r, "resoconto"),
+        })
 
     # ---- AUDIZIONI
     print("Query audizioni...")
-    data = run_query(QUERY_AUDIZIONI)
-    results["audizioni"] = extract_bindings(data)
+    q2 = build_query_audizioni(date_from)
+    audizioni_raw = extract(run_query(q2))
 
-    # ---- ODG
-    print("Query ODG...")
-    data = run_query(QUERY_ODG)
-    results["odg"] = extract_bindings(data)
+    audizioni = []
+    for r in audizioni_raw:
+        audizioni.append({
+            "data": val(r, "dataSeduta"),
+            "titolo": val(r, "titolo"),
+            "organo": val(r, "organo"),
+            "pdf": val(r, "resoconto"),
+        })
 
-    # ---- EMENDAMENTI
-    print("Query emendamenti...")
-    data = run_query(QUERY_EMENDAMENTI)
-    results["emendamenti"] = extract_bindings(data)
+    results = {
+        "resoconti": resoconti,
+        "audizioni": audizioni
+    }
 
-    # ---- SAVE
-    output_path = OUTPUT_DIR / f"camera_sparql_probe_{target_date}.json"
+    output_path = OUTPUT_DIR / f"camera_sparql_v2_{target_date}.json"
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
 
     print("Salvato:", output_path)
-
     print("Conteggi:")
-    for k, v in results.items():
-        print(f"- {k}: {len(v)}")
+    print("- resoconti:", len(resoconti))
+    print("- audizioni:", len(audizioni))
 
 
 if __name__ == "__main__":
