@@ -15,8 +15,9 @@ def get_target_date():
     return (datetime.today() - timedelta(days=1)).date()
 
 
-def date_from(days_back=30):
-    return (datetime.today().date() - timedelta(days=days_back)).isoformat()
+def date_from(hours_back=48):
+    dt = datetime.today() - timedelta(hours=hours_back)
+    return dt.date().isoformat()
 
 
 def run_query(query: str) -> dict:
