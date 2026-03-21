@@ -98,7 +98,7 @@ def normalize_rows(rows):
 
 def main():
     target_date = get_target_date().isoformat()
-    start_date = date_from(30)
+    start_date = date_from(48)
 
     print("SPARQL Camera - Giunte e Commissioni")
     print("Filtro da:", start_date)
