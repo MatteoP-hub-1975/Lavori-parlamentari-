@@ -38,6 +38,10 @@ jobs:
       - name: Run Camera resoconti fetch
         run: |
           python scripts/fetch_camera_resoconti.py
+
+      - name: Run Camera commissioni SPARQL
+        run: |
+          python scripts/fetch_camera_commissioni_sparql.py
      
       - name: Run Camera agenda fetch
         run: |
