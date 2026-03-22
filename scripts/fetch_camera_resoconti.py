@@ -9,13 +9,13 @@ from bs4 import BeautifulSoup
 
 
 BASE_URL = "https://www.camera.it"
-URL = "https://www.camera.it/leg19/207"
+URL_ASSEMBLEA = "https://www.camera.it/leg19/207"
+URL_COMMISSIONI = "https://www.camera.it/leg19/210"
 
 OUTPUT_DIR = Path("data/camera")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 HEADERS = {"User-Agent": "Mozilla/5.0"}
-
 
 MESI = {
     "gennaio": "01",
@@ -44,102 +44,98 @@ def fetch_html(url):
     return r.text
 
 
-def normalize_link(href):
-    return urljoin(BASE_URL, href or "")
+def normalize_link(href, base_url):
+    return urljoin(base_url, href or "")
 
 
 def compact(text):
     return " ".join((text or "").split()).strip()
 
 
-def extract_resoconto_links(soup):
-    links = []
-    for a in soup.find_all("a", href=True):
-        if "Vai al resoconto" in a.get_text():
-            links.append(normalize_link(a["href"]))
-    return links
-
-
-def extract_date_from_page(html):
-    soup = BeautifulSoup(html, "html.parser")
-    text = compact(soup.get_text(" ", strip=True)).lower()
-
-    # cerca pattern tipo "19 marzo 2026"
-    m = re.search(r"\b(\d{1,2})\s+(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\s+(\d{4})\b", text)
+def parse_it_date(text):
+    text = compact(text).lower()
+    m = re.search(
+        r"\b(?:lunedì|martedì|mercoledì|giovedì|venerdì|sabato|domenica)\s+(\d{1,2})\s+([a-zàèéìòù]+)\s+(\d{4})\b",
+        text,
+        flags=re.IGNORECASE,
+    )
     if not m:
         return ""
 
-    giorno, mese, anno = m.groups()
-    mese_num = MESI.get(mese.lower())
-
-    if not mese_num:
+    day, month_name, year = m.groups()
+    month_num = MESI.get(month_name.lower())
+    if not month_num:
         return ""
 
-    giorno = giorno.zfill(2)
-
-    return f"{anno}-{mese_num}-{giorno}"
+    return f"{year}-{month_num}-{day.zfill(2)}"
 
 
-def extract_seduta_from_page(html):
-    text = compact(BeautifulSoup(html, "html.parser").get_text(" ", strip=True))
-    m = re.search(r"seduta\s*n\.?\s*(\d+)", text, flags=re.IGNORECASE)
-    if m:
-        return f"Seduta n. {m.group(1)}"
-    return ""
+def extract_commissioni_resoconti(target_date):
+    html = fetch_html(URL_COMMISSIONI)
+    soup = BeautifulSoup(html, "html.parser")
+
+    items = []
+
+    # ogni riga utile è sostanzialmente:
+    # "Martedì 17 marzo 2026" + "Scarica Pdf"
+    for li in soup.find_all("li"):
+        li_text = compact(li.get_text(" ", strip=True))
+        if not li_text:
+            continue
+
+        data_iso = parse_it_date(li_text)
+        if data_iso != target_date:
+            continue
+
+        pdf_link = ""
+        for a in li.find_all("a", href=True):
+            a_text = compact(a.get_text(" ", strip=True)).lower()
+            if "scarica pdf" in a_text:
+                pdf_link = normalize_link(a["href"], URL_COMMISSIONI)
+                break
+
+        if not pdf_link:
+            continue
+
+        items.append({
+            "ramo": "Camera",
+            "data": target_date,
+            "tipo_atto": "Resoconto Commissioni",
+            "titolo": f"Resoconto Commissioni – {li_text}",
+            "data_resoconto": data_iso,
+            "link_pdf": pdf_link,
+            "categoria_preliminare": "Interesse istituzionale",
+            "motivazione_preliminare": "Resoconto Camera - Giunte e Commissioni",
+        })
+
+    return items
+
+
+def extract_assemblea_resoconti(target_date):
+    # Per ora lasciamo vuoto o base minimale: la priorità era Commissioni.
+    # Se vuoi, poi aggiungiamo la parte Assemblea con logica dedicata.
+    return []
 
 
 def main():
     target_date = get_target_date()
 
-    print("Scarico resoconti Camera e filtro per ieri:", target_date)
-
-    html = fetch_html(URL)
-    soup = BeautifulSoup(html, "html.parser")
-
-    links = extract_resoconto_links(soup)
+    print("Scarico resoconti Camera per data:", target_date)
 
     items = []
-
-    for link in links:
-        try:
-            page_html = fetch_html(link)
-
-            data_resoconto = extract_date_from_page(page_html)
-
-            if data_resoconto != target_date:
-                continue  # filtro qui
-
-            seduta = extract_seduta_from_page(page_html)
-
-            titolo = "Resoconto Camera"
-            if seduta:
-                titolo += f" – {seduta}"
-
-            items.append({
-                "ramo": "Camera",
-                "data": target_date,
-                "tipo_atto": "Resoconto",
-                "titolo": titolo,
-                "data_resoconto": data_resoconto,
-                "seduta": seduta,
-                "link_pdf": link,
-                "categoria_preliminare": "Interesse istituzionale",
-                "motivazione_preliminare": "Resoconto Camera",
-            })
-
-        except Exception as e:
-            print("Errore su link:", link)
+    items.extend(extract_commissioni_resoconti(target_date))
+    items.extend(extract_assemblea_resoconti(target_date))
 
     output_path = OUTPUT_DIR / f"camera_resoconti_{target_date}.json"
 
     with open(output_path, "w", encoding="utf-8") as f:
         json.dump(items, f, ensure_ascii=False, indent=2)
 
-    print("Trovati (ieri):", len(items))
+    print("Trovati:", len(items))
     print("Salvato:", output_path)
 
     for item in items:
-        print("-", item["titolo"], "|", item["data_resoconto"])
+        print("-", item["titolo"], "|", item["link_pdf"])
 
 
 if __name__ == "__main__":
