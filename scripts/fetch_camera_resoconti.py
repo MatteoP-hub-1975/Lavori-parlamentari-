@@ -32,11 +32,12 @@ MESI = {
     "dicembre": "12",
 }
 
-
+#def get_target_date():
+    #yesterday = datetime.today() - timedelta(days=1)
+    #return yesterday.date().isoformat()
+    
 def get_target_date():
-    yesterday = datetime.today() - timedelta(days=1)
-    return yesterday.date().isoformat()
-
+    return "2026-03-19"
 
 def fetch_html(url):
     r = requests.get(url, headers=HEADERS, timeout=60)
