@@ -5,28 +5,19 @@ from pathlib import Path
 from urllib.parse import urljoin
 
 import requests
-from bs4 import BeautifulSoup, Tag
+from bs4 import BeautifulSoup
 
 
-URL = "https://www.camera.it/leg19/546?tipo=elencoAudizioni"
 BASE_URL = "https://www.camera.it"
-OUTPUT_DIR = Path("data/camera")
-HEADERS = {"User-Agent": "Mozilla/5.0"}
+URL_TEMPLATE = (
+    "https://www.camera.it/leg19/824"
+    "?tipo=C&anno={anno}&mese={mese}&giorno={giorno}&view=filtered&pagina=#"
+)
 
-MESI = {
-    "gennaio": "01",
-    "febbraio": "02",
-    "marzo": "03",
-    "aprile": "04",
-    "maggio": "05",
-    "giugno": "06",
-    "luglio": "07",
-    "agosto": "08",
-    "settembre": "09",
-    "ottobre": "10",
-    "novembre": "11",
-    "dicembre": "12",
-}
+OUTPUT_DIR = Path("data/camera")
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+
+HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 
 def compact(text):
@@ -39,45 +30,51 @@ def parse_target_date():
     return sys.argv[1]
 
 
-def parse_it_date(text: str) -> str:
-    text = compact(text).lower()
-    m = re.search(
-        r"\b(?:lunedì|martedì|mercoledì|giovedì|venerdì|sabato|domenica)?\s*(\d{1,2})\s+"
-        r"(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\s+"
-        r"(\d{4})\b",
-        text,
-        flags=re.IGNORECASE,
-    )
-    if not m:
-        return ""
-
-    day, month_name, year = m.groups()
-    month_num = MESI.get(month_name.lower())
-    if not month_num:
-        return ""
-
-    return f"{year}-{month_num}-{day.zfill(2)}"
+def build_url(target_date: str) -> str:
+    anno, mese, giorno = target_date.split("-")
+    return URL_TEMPLATE.format(anno=anno, mese=mese, giorno=giorno)
 
 
-def find_context_container(a_tag: Tag):
+def normalize_link(href: str, base_url: str) -> str:
+    return urljoin(base_url, href or "")
+
+
+def looks_like_audizione(text: str) -> bool:
+    t = text.lower()
+    return "audizion" in t
+
+
+def find_context_container(a_tag):
     current = a_tag
     for _ in range(8):
         if current is None:
             break
         current = current.parent
-        if isinstance(current, Tag):
+        if current is not None:
             txt = compact(current.get_text(" ", strip=True))
             if len(txt) > 30:
                 return current
     return a_tag.parent
 
 
+def clean_title(text: str) -> str:
+    text = compact(text)
+    text = re.sub(r"\bscarica pdf\b", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\bresoconto stenografico\b", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\bresoconto sommario\b", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\bvideo\b", "", text, flags=re.IGNORECASE)
+    text = re.sub(r"\s+", " ", text).strip(" -|")
+    return text
+
+
 def main():
     target_date = parse_target_date()
+    url = build_url(target_date)
 
     print("Scarico audizioni Camera per data:", target_date)
+    print("URL:", url)
 
-    res = requests.get(URL, headers=HEADERS, timeout=60)
+    res = requests.get(url, headers=HEADERS, timeout=60)
     res.raise_for_status()
 
     soup = BeautifulSoup(res.text, "html.parser")
@@ -92,36 +89,48 @@ def main():
 
         if not text or not href:
             continue
-        if "audizion" not in text.lower():
+        if not looks_like_audizione(text):
             continue
 
-        full_href = urljoin(BASE_URL, href)
-        if "audiz=" not in full_href:
-            continue
+        full_href = normalize_link(href, url)
 
         container = find_context_container(a)
         context_text = compact(container.get_text(" ", strip=True)) if container else text
-        data_iso = parse_it_date(context_text)
+        titolo = clean_title(context_text)
 
-        if data_iso != target_date:
-            continue
+        # prova a catturare un pdf o link documento dallo stesso blocco
+        pdf_link = ""
+        if container:
+            for a2 in container.find_all("a", href=True):
+                href2 = normalize_link(a2.get("href", "").strip(), url)
+                text2 = compact(a2.get_text(" ", strip=True)).lower()
 
-        key = (text, full_href)
+                if (
+                    "documenti.camera.it" in href2.lower()
+                    or "getdocumento.ashx" in href2.lower()
+                    or "scarica pdf" in text2
+                    or href2.lower().endswith(".pdf")
+                ):
+                    pdf_link = href2
+                    break
+
+        # fallback al link dell'audizione trovato
+        final_link = pdf_link or full_href
+
+        key = (titolo, final_link)
         if key in seen:
             continue
         seen.add(key)
 
         results.append({
             "tipo_atto": "Audizione",
-            "titolo": text,
-            "data_audizione": data_iso,
-            "link_pdf": full_href,
+            "titolo": titolo or text,
+            "data_audizione": target_date,
+            "link_pdf": final_link,
             "motivazione_preliminare": "Audizione Camera",
         })
 
-    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
     output_file = OUTPUT_DIR / f"camera_audizioni_{target_date}.json"
-
     with open(output_file, "w", encoding="utf-8") as f:
         json.dump(results, f, ensure_ascii=False, indent=2)
 
@@ -129,7 +138,7 @@ def main():
     print(f"Salvato: {output_file}")
 
     for item in results[:10]:
-        print("-", item["data_audizione"], "|", item["titolo"], "|", item["link_pdf"])
+        print("-", item["titolo"], "|", item["link_pdf"])
 
 
 if __name__ == "__main__":
