@@ -4,34 +4,38 @@ from bs4 import BeautifulSoup
 URL = "https://www.camera.it/ricerca-emendamenti/?script=no"
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
+
 def compact(text):
     return " ".join((text or "").split()).strip()
 
+
 def main():
     print("Scarico pagina emendamenti Camera...")
+
     r = requests.get(URL, headers=HEADERS, timeout=60)
     r.raise_for_status()
 
     soup = BeautifulSoup(r.text, "html.parser")
 
-    print("TITLE:", compact(soup.title.get_text(" ", strip=True)) if soup.title else "")
+    form = soup.find("form")
+    if not form:
+        print("Nessun form trovato")
+        return
 
-    print("\n=== FORM ===")
-    forms = soup.find_all("form")
-    print("Numero form:", len(forms))
+    target_names = {"tseduta", "Legislatura", "esito", "trp", "pres", "tpart", "ris"}
 
-    for i, form in enumerate(forms, start=1):
-        print(f"\n--- FORM {i} ---")
-        print("ACTION:", form.get("action"))
-        print("METHOD:", form.get("method"))
+    for select in form.find_all("select"):
+        name = select.get("name")
+        if name not in target_names:
+            continue
 
-        for inp in form.find_all(["input", "select", "textarea"]):
-            print(
-                "TAG:", inp.name,
-                "| NAME:", inp.get("name"),
-                "| TYPE:", inp.get("type"),
-                "| VALUE:", inp.get("value")
-            )
+        print(f"\n=== SELECT {name} ===")
+        options = select.find_all("option")
+        print("Numero opzioni:", len(options))
+
+        for opt in options[:80]:
+            print("VALUE:", opt.get("value"), "| TEXT:", compact(opt.get_text(" ", strip=True)))
+
 
 if __name__ == "__main__":
     main()
