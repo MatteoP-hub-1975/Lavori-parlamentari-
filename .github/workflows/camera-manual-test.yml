@@ -42,6 +42,10 @@ jobs:
       - name: Run Camera audizioni fetch
         run: |
           python scripts/fetch_camera_audizioni.py "2026-03-02"
+
+      - name: Run Camera emendamenti fetch
+        run: |
+          python scripts/fetch_camera_emendamenti.py
       
       - name: Run Camera commissioni SPARQL
         run: |
