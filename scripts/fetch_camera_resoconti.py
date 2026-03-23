@@ -33,6 +33,8 @@ MESI = {
 }
 
 def get_target_date():
+    if len(sys.argv) > 1:
+        return sys.argv[1]
     yesterday = datetime.today() - timedelta(days=1)
     return yesterday.date().isoformat()
     
