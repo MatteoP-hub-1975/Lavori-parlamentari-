@@ -37,7 +37,7 @@ jobs:
 
       - name: Run Camera resoconti fetch
         run: |
-          python scripts/fetch_camera_resoconti.py
+          python scripts/fetch_camera_resoconti.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera commissioni SPARQL
         run: |
