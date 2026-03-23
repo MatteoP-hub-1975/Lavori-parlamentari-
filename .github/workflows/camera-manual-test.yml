@@ -43,9 +43,9 @@ jobs:
         run: |
           python scripts/fetch_camera_audizioni.py "2026-03-02"
 
-      - name: Run Camera emendamenti fetch
+      - name: Scan Camera resoconti for emendamenti
         run: |
-          python scripts/fetch_camera_emendamenti.py
+          python scripts/scan_camera_resoconti_for_emendamenti.py "${{ steps.set_target_date.outputs.target_date }}"
       
       - name: Run Camera commissioni SPARQL
         run: |
