@@ -5,7 +5,7 @@ from pathlib import Path
 from urllib.parse import urljoin
 
 import requests
-from bs4 import BeautifulSoup
+from bs4 import BeautifulSoup, Tag
 
 
 BASE_URL = "https://www.camera.it"
@@ -20,7 +20,7 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 
-def compact(text):
+def compact(text: str) -> str:
     return " ".join((text or "").split()).strip()
 
 
@@ -39,24 +39,6 @@ def normalize_link(href: str, base_url: str) -> str:
     return urljoin(base_url, href or "")
 
 
-def looks_like_audizione(text: str) -> bool:
-    t = text.lower()
-    return "audizion" in t
-
-
-def find_context_container(a_tag):
-    current = a_tag
-    for _ in range(8):
-        if current is None:
-            break
-        current = current.parent
-        if current is not None:
-            txt = compact(current.get_text(" ", strip=True))
-            if len(txt) > 30:
-                return current
-    return a_tag.parent
-
-
 def clean_title(text: str) -> str:
     text = compact(text)
     text = re.sub(r"\bscarica pdf\b", "", text, flags=re.IGNORECASE)
@@ -65,6 +47,67 @@ def clean_title(text: str) -> str:
     text = re.sub(r"\bvideo\b", "", text, flags=re.IGNORECASE)
     text = re.sub(r"\s+", " ", text).strip(" -|")
     return text
+
+
+def is_probably_menu_text(text: str) -> bool:
+    t = text.lower()
+    bad_chunks = [
+        "calendario settimanale",
+        "resoconti",
+        "audizioni",
+        "oggi in commissione",
+        "assemblea",
+        "giunte e commissioni",
+        "indagini conoscitive",
+        "stenografici delle commissioni",
+        "bollettino degli organi collegiali",
+    ]
+    return any(chunk in t for chunk in bad_chunks)
+
+
+def find_candidate_blocks(soup):
+    candidates = []
+    seen = set()
+
+    for tag in soup.find_all(["div", "li", "p", "td", "section", "article"]):
+        text = compact(tag.get_text(" ", strip=True))
+        if not text:
+            continue
+        if "audizion" not in text.lower():
+            continue
+        if is_probably_menu_text(text):
+            continue
+        if len(text) < 40:
+            continue
+
+        key = text[:300]
+        if key in seen:
+            continue
+        seen.add(key)
+        candidates.append(tag)
+
+    return candidates
+
+
+def extract_first_document_link(container, base_url):
+    for a in container.find_all("a", href=True):
+        href = normalize_link(a.get("href", "").strip(), base_url)
+        txt = compact(a.get_text(" ", strip=True)).lower()
+
+        if (
+            "documenti.camera.it" in href.lower()
+            or "getdocumento.ashx" in href.lower()
+            or href.lower().endswith(".pdf")
+            or "scarica pdf" in txt
+        ):
+            return href
+
+    for a in container.find_all("a", href=True):
+        href = normalize_link(a.get("href", "").strip(), base_url)
+        if "audiz=" in href.lower():
+            return href
+
+    return ""
 
 
 def main():
@@ -78,55 +121,30 @@ def main():
     res.raise_for_status()
 
     soup = BeautifulSoup(res.text, "html.parser")
-    links = soup.find_all("a", href=True)
+    blocks = find_candidate_blocks(soup)
 
     results = []
     seen = set()
 
-    for a in links:
-        text = compact(a.get_text(" ", strip=True))
-        href = a.get("href", "").strip()
-
-        if not text or not href:
-            continue
-        if not looks_like_audizione(text):
+    for block in blocks:
+        titolo = clean_title(block.get_text(" ", strip=True))
+        if not titolo:
             continue
 
-        full_href = normalize_link(href, url)
+        link = extract_first_document_link(block, url)
+        if not link:
+            continue
 
-        container = find_context_container(a)
-        context_text = compact(container.get_text(" ", strip=True)) if container else text
-        titolo = clean_title(context_text)
-
-        # prova a catturare un pdf o link documento dallo stesso blocco
-        pdf_link = ""
-        if container:
-            for a2 in container.find_all("a", href=True):
-                href2 = normalize_link(a2.get("href", "").strip(), url)
-                text2 = compact(a2.get_text(" ", strip=True)).lower()
-
-                if (
-                    "documenti.camera.it" in href2.lower()
-                    or "getdocumento.ashx" in href2.lower()
-                    or "scarica pdf" in text2
-                    or href2.lower().endswith(".pdf")
-                ):
-                    pdf_link = href2
-                    break
-
-        # fallback al link dell'audizione trovato
-        final_link = pdf_link or full_href
-
-        key = (titolo, final_link)
+        key = (titolo, link)
         if key in seen:
             continue
         seen.add(key)
 
         results.append({
             "tipo_atto": "Audizione",
-            "titolo": titolo or text,
+            "titolo": titolo,
             "data_audizione": target_date,
-            "link_pdf": final_link,
+            "link_pdf": link,
             "motivazione_preliminare": "Audizione Camera",
         })
 
