@@ -1,7 +1,9 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
 
 URL = "https://www.camera.it/leg19/546?tipo=elencoAudizioni"
+BASE_URL = "https://www.camera.it"
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 
@@ -18,23 +20,33 @@ def main():
     soup = BeautifulSoup(res.text, "html.parser")
     links = soup.find_all("a", href=True)
 
-    print(f"Link trovati: {len(links)}\n")
+    print(f"Link totali trovati: {len(links)}\n")
 
     printed = 0
     for a in links:
         text = compact(a.get_text(" ", strip=True))
         href = a.get("href", "").strip()
+        full_href = urljoin(BASE_URL, href)
 
-        if not text or not href:
+        combined = f"{text} {full_href}".lower()
+
+        if not any(x in combined for x in [
+            "audizion",
+            "documenti.camera.it",
+            "getdocumento.ashx",
+            "resoconto stenografico",
+        ]):
             continue
 
         print("TEXT:", text)
-        print("HREF:", href)
-        print("-" * 40)
+        print("HREF:", full_href)
+        print("-" * 60)
 
         printed += 1
-        if printed >= 80:
+        if printed >= 60:
             break
+
+    print("\nLink utili stampati:", printed)
 
 
 if __name__ == "__main__":
