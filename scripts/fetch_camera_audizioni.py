@@ -1,7 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
+from urllib.parse import urljoin
+import json
+from pathlib import Path
+import sys
 
-URL = "https://documenti.camera.it/apps/commonServices/getDocumento.ashx?sezione=commissioni&tipoDoc=elencoResoconti&idLegislatura=19&tipoElenco=audizioniCronologico&calendario=false&audiz=160305&scheda=true"
+
+URL = "https://www.camera.it/leg19/546?tipo=elencoAudizioni"
+BASE_URL = "https://www.camera.it"
+OUTPUT_DIR = Path("data/camera")
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 
@@ -9,36 +16,55 @@ def compact(text):
     return " ".join((text or "").split()).strip()
 
 
+def parse_target_date():
+    if len(sys.argv) > 1:
+        return sys.argv[1]
+    return "no-date"
+
+
 def main():
-    print("Scarico scheda audizione...")
+    target_date = parse_target_date()
+
+    print("Scarico audizioni Camera...")
 
     res = requests.get(URL, headers=HEADERS, timeout=60)
     res.raise_for_status()
 
     soup = BeautifulSoup(res.text, "html.parser")
+    links = soup.find_all("a", href=True)
 
-    print("TITLE:", compact(soup.title.get_text(" ", strip=True)) if soup.title else "")
+    results = []
 
-    print("\n=== LINK ===")
-    count = 0
-    for a in soup.find_all("a", href=True):
+    for a in links:
         text = compact(a.get_text(" ", strip=True))
         href = a.get("href", "").strip()
-        if text or href:
-            print("TEXT:", text)
-            print("HREF:", href)
-            print("-" * 40)
-            count += 1
-            if count >= 40:
-                break
 
-    print("\n=== IFRAME ===")
-    for iframe in soup.find_all("iframe"):
-        print(iframe.get("src", ""))
+        if not text or not href:
+            continue
 
-    print("\n=== SCRIPT SRC ===")
-    for script in soup.find_all("script", src=True):
-        print(script.get("src", ""))
+        if "audizion" not in text.lower():
+            continue
+
+        full_href = urljoin(BASE_URL, href)
+
+        if "audiz=" not in full_href:
+            continue
+
+        results.append({
+            "tipo_atto": "Audizione",
+            "titolo": text,
+            "link_pdf": full_href
+        })
+
+    print(f"Trovate audizioni: {len(results)}")
+
+    OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
+    output_file = OUTPUT_DIR / f"camera_audizioni_{target_date}.json"
+
+    with open(output_file, "w", encoding="utf-8") as f:
+        json.dump(results, f, ensure_ascii=False, indent=2)
+
+    print(f"Salvato: {output_file}")
 
 
 if __name__ == "__main__":
