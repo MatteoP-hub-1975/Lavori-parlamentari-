@@ -10,31 +10,57 @@ def compact(text):
 
 
 def main():
-    print("Scarico pagina emendamenti Camera...")
+    print("Test POST emendamenti Camera...")
 
-    r = requests.get(URL, headers=HEADERS, timeout=60)
+    payload = {
+        "Legislatura": "19",
+        "tseduta": "Commissione",
+        "ris": "10",
+        "hasParams": "true",
+        "maxRowsReturned": "10",
+        "numPage": "0",
+        "numPageEmendamenti": "0",
+        "totalPages": "0",
+        "totalPagesEmendamenti": "0",
+        "numFound": "0",
+        "parole": "",
+        "nomeDep": "",
+        "idAtto": "",
+        "art": "",
+        "numeme": "",
+        "pres": "",
+        "esito": "",
+        "tpart": "",
+        "listaAttiJson": "",
+        "attoIndex": "",
+        "emendamentoIndex": "",
+    }
+
+    r = requests.post(URL, headers=HEADERS, data=payload, timeout=60)
     r.raise_for_status()
 
+    print("STATUS:", r.status_code)
+
     soup = BeautifulSoup(r.text, "html.parser")
+    text = compact(soup.get_text(" ", strip=True))
+    print("TESTO INIZIALE:")
+    print(text[:2500])
 
-    form = soup.find("form")
-    if not form:
-        print("Nessun form trovato")
-        return
-
-    target_names = {"tseduta", "Legislatura", "esito", "trp", "pres", "tpart", "ris"}
-
-    for select in form.find_all("select"):
-        name = select.get("name")
-        if name not in target_names:
+    print("\n=== LINK RISULTATI ===")
+    printed = 0
+    for a in soup.find_all("a", href=True):
+        t = compact(a.get_text(" ", strip=True))
+        h = a.get("href", "").strip()
+        if not t and not h:
             continue
 
-        print(f"\n=== SELECT {name} ===")
-        options = select.find_all("option")
-        print("Numero opzioni:", len(options))
+        print("TEXT:", t)
+        print("HREF:", h)
+        print("-" * 50)
 
-        for opt in options[:80]:
-            print("VALUE:", opt.get("value"), "| TEXT:", compact(opt.get_text(" ", strip=True)))
+        printed += 1
+        if printed >= 40:
+            break
 
 
 if __name__ == "__main__":
