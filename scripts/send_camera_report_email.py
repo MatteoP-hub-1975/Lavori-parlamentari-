@@ -36,6 +36,14 @@ def load_agenda_operativa_data(target_date):
         return json.load(f)
 
 
+def load_resoconti_data(target_date):
+    file_path = OUTPUT_DIR / f"camera_resoconti_{target_date}.json"
+    if not file_path.exists():
+        return []
+    with open(file_path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
 def build_agenda_section(items):
     blocks = []
 
@@ -54,6 +62,36 @@ def build_agenda_section(items):
             lines.append(f"Motivazione: {motivazione}")
         if link:
             lines.append(f'Link: <a href="{link}">link documento</a>')
+
+        blocks.append("<br>".join(lines) + "<br><br>")
+
+    return blocks
+
+
+def build_resoconti_section(items):
+    blocks = []
+
+    for item in items:
+        tipo = compact_spaces(item.get("tipo_atto", ""))
+        titolo = compact_spaces(item.get("titolo", ""))
+        data_resoconto = compact_spaces(item.get("data_resoconto", ""))
+        seduta = compact_spaces(item.get("seduta", ""))
+        link = compact_spaces(item.get("link_pdf", ""))
+        motivazione = compact_spaces(item.get("motivazione_preliminare", ""))
+
+        lines = []
+        if tipo:
+            lines.append(f"<b>{tipo}</b>")
+        if titolo:
+            lines.append(titolo)
+        if data_resoconto:
+            lines.append(f"Data resoconto: {data_resoconto}")
+        if seduta:
+            lines.append(seduta)
+        if motivazione:
+            lines.append(f"Motivazione: {motivazione}")
+        if link:
+            lines.append(f'PDF: <a href="{link}">link documento</a>')
 
         blocks.append("<br>".join(lines) + "<br><br>")
 
@@ -134,7 +172,7 @@ def build_sections(items):
     return sections
 
 
-def build_email_body(agenda_blocks, sections, date):
+def build_email_body(agenda_blocks, resoconti_blocks, sections, date):
     body = f"<b>Monitor Parlamento – Camera – {date}</b><br><br>"
 
     body += "<b>=== AGENDA LAVORI CAMERA ===</b><br><br>"
@@ -142,6 +180,12 @@ def build_email_body(agenda_blocks, sections, date):
         body += "".join(agenda_blocks)
     else:
         body += "Nessuna segnalazione.<br><br>"
+
+    body += "<b>=== RESOCONTI COMMISSIONI ===</b><br><br>"
+    if resoconti_blocks:
+        body += "".join(resoconti_blocks)
+    else:
+        body += "Nessun resoconto disponibile.<br><br>"
 
     body += "<b>=== INTERESSE TRASPORTO MARITTIMO ===</b><br><br>"
     if sections["Interesse trasporto marittimo"]:
@@ -195,12 +239,14 @@ def main():
 
     analyzed_items = load_analyzed_data(target_date)
     agenda_items = load_agenda_operativa_data(target_date)
+    resoconti_items = load_resoconti_data(target_date)
 
     agenda_blocks = build_agenda_section(agenda_items)
+    resoconti_blocks = build_resoconti_section(resoconti_items)
     sections = build_sections(analyzed_items)
 
     subject = f"Monitor Parlamento – Camera – {target_date}"
-    body = build_email_body(agenda_blocks, sections, target_date)
+    body = build_email_body(agenda_blocks, resoconti_blocks, sections, target_date)
 
     send_email(subject, body)
     print("Email Camera inviata.")
