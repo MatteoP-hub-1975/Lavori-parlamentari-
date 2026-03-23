@@ -45,8 +45,8 @@ jobs:
 
       - name: Scan Camera resoconti for emendamenti
         run: |
-          python scripts/scan_camera_resoconti_for_emendamenti.py "${{ steps.set_target_date.outputs.target_date }}"
-      
+          python scripts/scan_camera_resoconti_for_emendamenti.py "2026-03-19"
+
       - name: Run Camera commissioni SPARQL
         run: |
           python scripts/fetch_camera_commissioni_sparql.py
