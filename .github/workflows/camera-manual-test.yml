@@ -33,7 +33,7 @@ jobs:
 
       - name: Fetch agenda Camera operativa
         run: |
-          python scripts/fetch_camera_agenda_operativa.py
+          python scripts/fetch_camera_agenda_operativa.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera resoconti fetch
         run: |
