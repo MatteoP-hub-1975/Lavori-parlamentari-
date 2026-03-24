@@ -41,28 +41,41 @@ def extract_blocks(html):
     soup = BeautifulSoup(html, "html.parser")
 
     blocks = []
-    for tag in soup.find_all(["tr", "div", "p"]):
+
+    for tag in soup.find_all(["tr"]):  # SOLO righe tabella (ODG vero)
         txt = compact(tag.get_text(" ", strip=True))
-        if len(txt) > 80:
-            blocks.append(txt)
+
+        if len(txt) < 60:
+            continue
+
+        # elimina menu e robaccia
+        if "menu di navigazione" in txt.lower():
+            continue
+        if "vai al contenuto" in txt.lower():
+            continue
+        if "camera dei deputati" in txt.lower() and len(txt) > 500:
+            continue
+
+        blocks.append(txt)
 
     return blocks
-
 
 def classify_block(text):
     t = text.lower()
 
     if "audizion" in t:
         return "Audizione"
-    if "emendament" in t or "proposte emendative" in t:
-        return "Emendamenti"
+
     if "termine per la presentazione" in t:
         return "Termine emendamenti"
+
+    if "emendament" in t:
+        return "Emendamenti"
+
     if re.search(r"\b(c\.|a\.c\.)\s*\d+", text):
         return "DDL / PDL"
 
     return None
-
 
 def main():
     target_date = get_target_date()
