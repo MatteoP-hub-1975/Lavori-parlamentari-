@@ -93,6 +93,13 @@ def main():
 
         if not is_relevant(s):
             continue
+        # elimina righe di navigazione anche se passano il filtro
+        if "menu" in s.lower():
+            continue
+        if "vai al contenuto" in s.lower():
+            continue
+        if "camera dei deputati" in s.lower() and len(s) > 200:
+            continue
 
         items.append({
             "tipo": classify(s),
