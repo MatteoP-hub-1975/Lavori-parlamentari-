@@ -71,9 +71,17 @@ def main():
     html = fetch_html(url)
     soup = BeautifulSoup(html, "html.parser")
 
-    full_text = soup.get_text(" ", strip=True)
+    raw_text = soup.get_text("\n", strip=True)
 
-    sentences = split_sentences(full_text)
+    # TAGLIO il menu: prendo solo dopo il punto in cui iniziano le convocazioni vere
+    start_idx = raw_text.lower().find("convocazioni")
+
+    if start_idx == -1:
+        start_idx = raw_text.lower().find("commissioni")
+
+    filtered_text = raw_text[start_idx:] if start_idx != -1 else raw_text
+
+    sentences = split_sentences(filtered_text)
 
     items = []
 
