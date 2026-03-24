@@ -49,7 +49,7 @@ jobs:
 
       - name: Run Camera commissioni SPARQL
         run: |
-          python scripts/fetch_camera_commissioni_sparql.py
+          python scripts/fetch_camera_commissioni_sparql.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera agenda fetch
         run: |
