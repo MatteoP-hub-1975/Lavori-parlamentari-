@@ -3,14 +3,10 @@ import re
 import sys
 from datetime import datetime, timedelta
 from pathlib import Path
-from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
 
-
-BASE_URL = "https://www.camera.it"
-URL_TEMPLATE = "https://www.camera.it/leg19/187?slAnnoMese={yyyymm}&slGiorno={day}&idSeduta="
 
 OUTPUT_DIR = Path("data/camera")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
@@ -27,9 +23,17 @@ def get_target_date():
     return (datetime.today() - timedelta(days=1)).date().isoformat()
 
 
-def build_odg_url(target_date: str) -> str:
+def build_assemblea_url(target_date: str) -> str:
     year, month, day = target_date.split("-")
-    return URL_TEMPLATE.format(yyyymm=f"{year}{month}", day=day)
+    return f"https://www.camera.it/leg19/187?slAnnoMese={year}{month}&slGiorno={day}&idSeduta="
+
+
+def build_commissioni_url(target_date: str) -> str:
+    year, month, day = target_date.split("-")
+    return (
+        "https://www.camera.it/leg19/824"
+        f"?tipo=C&anno={year}&mese={month}&giorno={day}&view=filtered&pagina=#"
+    )
 
 
 def compact(text: str) -> str:
@@ -42,93 +46,142 @@ def fetch_html(url: str) -> str:
     return r.text
 
 
-def find_snippets(text: str, patterns, window=220, max_hits=8):
+def extract_text_blocks_from_html(html: str):
+    soup = BeautifulSoup(html, "html.parser")
+    blocks = []
+
+    for tag in soup.find_all(["tr", "p", "li", "div"]):
+        text = compact(tag.get_text(" ", strip=True))
+        if not text:
+            continue
+        if len(text) < 40:
+            continue
+        blocks.append(text)
+
+    return blocks
+
+
+def is_navigation_noise(text: str) -> bool:
+    t = text.lower()
+
+    noise_chunks = [
+        "vai al contenuto",
+        "menu di navigazione",
+        "accesso rapido",
+        "progetti di legge ultimi decreti legge esaminati",
+        "calendario settimanale resoconti audizioni oggi in commissione",
+        "assemblea giunte e commissioni audizioni indagini conoscitive",
+        "camera dei deputati europa internazionale",
+        "registro dei rappresentanti di interessi",
+        "prenotazione eventi visitare montecitorio",
+        "server error",
+    ]
+
+    return any(chunk in t for chunk in noise_chunks)
+
+
+def matched_marittimo_keywords(text: str):
+    patterns = {
+        "trasporto marittimo": r"\btrasporto marittimo\b",
+        "marittimo": r"\bmarittim[oaie]\w*\b",
+        "navigazione": r"\bnavigazion\w*\b",
+        "porto/porti": r"\bport[oi]\b",
+        "shipping": r"\bshipping\b",
+        "armatore": r"\barmator\w*\b",
+        "nave/navi": r"\bnav[ei]\b",
+        "logistica": r"\blogistic\w*\b",
+        "cabotaggio": r"\bcabotagg\w*\b",
+        "canale di suez": r"\bcanale di suez\b",
+        "stretto di hormuz": r"\bstretto di hormuz\b",
+        "blue economy": r"\bblue economy\b",
+        "autorità portuale": r"\bautorità portual\w*\b",
+        "adsp": r"\badsp\b",
+    }
+
     hits = []
-    for pat in patterns:
-        for m in re.finditer(pat, text, flags=re.IGNORECASE):
-            start = max(0, m.start() - window)
-            end = min(len(text), m.end() + window)
-            snippet = compact(text[start:end])
-            if snippet and snippet not in hits:
-                hits.append(snippet)
-            if len(hits) >= max_hits:
-                return hits
+    for label, pattern in patterns.items():
+        if re.search(pattern, text, flags=re.IGNORECASE):
+            hits.append(label)
     return hits
 
 
-def extract_fascicolo_link(soup: BeautifulSoup, base_url: str) -> str:
-    for a in soup.find_all("a", href=True):
-        text = compact(a.get_text(" ", strip=True))
-        if "Fascicolo ODG" in text:
-            return urljoin(base_url, a["href"])
-    return ""
+def infer_item_type(text: str) -> str:
+    t = text.lower()
+
+    if "audizion" in t:
+        return "Audizione"
+    if "emendament" in t or "proposte emendative" in t:
+        return "Emendamenti"
+    if "termine per la presentazione" in t:
+        return "Termine emendamenti"
+    if re.search(r"\b(a\.c\.|c\.)\s*\d+", text, flags=re.IGNORECASE):
+        return "DDL / PDL"
+    if re.search(r"\bdoc\.\s*[ivxlcdm]", text, flags=re.IGNORECASE):
+        return "Documento"
+    if "interrogazione" in t or "interpellanza" in t or "mozione" in t or "risoluzione" in t:
+        return "Atto di indirizzo / controllo"
+    return "Voce ODG"
 
 
-def extract_title_and_date(text: str):
-    seduta = ""
-    data_line = ""
+def dedupe_items(items):
+    seen = set()
+    out = []
 
-    m_seduta = re.search(r"\b(\d+)\^?\s+SEDUTA PUBBLICA\b", text, flags=re.IGNORECASE)
-    if m_seduta:
-        seduta = f"Seduta n. {m_seduta.group(1)}"
+    for item in items:
+        key = (item["fonte"], item["tipo"], item["snippet"])
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(item)
 
-    m_data = re.search(
-        r"\b(lunedì|martedì|mercoledì|giovedì|venerdì|sabato|domenica)\s+\d{1,2}\s+[A-Za-zàèéìòù]+\s+\d{4}\b",
-        text,
-        flags=re.IGNORECASE,
-    )
-    if m_data:
-        data_line = compact(m_data.group(0))
+    return out
 
-    title = "ODG Assemblea"
-    if seduta:
-        title += f" – {seduta}"
-    if data_line:
-        title += f" – {data_line}"
 
-    return title, seduta, data_line
+def scan_source(name: str, url: str):
+    html = fetch_html(url)
+    blocks = extract_text_blocks_from_html(html)
+
+    relevant_items = []
+
+    for block in blocks:
+        if is_navigation_noise(block):
+            continue
+
+        keyword_hits = matched_marittimo_keywords(block)
+        if not keyword_hits:
+            continue
+
+        relevant_items.append({
+            "fonte": name,
+            "tipo": infer_item_type(block),
+            "snippet": block,
+            "matched_keywords": keyword_hits,
+        })
+
+    return dedupe_items(relevant_items)
 
 
 def main():
     target_date = get_target_date()
-    url = build_odg_url(target_date)
 
-    print("Scansiono ODG Camera per alert:", target_date)
-    print("URL:", url)
+    assemblea_url = build_assemblea_url(target_date)
+    commissioni_url = build_commissioni_url(target_date)
 
-    html = fetch_html(url)
-    soup = BeautifulSoup(html, "html.parser")
-    full_text = compact(soup.get_text(" ", strip=True))
+    print("Scansiono ODG Camera per contenuti futuri rilevanti:", target_date)
 
-    title, seduta, data_line = extract_title_and_date(full_text)
-    fascicolo_link = extract_fascicolo_link(soup, url)
+    assemblea_items = scan_source("ODG Assemblea", assemblea_url)
+    commissioni_items = scan_source("ODG Commissioni", commissioni_url)
 
-    audizioni_patterns = [
-        r"\baudizion[ei]\b",
-        r"\baudizione\b",
-        r"\baudizioni\b",
-    ]
-
-    emendamenti_patterns = [
-        r"termine\s+per\s+la\s+presentazione\s+degli\s+emendamenti",
-        r"presentazione\s+degli\s+emendamenti",
-        r"\bemendament[oi]\b",
-    ]
-
-    audizioni_snippets = find_snippets(full_text, audizioni_patterns)
-    emendamenti_snippets = find_snippets(full_text, emendamenti_patterns)
+    all_items = dedupe_items(assemblea_items + commissioni_items)
 
     result = {
         "target_date": target_date,
-        "url": url,
-        "titolo": title,
-        "seduta": seduta,
-        "data_odg": data_line,
-        "fascicolo_odg": fascicolo_link,
-        "audizioni_presenti": bool(audizioni_snippets),
-        "emendamenti_presenti": bool(emendamenti_snippets),
-        "audizioni_snippets": audizioni_snippets,
-        "emendamenti_snippets": emendamenti_snippets,
+        "sources": {
+            "assemblea_url": assemblea_url,
+            "commissioni_url": commissioni_url,
+        },
+        "count": len(all_items),
+        "items": all_items,
     }
 
     out_path = OUTPUT_DIR / f"camera_odg_alerts_{target_date}.json"
@@ -136,10 +189,9 @@ def main():
         json.dump(result, f, ensure_ascii=False, indent=2)
 
     print("Salvato:", out_path)
-    print("Audizioni presenti:", result["audizioni_presenti"], "| hits:", len(audizioni_snippets))
-    print("Emendamenti presenti:", result["emendamenti_presenti"], "| hits:", len(emendamenti_snippets))
-    if fascicolo_link:
-        print("Fascicolo ODG:", fascicolo_link)
+    print("Elementi rilevanti trovati:", len(all_items))
+    for item in all_items[:10]:
+        print("-", item["fonte"], "|", item["tipo"], "|", item["matched_keywords"], "|", item["snippet"][:220])
 
 
 if __name__ == "__main__":
