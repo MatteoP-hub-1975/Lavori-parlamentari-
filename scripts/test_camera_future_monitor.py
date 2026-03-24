@@ -29,7 +29,6 @@ def extract_commission_links(index_html: str):
     soup = BeautifulSoup(index_html, "html.parser")
     links = []
 
-    # pagina mobile: prendiamo i link nel contenuto principale
     for a in soup.find_all("a", href=True):
         href = (a.get("href") or "").strip()
         text = compact(a.get_text(" ", strip=True))
@@ -41,7 +40,6 @@ def extract_commission_links(index_html: str):
         if "commissione" in combined and "permanenti" not in combined:
             links.append((text or title or full, full))
 
-    # dedup
     seen = set()
     out = []
     for label, url in links:
@@ -50,26 +48,6 @@ def extract_commission_links(index_html: str):
         seen.add(url)
         out.append((label, url))
     return out
-
-
-def split_blocks(text: str):
-    raw = text.split("\n")
-    blocks = []
-    curr = []
-
-    for line in raw:
-        line = compact(line)
-        if not line:
-            if curr:
-                blocks.append(" ".join(curr))
-                curr = []
-            continue
-        curr.append(line)
-
-    if curr:
-        blocks.append(" ".join(curr))
-
-    return blocks
 
 
 def is_relevant_block(block: str) -> bool:
@@ -84,6 +62,8 @@ def is_relevant_block(block: str) -> bool:
         "c.",
         "disegno di legge",
         "proposta di legge",
+        "atto n.",
+        "atto del governo",
     ])
 
 
@@ -100,6 +80,8 @@ def infer_item_type(block: str) -> str:
         return "Documento"
     if re.search(r"\b(a\.c\.|c\.)\s*\d+", block, flags=re.IGNORECASE):
         return "DDL / PDL"
+    if "atto n." in b or "atto del governo" in b:
+        return "Atto del Governo"
     return "Altro"
 
 
@@ -114,10 +96,12 @@ def classify_sector(block: str) -> str:
     trasporto = [
         "trasport", "logistic", "ferroviar", "stradal", "autostrad",
         "aeroport", "aeronautic", "mobilità", "tpl",
+        "veicoli", "trasporto pubblico locale",
     ]
     industria = [
         "energia", "industr", "imprese", "approvvigionamenti",
         "carburanti", "supply chain", "manifattur", "commercio",
+        "pnrr", "politiche di coesione",
     ]
 
     if any(x in b for x in marittimo):
@@ -129,42 +113,52 @@ def classify_sector(block: str) -> str:
     return "Non attinenti"
 
 
+def extract_commission_name(block: str) -> str:
+    m = re.search(r"\b([IVX]+\s+COMMISSIONE.*?)\b(?=\s+[A-ZÀ-Ü])", block)
+    if m:
+        return compact(m.group(1))
+
+    m2 = re.search(r"\b([IVX]+\s+COMMISSIONE)\b", block)
+    if m2:
+        return compact(m2.group(1))
+
+    return "Commissione"
+
+
 def scan_commission_page(label: str, url: str):
     html = fetch_html(url)
     soup = BeautifulSoup(html, "html.parser")
 
+    text = soup.get_text("\n", strip=True)
+
+    # split per singola commissione
+    raw_blocks = re.split(r"\b(?=[IVX]+\s+COMMISSIONE)\b", text)
+
     blocks = []
+    for b in raw_blocks:
+        b = compact(b)
 
-    for section in soup.find_all(["article", "div"]):
-        txt = compact(section.get_text(" ", strip=True))
-
-        if len(txt) < 100:
+        if len(b) < 100:
             continue
 
-        # deve contenere una commissione reale
-        if not re.search(r"\b[I|V|X]+\s+COMMISSIONE\b", txt, re.IGNORECASE):
+        if not re.search(r"\b[IVX]+\s+COMMISSIONE\b", b):
             continue
 
-        blocks.append(txt)
+        blocks.append(b)
 
     items = []
     for block in blocks:
-        if len(block) < 80:
-            continue
         if not is_relevant_block(block):
             continue
 
         items.append({
-            "commissione": label,
+            "commissione": extract_commission_name(block),
             "url": url,
             "tipo": infer_item_type(block),
             "categoria": classify_sector(block),
             "snippet": block,
         })
 
-    return items
-
-    # dedup
     seen = set()
     out = []
     for x in items:
@@ -173,6 +167,7 @@ def scan_commission_page(label: str, url: str):
             continue
         seen.add(key)
         out.append(x)
+
     return out
 
 
