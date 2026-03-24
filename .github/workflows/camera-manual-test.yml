@@ -10,7 +10,7 @@ jobs:
     steps:
       - name: Set target date
         id: set_target_date
-        run: echo "target_date=$(date -d 'yesterday' +%F)" >> $GITHUB_OUTPUT
+        run: echo "target_date=2026-03-25" >> $GITHUB_OUTPUT
 
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -41,16 +41,16 @@ jobs:
 
       - name: Run Camera audizioni fetch
         run: |
-          python scripts/fetch_camera_audizioni.py "2026-03-02"
+          python scripts/fetch_camera_audizioni.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Scan Camera resoconti for emendamenti
         run: |
-          python scripts/scan_camera_resoconti_for_emendamenti.py "2026-03-19"
+          python scripts/scan_camera_resoconti_for_emendamenti.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera commissioni SPARQL
         run: |
           python scripts/fetch_camera_commissioni_sparql.py
-     
+
       - name: Run Camera agenda fetch
         run: |
           python scripts/fetch_camera_agenda.py "${{ steps.set_target_date.outputs.target_date }}"
