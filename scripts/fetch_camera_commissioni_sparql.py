@@ -1,4 +1,5 @@
 import json
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -12,11 +13,14 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def get_target_date():
-    return (datetime.today() - timedelta(days=1)).date()
+    if len(sys.argv) > 1:
+        return sys.argv[1]
+    return (datetime.today() - timedelta(days=1)).date().isoformat()
 
 
-def date_from(hours_back=48):
-    dt = datetime.today() - timedelta(hours=hours_back)
+def date_from(target_date_str: str, hours_back=48):
+    target_dt = datetime.strptime(target_date_str, "%Y-%m-%d")
+    dt = target_dt - timedelta(hours=hours_back)
     return dt.date().isoformat()
 
 
@@ -97,10 +101,11 @@ def normalize_rows(rows):
 
 
 def main():
-    target_date = get_target_date().isoformat()
-    start_date = date_from(48)
+    target_date = get_target_date()
+    start_date = date_from(target_date, 48)
 
     print("SPARQL Camera - Giunte e Commissioni")
+    print("Target date:", target_date)
     print("Filtro da:", start_date)
 
     query = build_query(start_date)
