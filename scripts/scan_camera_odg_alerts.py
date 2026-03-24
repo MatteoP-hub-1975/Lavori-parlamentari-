@@ -11,9 +11,7 @@ from bs4 import BeautifulSoup
 OUTPUT_DIR = Path("data/camera")
 OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0",
-}
+HEADERS = {"User-Agent": "Mozilla/5.0"}
 
 
 def get_target_date():
@@ -22,8 +20,8 @@ def get_target_date():
     return (datetime.today() - timedelta(days=1)).date().isoformat()
 
 
-def build_commissioni_url(target_date: str):
-    y, m, d = target_date.split("-")
+def build_commissioni_url(date):
+    y, m, d = date.split("-")
     return f"https://www.camera.it/leg19/824?tipo=C&anno={y}&mese={m}&giorno={d}&view=filtered&pagina=#"
 
 
@@ -33,81 +31,73 @@ def fetch_html(url):
     return r.text
 
 
-def compact(text):
-    return re.sub(r"\s+", " ", text).strip()
+def split_sentences(text):
+    # spezza il testo in frasi "vere"
+    return re.split(r"(?<=[\.\;])\s+", text)
 
 
-def extract_blocks(html):
-    soup = BeautifulSoup(html, "html.parser")
+def is_relevant(sentence):
+    s = sentence.lower()
 
-    blocks = []
+    return (
+        "audizion" in s
+        or "emendament" in s
+        or "termine per la presentazione" in s
+        or re.search(r"\b(c\.|a\.c\.)\s*\d+", s)
+    )
 
-    for tag in soup.find_all(["tr"]):  # SOLO righe tabella (ODG vero)
-        txt = compact(tag.get_text(" ", strip=True))
 
-        if len(txt) < 60:
-            continue
+def classify(sentence):
+    s = sentence.lower()
 
-        # elimina menu e robaccia
-        if "menu di navigazione" in txt.lower():
-            continue
-        if "vai al contenuto" in txt.lower():
-            continue
-        if "camera dei deputati" in txt.lower() and len(txt) > 500:
-            continue
-
-        blocks.append(txt)
-
-    return blocks
-
-def classify_block(text):
-    t = text.lower()
-
-    if "audizion" in t:
+    if "audizion" in s:
         return "Audizione"
-
-    if "termine per la presentazione" in t:
+    if "termine per la presentazione" in s:
         return "Termine emendamenti"
-
-    if "emendament" in t:
+    if "emendament" in s:
         return "Emendamenti"
-
-    if re.search(r"\b(c\.|a\.c\.)\s*\d+", text):
+    if re.search(r"\b(c\.|a\.c\.)\s*\d+", s):
         return "DDL / PDL"
 
-    return None
+    return "Altro"
+
 
 def main():
     target_date = get_target_date()
-
     url = build_commissioni_url(target_date)
 
-    print("Scan ODG Commissioni:", target_date)
-    print("URL:", url)
+    print("Scan ODG:", url)
 
     html = fetch_html(url)
-    blocks = extract_blocks(html)
+    soup = BeautifulSoup(html, "html.parser")
+
+    full_text = soup.get_text(" ", strip=True)
+
+    sentences = split_sentences(full_text)
 
     items = []
 
-    for b in blocks:
-        tipo = classify_block(b)
-        if not tipo:
+    for s in sentences:
+        s = s.strip()
+
+        if len(s) < 80:
+            continue
+
+        if not is_relevant(s):
             continue
 
         items.append({
-            "tipo": tipo,
-            "snippet": b
+            "tipo": classify(s),
+            "snippet": s
         })
 
     # dedup
     seen = set()
     clean = []
     for i in items:
-        key = i["snippet"]
-        if key in seen:
+        if i["snippet"] in seen:
             continue
-        seen.add(key)
+        seen.add(i["snippet"])
         clean.append(i)
 
     result = {
