@@ -57,7 +57,7 @@ jobs:
 
       - name: Run Camera SPARQL probe
         run: |
-          python scripts/fetch_camera_sparql_probe.py
+          python scripts/fetch_camera_sparql_probe.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera parse
         env:
