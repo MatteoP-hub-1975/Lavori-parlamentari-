@@ -132,8 +132,20 @@ def classify_sector(block: str) -> str:
 def scan_commission_page(label: str, url: str):
     html = fetch_html(url)
     soup = BeautifulSoup(html, "html.parser")
-    text = soup.get_text("\n", strip=True)
-    blocks = split_blocks(text)
+
+    blocks = []
+
+    for section in soup.find_all(["article", "div"]):
+        txt = compact(section.get_text(" ", strip=True))
+
+        if len(txt) < 100:
+            continue
+
+        # deve contenere una commissione reale
+        if not re.search(r"\b[I|V|X]+\s+COMMISSIONE\b", txt, re.IGNORECASE):
+            continue
+
+        blocks.append(txt)
 
     items = []
     for block in blocks:
@@ -149,6 +161,8 @@ def scan_commission_page(label: str, url: str):
             "categoria": classify_sector(block),
             "snippet": block,
         })
+
+    return items
 
     # dedup
     seen = set()
