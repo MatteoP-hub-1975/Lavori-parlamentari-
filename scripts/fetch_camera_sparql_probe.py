@@ -1,4 +1,5 @@
 import json
+import sys
 from datetime import datetime, timedelta
 from pathlib import Path
 
@@ -12,12 +13,14 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 
 def get_target_date():
-    return (datetime.today() - timedelta(days=1)).date()
+    if len(sys.argv) > 1:
+        return sys.argv[1]
+    return (datetime.today() - timedelta(days=1)).date().isoformat()
 
 
-def get_date_filter(days=5):
-    today = datetime.today().date()
-    start = today - timedelta(days=days)
+def get_date_filter(target_date_str: str, days=5):
+    target_dt = datetime.strptime(target_date_str, "%Y-%m-%d").date()
+    start = target_dt - timedelta(days=days)
     return start.isoformat()
 
 
@@ -42,13 +45,11 @@ def val(x, key):
     return x.get(key, {}).get("value", "")
 
 
-# =========================
-# QUERY RESOCONTI (FILTRATI)
-# =========================
 def build_query_resoconti(date_from):
     return f"""
     PREFIX ocd: <http://dati.camera.it/ocd/>
     PREFIX dc: <http://purl.org/dc/elements/1.1/>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
     SELECT DISTINCT ?dataSeduta ?titolo ?organo ?resoconto
     WHERE {{
@@ -76,13 +77,11 @@ def build_query_resoconti(date_from):
     """
 
 
-# =========================
-# QUERY AUDIZIONI (FILTRATE)
-# =========================
 def build_query_audizioni(date_from):
     return f"""
     PREFIX ocd: <http://dati.camera.it/ocd/>
     PREFIX dc: <http://purl.org/dc/elements/1.1/>
+    PREFIX xsd: <http://www.w3.org/2001/XMLSchema#>
 
     SELECT DISTINCT ?dataSeduta ?titolo ?organo ?resoconto
     WHERE {{
@@ -114,12 +113,12 @@ def build_query_audizioni(date_from):
 
 def main():
     target_date = get_target_date()
-    date_from = get_date_filter(5)
+    date_from = get_date_filter(target_date, 5)
 
     print("SPARQL Camera V2...")
+    print("Target date:", target_date)
     print("Filtro da:", date_from)
 
-    # ---- RESOCONTI
     print("Query resoconti...")
     q1 = build_query_resoconti(date_from)
     resoconti_raw = extract(run_query(q1))
@@ -133,7 +132,6 @@ def main():
             "pdf": val(r, "resoconto"),
         })
 
-    # ---- AUDIZIONI
     print("Query audizioni...")
     q2 = build_query_audizioni(date_from)
     audizioni_raw = extract(run_query(q2))
@@ -148,6 +146,8 @@ def main():
         })
 
     results = {
+        "target_date": target_date,
+        "date_from": date_from,
         "resoconti": resoconti,
         "audizioni": audizioni
     }
