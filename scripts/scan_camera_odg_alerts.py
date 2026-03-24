@@ -20,115 +20,139 @@ def get_target_date():
     return (datetime.today() - timedelta(days=1)).date().isoformat()
 
 
-def build_commissioni_url(date):
-    y, m, d = date.split("-")
-    return f"https://www.camera.it/leg19/824?tipo=C&anno={y}&mese={m}&giorno={d}&view=filtered&pagina=#"
+def build_commissioni_url(target_date: str) -> str:
+    y, m, d = target_date.split("-")
+    return f"https://www.camera.it/leg19/1099?giorno={d}&mese={m}&anno={y}"
 
 
-def fetch_html(url):
+def fetch_html(url: str) -> str:
     r = requests.get(url, headers=HEADERS, timeout=60)
     r.raise_for_status()
     return r.text
 
 
-def split_sentences(text):
-    # spezza il testo in frasi "vere"
-    return re.split(r"(?<=[\.\;])\s+", text)
+def compact(text: str) -> str:
+    return re.sub(r"\s+", " ", (text or "")).strip()
 
 
-def is_relevant(sentence):
-    s = sentence.lower()
+def classify_line(text: str):
+    low = text.lower()
 
-    return (
-        "audizion" in s
-        or "emendament" in s
-        or "termine per la presentazione" in s
-        or re.search(r"\b(c\.|a\.c\.)\s*\d+", s)
-    )
-
-
-def classify(sentence):
-    s = sentence.lower()
-
-    if "audizion" in s:
+    if "audizion" in low:
         return "Audizione"
-    if "termine per la presentazione" in s:
+
+    if "termine per la presentazione" in low and (
+        "emendament" in low or "proposte emendative" in low
+    ):
         return "Termine emendamenti"
-    if "emendament" in s:
+
+    if "emendament" in low or "proposte emendative" in low:
         return "Emendamenti"
-    if re.search(r"\b(c\.|a\.c\.)\s*\d+", s):
+
+    if re.search(r"\b(a\.c\.|c\.)\s*\d+", text, flags=re.IGNORECASE):
         return "DDL / PDL"
 
-    return "Altro"
+    if re.search(r"\b(doc\.)\s*[ivxlcdm]", text, flags=re.IGNORECASE):
+        return "Documento"
+
+    return None
+
+
+def is_noise(text: str) -> bool:
+    low = text.lower()
+
+    noise_patterns = [
+        "vai al contenuto",
+        "menu di navigazione",
+        "scrivi",
+        "sito mobile",
+        "accesso rapido",
+        "prenotazione eventi",
+        "visitare montecitorio",
+        "registro dei rappresentanti di interessi",
+        "camera dei deputati",
+        "organi parlamentari",
+        "conoscere la camera",
+        "calendario settimanale",
+        "resoconti",
+        "oggi in commissione",
+        "conferenze stampa",
+        "interrogazioni, interpellanze, etc.",
+        "votazioni",
+        "ultimi dossier",
+        "amministrazione trasparente",
+        "social media policy",
+        "privacy",
+        "mappa del sito",
+        "avviso legale",
+        "accessibilità",
+        "cookie",
+    ]
+
+    return any(pat in low for pat in noise_patterns)
+
+
+def extract_relevant_items(text: str):
+    lines = [compact(x) for x in text.split("\n")]
+    items = []
+
+    for line in lines:
+        if len(line) < 40:
+            continue
+
+        if is_noise(line):
+            continue
+
+        tipo = classify_line(line)
+        if not tipo:
+            continue
+
+        items.append({
+            "tipo": tipo,
+            "snippet": line
+        })
+
+    # dedup
+    seen = set()
+    clean = []
+    for item in items:
+        key = (item["tipo"], item["snippet"])
+        if key in seen:
+            continue
+        seen.add(key)
+        clean.append(item)
+
+    return clean
 
 
 def main():
     target_date = get_target_date()
     url = build_commissioni_url(target_date)
 
-    print("Scan ODG:", url)
+    print("Scansiono convocazioni Camera:", target_date)
+    print("URL:", url)
 
     html = fetch_html(url)
     soup = BeautifulSoup(html, "html.parser")
+    text = soup.get_text("\n", strip=True)
 
-    raw_text = soup.get_text("\n", strip=True)
-
-    # TAGLIO il menu: prendo solo dopo il punto in cui iniziano le convocazioni vere
-    start_idx = raw_text.lower().find("convocazioni")
-
-    if start_idx == -1:
-        start_idx = raw_text.lower().find("commissioni")
-
-    filtered_text = raw_text[start_idx:] if start_idx != -1 else raw_text
-
-    sentences = split_sentences(filtered_text)
-
-    items = []
-
-    for s in sentences:
-        s = s.strip()
-
-        if len(s) < 80:
-            continue
-
-        if not is_relevant(s):
-            continue
-        # elimina righe di navigazione anche se passano il filtro
-        if "menu" in s.lower():
-            continue
-        if "vai al contenuto" in s.lower():
-            continue
-        if "camera dei deputati" in s.lower() and len(s) > 200:
-            continue
-
-        items.append({
-            "tipo": classify(s),
-            "snippet": s
-        })
-
-    # dedup
-    seen = set()
-    clean = []
-    for i in items:
-        if i["snippet"] in seen:
-            continue
-        seen.add(i["snippet"])
-        clean.append(i)
+    items = extract_relevant_items(text)
 
     result = {
         "target_date": target_date,
-        "count": len(clean),
-        "items": clean
+        "url": url,
+        "count": len(items),
+        "items": items,
     }
 
     out_path = OUTPUT_DIR / f"camera_odg_alerts_{target_date}.json"
-
     with open(out_path, "w", encoding="utf-8") as f:
         json.dump(result, f, indent=2, ensure_ascii=False)
 
-    print("Trovati:", len(clean))
-    for x in clean[:5]:
-        print("-", x["tipo"], "|", x["snippet"][:200])
+    print("Salvato:", out_path)
+    print("Trovati:", len(items))
+    for item in items[:10]:
+        print("-", item["tipo"], "|", item["snippet"])
 
 
 if __name__ == "__main__":
