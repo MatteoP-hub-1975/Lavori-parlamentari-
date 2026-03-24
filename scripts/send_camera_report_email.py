@@ -20,28 +20,37 @@ def parse_target_date():
     return sys.argv[1]
 
 
+def load_json_if_exists(path: Path):
+    if not path.exists():
+        return None
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
+
+
 def load_analyzed_data(target_date):
     file_path = OUTPUT_DIR / f"camera_atti_analizzati_{target_date}.json"
-    if not file_path.exists():
-        return []
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    data = load_json_if_exists(file_path)
+    return data or []
 
 
 def load_agenda_operativa_data(target_date):
     file_path = OUTPUT_DIR / f"camera_agenda_operativa_{target_date}.json"
-    if not file_path.exists():
-        return []
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    data = load_json_if_exists(file_path)
+    return data or []
 
 
 def load_resoconti_data(target_date):
     file_path = OUTPUT_DIR / f"camera_resoconti_{target_date}.json"
-    if not file_path.exists():
+    data = load_json_if_exists(file_path)
+    return data or []
+
+
+def load_odg_alerts_data(target_date):
+    file_path = OUTPUT_DIR / f"camera_odg_alerts_{target_date}.json"
+    data = load_json_if_exists(file_path)
+    if not data:
         return []
-    with open(file_path, "r", encoding="utf-8") as f:
-        return json.load(f)
+    return data.get("items", []) or []
 
 
 def build_agenda_section(items):
@@ -64,6 +73,25 @@ def build_agenda_section(items):
             lines.append(f'Link: <a href="{link}">link documento</a>')
 
         blocks.append("<br>".join(lines) + "<br><br>")
+
+    return blocks
+
+
+def build_odg_alerts_section(items):
+    blocks = []
+
+    for item in items:
+        tipo = compact_spaces(item.get("tipo", ""))
+        snippet = compact_spaces(item.get("snippet", ""))
+
+        lines = []
+        if tipo:
+            lines.append(f"<b>{tipo}</b>")
+        if snippet:
+            lines.append(snippet)
+
+        if lines:
+            blocks.append("<br>".join(lines) + "<br><br>")
 
     return blocks
 
@@ -172,7 +200,7 @@ def build_sections(items):
     return sections
 
 
-def build_email_body(agenda_blocks, resoconti_blocks, sections, date):
+def build_email_body(agenda_blocks, odg_alert_blocks, resoconti_blocks, sections, date):
     body = f"<b>Monitor Parlamento – Camera – {date}</b><br><br>"
 
     body += "<b>=== AGENDA LAVORI CAMERA ===</b><br><br>"
@@ -180,6 +208,12 @@ def build_email_body(agenda_blocks, resoconti_blocks, sections, date):
         body += "".join(agenda_blocks)
     else:
         body += "Nessuna segnalazione.<br><br>"
+
+    body += "<b>=== FUTURO (ODG / CONVOCAZIONI) ===</b><br><br>"
+    if odg_alert_blocks:
+        body += "".join(odg_alert_blocks)
+    else:
+        body += "Nessun elemento rilevante.<br><br>"
 
     body += "<b>=== RESOCONTI COMMISSIONI ===</b><br><br>"
     if resoconti_blocks:
@@ -239,14 +273,22 @@ def main():
 
     analyzed_items = load_analyzed_data(target_date)
     agenda_items = load_agenda_operativa_data(target_date)
+    odg_alert_items = load_odg_alerts_data(target_date)
     resoconti_items = load_resoconti_data(target_date)
 
     agenda_blocks = build_agenda_section(agenda_items)
+    odg_alert_blocks = build_odg_alerts_section(odg_alert_items)
     resoconti_blocks = build_resoconti_section(resoconti_items)
     sections = build_sections(analyzed_items)
 
     subject = f"Monitor Parlamento – Camera – {target_date}"
-    body = build_email_body(agenda_blocks, resoconti_blocks, sections, target_date)
+    body = build_email_body(
+        agenda_blocks,
+        odg_alert_blocks,
+        resoconti_blocks,
+        sections,
+        target_date,
+    )
 
     send_email(subject, body)
     print("Email Camera inviata.")
