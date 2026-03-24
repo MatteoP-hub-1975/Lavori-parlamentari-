@@ -55,6 +55,14 @@ jobs:
         run: |
           python scripts/fetch_camera_commissioni_sparql.py "${{ steps.set_target_date.outputs.target_date }}"
 
+      - name: Test Camera future monitor
+        env:
+          SMTP_USER: ${{ secrets.SMTP_USER }}
+          SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
+          SMTP_TO: ${{ secrets.SMTP_TO }}
+        run: |
+          python scripts/test_camera_future_monitor.py
+
       - name: Run Camera agenda fetch
         run: |
           python scripts/fetch_camera_agenda.py "${{ steps.set_target_date.outputs.target_date }}"
