@@ -1,177 +1,120 @@
 import os
 import re
+import sys
+import json
 import smtplib
+from datetime import datetime, timedelta
+from pathlib import Path
 from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
-from urllib.parse import urljoin
 
+import fitz  # PyMuPDF
 import requests
-from bs4 import BeautifulSoup
 
 
-INDEX_URL = "https://mobile.camera.it/convocazioni-commissioni-permanenti"
-BASE_URL = "https://mobile.camera.it"
+OUTPUT_DIR = Path("data/camera")
+OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 HEADERS = {"User-Agent": "Mozilla/5.0"}
+
+
+def get_target_date():
+    if len(sys.argv) > 1:
+        return sys.argv[1]
+    return (datetime.today() - timedelta(days=1)).date().isoformat()
+
+
+def build_bollettino_pdf_url(target_date: str) -> str:
+    y, m, d = target_date.split("-")
+    # pattern osservato: 2332026.pdf = 23/3/2026
+    return f"https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/{int(d)}{int(m)}{y}.pdf"
 
 
 def compact(text: str) -> str:
     return re.sub(r"\s+", " ", (text or "")).strip()
 
 
-def fetch_html(url: str) -> str:
-    r = requests.get(url, headers=HEADERS, timeout=60)
+def download_pdf(url: str) -> bytes:
+    r = requests.get(url, headers=HEADERS, timeout=90)
     r.raise_for_status()
-    return r.text
+    return r.content
 
 
-def extract_commission_links(index_html: str):
-    soup = BeautifulSoup(index_html, "html.parser")
-    links = []
+def extract_pdf_text(pdf_bytes: bytes) -> str:
+    doc = fitz.open(stream=pdf_bytes, filetype="pdf")
+    parts = []
+    for page in doc:
+        parts.append(page.get_text())
+    return "\n".join(parts)
 
-    for a in soup.find_all("a", href=True):
-        href = (a.get("href") or "").strip()
-        text = compact(a.get_text(" ", strip=True))
-        title = compact(a.get("title", ""))
 
-        full = urljoin(BASE_URL, href)
-        combined = f"{text} {title} {full}".lower()
+def find_matches(text: str):
+    patterns = [
+        ("Termine emendamenti", r"termine\s+per\s+la\s+presentazione[^\.:\n]{0,300}(emendament|proposte\s+emendative)"),
+        ("Emendamenti", r"(emendament[oi]|proposte\s+emendative)"),
+        ("Audizione", r"audizion[ei]"),
+        ("DDL / PDL", r"\b(a\.c\.|c\.)\s*\d+"),
+        ("Documento", r"\b(doc\.)\s*[ivxlcdm]+"),
+        ("Atto del Governo", r"\batto\s+n\.\s*\d+"),
+    ]
 
-        if "commissione" in combined and "permanenti" not in combined:
-            links.append((text or title or full, full))
+    items = []
 
+    for tipo, pattern in patterns:
+        for m in re.finditer(pattern, text, flags=re.IGNORECASE):
+            start = max(0, m.start() - 220)
+            end = min(len(text), m.end() + 320)
+            snippet = compact(text[start:end])
+
+            if len(snippet) < 60:
+                continue
+
+            items.append({
+                "tipo": tipo,
+                "snippet": snippet,
+            })
+
+    # dedup
     seen = set()
-    out = []
-    for label, url in links:
-        if url in seen:
+    clean = []
+    for item in items:
+        key = (item["tipo"], item["snippet"])
+        if key in seen:
             continue
-        seen.add(url)
-        out.append((label, url))
-    return out
+        seen.add(key)
+        clean.append(item)
+
+    return clean
 
 
-def is_relevant_block(block: str) -> bool:
-    b = block.lower()
-    return any(x in b for x in [
-        "audizion",
-        "emendament",
-        "proposte emendative",
-        "termine per la presentazione",
-        "doc.",
-        "a.c.",
-        "c.",
-        "disegno di legge",
-        "proposta di legge",
-        "atto n.",
-        "atto del governo",
-    ])
-
-
-def infer_item_type(block: str) -> str:
-    b = block.lower()
-
-    if "termine per la presentazione" in b and ("emendament" in b or "proposte emendative" in b):
-        return "Termine emendamenti"
-    if "audizion" in b:
-        return "Audizione"
-    if "emendament" in b or "proposte emendative" in b:
-        return "Emendamenti"
-    if re.search(r"\b(doc\.)\s*[ivxlcdm]", block, flags=re.IGNORECASE):
-        return "Documento"
-    if re.search(r"\b(a\.c\.|c\.)\s*\d+", block, flags=re.IGNORECASE):
-        return "DDL / PDL"
-    if "atto n." in b or "atto del governo" in b:
-        return "Atto del Governo"
-    return "Altro"
-
-
-def classify_sector(block: str) -> str:
-    b = block.lower()
+def classify_sector(snippet: str) -> str:
+    s = snippet.lower()
 
     marittimo = [
         "marittim", "navigazion", "porto", "porti", "shipping",
         "armator", "nave", "navi", "autorità portuale", "adsp",
-        "stretto di hormuz", "canale di suez", "blue economy",
+        "blue economy", "canale di suez", "stretto di hormuz",
     ]
     trasporto = [
         "trasport", "logistic", "ferroviar", "stradal", "autostrad",
         "aeroport", "aeronautic", "mobilità", "tpl",
-        "veicoli", "trasporto pubblico locale",
+        "trasporto pubblico locale", "veicoli",
     ]
     industria = [
         "energia", "industr", "imprese", "approvvigionamenti",
-        "carburanti", "supply chain", "manifattur", "commercio",
-        "pnrr", "politiche di coesione",
+        "carburanti", "pnrr", "politiche di coesione",
     ]
 
-    if any(x in b for x in marittimo):
+    if any(x in s for x in marittimo):
         return "Interesse trasporto marittimo"
-    if any(x in b for x in trasporto):
+    if any(x in s for x in trasporto):
         return "Interesse industria del trasporto"
-    if any(x in b for x in industria):
+    if any(x in s for x in industria):
         return "Interesse industriale generale"
     return "Non attinenti"
 
 
-def extract_commission_name(block: str) -> str:
-    m = re.search(r"\b([IVX]+\s+COMMISSIONE.*?)\b(?=\s+[A-ZÀ-Ü])", block)
-    if m:
-        return compact(m.group(1))
-
-    m2 = re.search(r"\b([IVX]+\s+COMMISSIONE)\b", block)
-    if m2:
-        return compact(m2.group(1))
-
-    return "Commissione"
-
-
-def scan_commission_page(label: str, url: str):
-    html = fetch_html(url)
-    soup = BeautifulSoup(html, "html.parser")
-
-    text = soup.get_text("\n", strip=True)
-
-    # split per singola commissione
-    raw_blocks = re.split(r"\b(?=[IVX]+\s+COMMISSIONE)\b", text)
-
-    blocks = []
-    for b in raw_blocks:
-        b = compact(b)
-
-        if len(b) < 100:
-            continue
-
-        if not re.search(r"\b[IVX]+\s+COMMISSIONE\b", b):
-            continue
-
-        blocks.append(b)
-
-    items = []
-    for block in blocks:
-        if not is_relevant_block(block):
-            continue
-
-        items.append({
-            "commissione": extract_commission_name(block),
-            "url": url,
-            "tipo": infer_item_type(block),
-            "categoria": classify_sector(block),
-            "snippet": block,
-        })
-
-    seen = set()
-    out = []
-    for x in items:
-        key = (x["commissione"], x["tipo"], x["snippet"])
-        if key in seen:
-            continue
-        seen.add(key)
-        out.append(x)
-
-    return out
-
-
-def build_email_body(items):
+def build_email_body(target_date: str, pdf_url: str, items):
     sections = {
         "Interesse trasporto marittimo": [],
         "Interesse industria del trasporto": [],
@@ -180,18 +123,18 @@ def build_email_body(items):
     }
 
     for item in items:
+        item["categoria"] = classify_sector(item["snippet"])
         sections[item["categoria"]].append(item)
 
-    body = "<b>Test Camera – Futuro da convocazioni Commissioni</b><br><br>"
+    body = f"<b>Test Camera – Futuro da Bollettino Commissioni – {target_date}</b><br><br>"
+    body += f'Fonte PDF: <a href="{pdf_url}">bollettino commissioni</a><br><br>'
 
-    order = [
+    for sec in [
         "Interesse trasporto marittimo",
         "Interesse industria del trasporto",
         "Interesse industriale generale",
         "Non attinenti",
-    ]
-
-    for sec in order:
+    ]:
         body += f"<b>=== {sec.upper()} ===</b><br><br>"
         if not sections[sec]:
             body += "Nessun elemento.<br><br>"
@@ -199,9 +142,7 @@ def build_email_body(items):
 
         for item in sections[sec]:
             body += f"<b>{item['tipo']}</b><br>"
-            body += f"Commissione: {item['commissione']}<br>"
-            body += f"{item['snippet']}<br>"
-            body += f'Link: <a href="{item["url"]}">pagina commissione</a><br><br>'
+            body += f"{item['snippet']}<br><br>"
 
     return body
 
@@ -227,28 +168,38 @@ def send_email(subject: str, body: str):
 
 
 def main():
-    print("Scarico indice commissioni...")
-    index_html = fetch_html(INDEX_URL)
-    commission_links = extract_commission_links(index_html)
+    target_date = get_target_date()
+    pdf_url = build_bollettino_pdf_url(target_date)
 
-    print("Commissioni trovate:", len(commission_links))
+    print("Target date:", target_date)
+    print("PDF:", pdf_url)
 
-    all_items = []
-    for label, url in commission_links:
-        try:
-            items = scan_commission_page(label, url)
-            if items:
-                print("-", label, "| items:", len(items))
-            all_items.extend(items)
-        except Exception as e:
-            print("-", label, "| errore:", e)
+    pdf_bytes = download_pdf(pdf_url)
+    text = extract_pdf_text(pdf_bytes)
 
-    subject = "Test Camera – Futuro da convocazioni Commissioni"
-    body = build_email_body(all_items)
+    items = find_matches(text)
+
+    out = {
+        "target_date": target_date,
+        "pdf_url": pdf_url,
+        "count": len(items),
+        "items": items,
+    }
+
+    out_path = OUTPUT_DIR / f"camera_future_pdf_scan_{target_date}.json"
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(out, f, ensure_ascii=False, indent=2)
+
+    print("Trovati:", len(items))
+    for item in items[:10]:
+        print("-", item["tipo"], "|", item["snippet"][:220])
+
+    subject = f"Test Camera – Futuro da Bollettino Commissioni – {target_date}"
+    body = build_email_body(target_date, pdf_url, items)
     send_email(subject, body)
 
-    print("Totale elementi trovati:", len(all_items))
     print("Mail inviata.")
+    print("Salvato:", out_path)
 
 
 if __name__ == "__main__":
