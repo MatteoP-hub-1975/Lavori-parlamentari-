@@ -71,10 +71,6 @@ jobs:
         run: |
           python scripts/fetch_camera_sparql_probe.py "${{ steps.set_target_date.outputs.target_date }}"
 
-      - name: Run Camera future PDF monitor
-        run: |
-          python scripts/test_camera_future_monitor.py "${{ steps.set_target_date.outputs.target_date }}"
-
       - name: Run Camera parse
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
