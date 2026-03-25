@@ -61,7 +61,7 @@ jobs:
           SMTP_PASSWORD: ${{ secrets.SMTP_PASSWORD }}
           SMTP_TO: ${{ secrets.SMTP_TO }}
         run: |
-          python scripts/test_camera_future_monitor.py
+          python scripts/test_camera_future_monitor.py "${{ steps.set_target_date.outputs.target_date }}"
 
       - name: Run Camera agenda fetch
         run: |
