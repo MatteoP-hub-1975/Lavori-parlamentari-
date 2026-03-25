@@ -17,14 +17,16 @@ OUTPUT_DIR.mkdir(parents=True, exist_ok=True)
 
 HEADERS = {"User-Agent": "Mozilla/5.0"}
 
-
-# ---------------- DATE ----------------
-
 ITALIAN_MONTHS = {
     1: "gennaio", 2: "febbraio", 3: "marzo", 4: "aprile",
     5: "maggio", 6: "giugno", 7: "luglio", 8: "agosto",
     9: "settembre", 10: "ottobre", 11: "novembre", 12: "dicembre",
 }
+
+WEEKDAYS = [
+    "lunedì", "martedì", "mercoledì", "giovedì",
+    "venerdì", "sabato", "domenica"
+]
 
 
 def get_target_date():
@@ -33,133 +35,172 @@ def get_target_date():
     return (datetime.today() - timedelta(days=1)).date().isoformat()
 
 
-def build_date_strings(date_str):
+def compact(text: str) -> str:
+    return re.sub(r"\s+", " ", (text or "")).strip()
+
+
+def build_date_strings(date_str: str):
     dt = datetime.strptime(date_str, "%Y-%m-%d")
-    weekdays = [
-        "lunedì", "martedì", "mercoledì", "giovedì",
-        "venerdì", "sabato", "domenica"
-    ]
-    return f"{weekdays[dt.weekday()]} {dt.day} {ITALIAN_MONTHS[dt.month]} {dt.year}"
+    full = f"{WEEKDAYS[dt.weekday()]} {dt.day} {ITALIAN_MONTHS[dt.month]} {dt.year}"
+    short = f"{dt.day} {ITALIAN_MONTHS[dt.month]} {dt.year}"
+    return full.lower(), short.lower()
 
 
-# ---------------- PDF ----------------
-
-def find_pdf(target_date):
+def find_pdf(target_date: str):
     dt = datetime.strptime(target_date, "%Y-%m-%d").date()
 
-    for i in range(5):
+    for i in range(7):
         d = dt - timedelta(days=i)
         url = f"https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/{d.day}{d.month}{d.year}.pdf"
-
-        r = requests.get(url, headers=HEADERS)
-        if r.status_code == 200:
+        r = requests.get(url, headers=HEADERS, timeout=90)
+        if r.status_code == 200 and "pdf" in (r.headers.get("Content-Type", "").lower()):
             return url, r.content
 
     raise Exception("PDF non trovato")
 
 
-def extract_text(pdf_bytes):
+def extract_text(pdf_bytes: bytes) -> str:
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    return "\n".join([p.get_text() for p in doc])
+    parts = []
+    for page in doc:
+        parts.append(page.get_text())
+    return "\n".join(parts)
 
 
-# ---------------- PARSING ----------------
-
-def compact(t):
-    return re.sub(r"\s+", " ", t).strip()
-
-
-def extract_day_section(text, target_date):
-    marker = build_date_strings(target_date).lower()
+def extract_day_section(text: str, target_date: str) -> str:
+    text = text.replace("\r", "\n")
     text_low = text.lower()
 
-    start = text_low.find(marker)
+    full_marker, short_marker = build_date_strings(target_date)
+
+    start = text_low.find(full_marker)
+    if start == -1:
+        start = text_low.find(short_marker)
     if start == -1:
         raise Exception("Data non trovata nel PDF")
 
-    # fine = prossima data
-    end_match = re.search(
-        r"(lunedì|martedì|mercoledì|giovedì|venerdì|sabato|domenica)\s+\d{1,2}\s+[a-z]+\s+2026",
-        text_low[start + 20:]
+    next_day_pattern = re.compile(
+        r"\b(lunedì|martedì|mercoledì|giovedì|venerdì|sabato|domenica)\s+\d{1,2}\s+"
+        r"(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\s+\d{4}",
+        re.IGNORECASE
     )
 
-    end = start + end_match.start() if end_match else len(text)
+    next_match = next_day_pattern.search(text, start + 40)
+    end = next_match.start() if next_match else len(text)
 
     return text[start:end]
 
 
-def split_commissions(text):
-    parts = re.split(r"\b([IVX]+\s+COMMISSIONE.*?)\b", text)
+def split_commissions(day_section: str):
+    pattern = re.compile(r"(?=\b[IVX]+\s+COMMISSIONE\b)", re.IGNORECASE)
+    raw_blocks = pattern.split(day_section)
 
     out = []
-    for i in range(1, len(parts), 2):
-        title = parts[i]
-        body = parts[i + 1]
-        out.append((compact(title), compact(body)))
+    for block in raw_blocks:
+        block = compact(block)
+        if not block:
+            continue
+
+        m = re.match(r"([IVX]+\s+COMMISSIONE(?:\s+[A-ZÀ-Ú][^\n\.]{0,120})?)", block, flags=re.IGNORECASE)
+        if not m:
+            continue
+
+        title = compact(m.group(1))
+        body = compact(block[len(m.group(0)):])
+        out.append((title, body))
 
     return out
 
 
-# ---------------- EXTRACTION ----------------
+def infer_type(text: str):
+    low = text.lower()
 
-def infer_type(t):
-    l = t.lower()
-
-    if "termine" in l and "emend" in l:
+    if "termine per la presentazione" in low and ("emend" in low or "proposte emendative" in low):
         return "Termine emendamenti"
-    if "emend" in l:
+    if "proposte emendative" in low or "emendament" in low:
         return "Emendamenti"
-    if "audizion" in l:
+    if "audizion" in low:
         return "Audizione"
-    if re.search(r"\b(c\.|a\.c\.)\s*\d+", t, re.I):
+    if re.search(r"\b(a\.c\.|c\.)\s*\d+", text, re.I):
         return "DDL / PDL"
-    if "atto n." in l:
-        return "Atto del Governo"
-    if "doc." in l:
+    if re.search(r"\bdoc\.\s*[ivxlcdm]+", text, re.I):
         return "Documento"
+    if re.search(r"\batto\s+n\.\s*\d+", text, re.I):
+        return "Atto del Governo"
     return None
 
 
-def classify(t):
-    l = t.lower()
+def classify(text: str):
+    low = text.lower()
 
-    if any(x in l for x in ["marittim", "porto", "nave"]):
+    if any(x in low for x in ["marittim", "porto", "porti", "nave", "navi", "navigazion", "armator", "shipping", "adsp"]):
         return "Interesse trasporto marittimo"
-    if "trasport" in l:
+    if any(x in low for x in ["trasport", "trasporto pubblico locale", "tpl", "mobilità", "logistic", "veicoli", "ferroviar", "aeroport", "autostrad"]):
         return "Interesse industria del trasporto"
-    if any(x in l for x in ["energia", "industr", "pnrr"]):
+    if any(x in low for x in ["energia", "industr", "imprese", "pnrr", "politiche di coesione", "approvvigionamenti", "carburanti"]):
         return "Interesse industriale generale"
     return "Non attinenti"
 
 
-def extract_items(section, commission):
-    sentences = re.split(r"\.\s+", section)
+def split_into_chunks(section_text: str):
+    text = section_text.replace(" .", ".").replace(" ;", ";")
+    chunks = re.split(r"(?<=[\.\;\:])\s+", text)
 
+    out = []
+    current = []
+
+    for chunk in chunks:
+        c = compact(chunk)
+        if not c:
+            continue
+        current.append(c)
+
+        joined = compact(" ".join(current))
+        if len(joined) >= 220 or any(k in joined.lower() for k in [
+            "audizion", "emendament", "proposte emendative",
+            "termine per la presentazione", "atto n.", "doc.", "a.c.", "c."
+        ]):
+            out.append(joined)
+            current = []
+
+    if current:
+        out.append(compact(" ".join(current)))
+
+    return out
+
+
+def extract_items(section_text: str, commission: str):
+    chunks = split_into_chunks(section_text)
     items = []
 
-    for s in sentences:
-        s = compact(s)
-
-        if len(s) < 60:
+    for chunk in chunks:
+        if len(chunk) < 50:
             continue
 
-        tipo = infer_type(s)
-        if not tipo:
+        item_type = infer_type(chunk)
+        if not item_type:
             continue
 
         items.append({
             "commissione": commission,
-            "tipo": tipo,
-            "testo": s,
-            "categoria": classify(s),
+            "tipo": item_type,
+            "testo": chunk,
+            "categoria": classify(chunk),
         })
 
-    return items
+    seen = set()
+    clean = []
+    for item in items:
+        key = (item["commissione"], item["tipo"], item["testo"])
+        if key in seen:
+            continue
+        seen.add(key)
+        clean.append(item)
+
+    return clean
 
 
-# ---------------- EMAIL ----------------
-
-def build_email(date, pdf_url, items):
+def build_email(date: str, pdf_url: str, items):
     sections = {
         "Interesse trasporto marittimo": [],
         "Interesse industria del trasporto": [],
@@ -167,28 +208,46 @@ def build_email(date, pdf_url, items):
         "Non attinenti": [],
     }
 
-    for i in items:
-        sections[i["categoria"]].append(i)
+    for item in items:
+        sections[item["categoria"]].append(item)
 
     body = f"<b>Monitor Camera – {date}</b><br>"
-    body += f'<a href="{pdf_url}">Fonte PDF</a><br><br>'
+    body += f'Fonte PDF: <a href="{pdf_url}">link documento</a><br><br>'
 
-    for k in sections:
-        body += f"<b>=== {k.upper()} ===</b><br><br>"
+    for section_name in [
+        "Interesse trasporto marittimo",
+        "Interesse industria del trasporto",
+        "Interesse industriale generale",
+        "Non attinenti",
+    ]:
+        body += f"<b>=== {section_name.upper()} ===</b><br><br>"
 
-        if not sections[k]:
+        if not sections[section_name]:
             body += "Nessun elemento.<br><br>"
             continue
 
-        for i in sections[k]:
-            body += f"<b>{i['tipo']}</b><br>"
-            body += f"Commissione: {i['commissione']}<br>"
-            body += f"{i['testo']}<br><br>"
+        for item in sections[section_name]:
+            body += f"<b>{item['tipo']}</b><br>"
+            body += f"Commissione: {item['commissione']}<br>"
+            body += f"{item['testo']}<br><br>"
 
     return body
 
 
-def send_email(subject, body):
+def save_json(date: str, pdf_url: str, items):
+    out_path = OUTPUT_DIR / f"camera_future_pdf_scan_{date}.json"
+    payload = {
+        "target_date": date,
+        "pdf_url": pdf_url,
+        "count": len(items),
+        "items": items,
+    }
+    with open(out_path, "w", encoding="utf-8") as f:
+        json.dump(payload, f, ensure_ascii=False, indent=2)
+    return out_path
+
+
+def send_email(subject: str, body: str):
     msg = MIMEMultipart()
     msg["From"] = os.environ["SMTP_USER"]
     msg["To"] = os.environ["SMTP_TO"]
@@ -201,30 +260,33 @@ def send_email(subject, body):
         s.send_message(msg)
 
 
-# ---------------- MAIN ----------------
-
 def main():
     date = get_target_date()
-
     print("DATE:", date)
 
     pdf_url, pdf_bytes = find_pdf(date)
-    text = extract_text(pdf_bytes)
+    print("PDF:", pdf_url)
 
+    text = extract_text(pdf_bytes)
     day_section = extract_day_section(text, date)
     commissions = split_commissions(day_section)
 
-    all_items = []
+    print("COMMISSIONS:", len(commissions))
 
-    for name, content in commissions:
-        items = extract_items(content, name)
+    all_items = []
+    for commission, content in commissions:
+        items = extract_items(content, commission)
         all_items.extend(items)
 
     print("ITEMS:", len(all_items))
+    for item in all_items[:10]:
+        print("-", item["tipo"], "|", item["commissione"], "|", item["testo"][:220])
 
+    out_path = save_json(date, pdf_url, all_items)
     body = build_email(date, pdf_url, all_items)
     send_email(f"Monitor Camera – {date}", body)
 
+    print("JSON:", out_path)
     print("DONE")
 
 
