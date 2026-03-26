@@ -61,23 +61,24 @@ def find_pdf(target_date: str):
 
 def extract_text(pdf_bytes: bytes) -> str:
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    parts = []
-    for page in doc:
-        parts.append(page.get_text())
-    return "\n".join(parts)
+    return "\n".join(page.get_text() for page in doc)
 
 
 def extract_day_section(text: str, target_date: str) -> str:
+    """
+    Usa l'ULTIMA occorrenza della data target nel PDF:
+    copertina/indice la citano più volte, ma l'ultima è la sezione vera.
+    """
     text = text.replace("\r", "\n")
     text_low = text.lower()
 
     full_marker, short_marker = build_date_strings(target_date)
 
-    start = text_low.find(full_marker)
+    start = text_low.rfind(full_marker)
     if start == -1:
-        start = text_low.find(short_marker)
+        start = text_low.rfind(short_marker)
     if start == -1:
-        raise Exception("Data non trovata nel PDF")
+        raise Exception("Data target non trovata nel PDF")
 
     next_day_pattern = re.compile(
         r"\b(lunedì|martedì|mercoledì|giovedì|venerdì|sabato|domenica)\s+\d{1,2}\s+"
@@ -88,26 +89,37 @@ def extract_day_section(text: str, target_date: str) -> str:
     next_match = next_day_pattern.search(text, start + 40)
     end = next_match.start() if next_match else len(text)
 
-    return text[start:end]
+    section = text[start:end]
+    return section
 
 
 def split_commissions(day_section: str):
-    pattern = re.compile(r"(?=\b[IVX]+\s+COMMISSIONE\b)", re.IGNORECASE)
+    """
+    Divide la sezione del giorno per heading commissione:
+    I COMMISSIONE PERMANENTE, II COMMISSIONE PERMANENTE, ...
+    """
+    pattern = re.compile(r"(?=\b[IVX]+\s+COMMISSIONE(?:\s+PERMANENTE)?\b)", re.IGNORECASE)
     raw_blocks = pattern.split(day_section)
 
     out = []
     for block in raw_blocks:
-        block = compact(block)
+        block = block.strip()
         if not block:
             continue
 
-        m = re.match(r"([IVX]+\s+COMMISSIONE(?:\s+[A-ZÀ-Ú][^\n\.]{0,120})?)", block, flags=re.IGNORECASE)
+        m = re.match(
+            r"([IVX]+\s+COMMISSIONE(?:\s+PERMANENTE)?(?:\s*\([^)]+\))?)",
+            block,
+            flags=re.IGNORECASE
+        )
         if not m:
             continue
 
-        title = compact(m.group(1))
-        body = compact(block[len(m.group(0)):])
-        out.append((title, body))
+        commissione = compact(m.group(1))
+        body = compact(block[m.end():])
+
+        if body:
+            out.append((commissione, body))
 
     return out
 
@@ -117,7 +129,7 @@ def infer_type(text: str):
 
     if "termine per la presentazione" in low and ("emend" in low or "proposte emendative" in low):
         return "Termine emendamenti"
-    if "proposte emendative" in low or "emendament" in low:
+    if "proposte emendative" in low or "esame emendamenti" in low or "emendament" in low:
         return "Emendamenti"
     if "audizion" in low:
         return "Audizione"
@@ -142,51 +154,37 @@ def classify(text: str):
     return "Non attinenti"
 
 
-def split_into_chunks(section_text: str):
-    text = section_text.replace(" .", ".").replace(" ;", ";")
-    chunks = re.split(r"(?<=[\.\;\:])\s+", text)
+def extract_items(section_text: str, commissione: str, data_seduta: str):
+    """
+    Cerca match rilevanti e salva snippet con contesto.
+    """
+    patterns = [
+        ("Termine emendamenti", r"termine\s+per\s+la\s+presentazione[^\.:\n]{0,400}(emendament|proposte\s+emendative)"),
+        ("Emendamenti", r"(esame\s+emendamenti[^\.:\n]{0,250}|proposte\s+emendative[^\.:\n]{0,250}|emendament[oi][^\.:\n]{0,250})"),
+        ("Audizione", r"(audizion[ei][^\.:\n]{0,350})"),
+        ("DDL / PDL", r"((?:A\.C\.|C\.)\s*\d+[^\n\.]{0,250})"),
+        ("Documento", r"((?:Doc\.)\s*[IVXLCDM]+[^,\n\.]{0,80}(?:,\s*n\.\s*\d+)?[^\n\.]{0,250})"),
+        ("Atto del Governo", r"(Atto\s+n\.\s*\d+[^\n\.]{0,250})"),
+    ]
 
-    out = []
-    current = []
-
-    for chunk in chunks:
-        c = compact(chunk)
-        if not c:
-            continue
-        current.append(c)
-
-        joined = compact(" ".join(current))
-        if len(joined) >= 220 or any(k in joined.lower() for k in [
-            "audizion", "emendament", "proposte emendative",
-            "termine per la presentazione", "atto n.", "doc.", "a.c.", "c."
-        ]):
-            out.append(joined)
-            current = []
-
-    if current:
-        out.append(compact(" ".join(current)))
-
-    return out
-
-
-def extract_items(section_text: str, commission: str):
-    chunks = split_into_chunks(section_text)
     items = []
 
-    for chunk in chunks:
-        if len(chunk) < 50:
-            continue
+    for tipo, pattern in patterns:
+        for m in re.finditer(pattern, section_text, flags=re.IGNORECASE):
+            start = max(0, m.start() - 180)
+            end = min(len(section_text), m.end() + 220)
+            snippet = compact(section_text[start:end])
 
-        item_type = infer_type(chunk)
-        if not item_type:
-            continue
+            if len(snippet) < 40:
+                continue
 
-        items.append({
-            "commissione": commission,
-            "tipo": item_type,
-            "testo": chunk,
-            "categoria": classify(chunk),
-        })
+            items.append({
+                "data_seduta": data_seduta,
+                "commissione": commissione,
+                "tipo": tipo,
+                "testo": snippet,
+                "categoria": classify(snippet),
+            })
 
     seen = set()
     clean = []
@@ -228,6 +226,7 @@ def build_email(date: str, pdf_url: str, items):
 
         for item in sections[section_name]:
             body += f"<b>{item['tipo']}</b><br>"
+            body += f"Data seduta: {item['data_seduta']}<br>"
             body += f"Commissione: {item['commissione']}<br>"
             body += f"{item['testo']}<br><br>"
 
@@ -248,6 +247,9 @@ def save_json(date: str, pdf_url: str, items):
 
 
 def send_email(subject: str, body: str):
+    if not all(k in os.environ for k in ["SMTP_USER", "SMTP_PASSWORD", "SMTP_TO"]):
+        return
+
     msg = MIMEMultipart()
     msg["From"] = os.environ["SMTP_USER"]
     msg["To"] = os.environ["SMTP_TO"]
@@ -274,8 +276,8 @@ def main():
     print("COMMISSIONS:", len(commissions))
 
     all_items = []
-    for commission, content in commissions:
-        items = extract_items(content, commission)
+    for commissione, content in commissions:
+        items = extract_items(content, commissione, date)
         all_items.extend(items)
 
     print("ITEMS:", len(all_items))
