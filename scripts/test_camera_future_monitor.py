@@ -59,69 +59,131 @@ def find_pdf(target_date: str):
     raise Exception("PDF non trovato")
 
 
-def extract_text(pdf_bytes: bytes) -> str:
+def extract_pages(pdf_bytes: bytes):
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
-    return "\n".join(page.get_text() for page in doc)
+    pages = []
+    for i, page in enumerate(doc):
+        text = page.get_text()
+        pages.append({"page_num": i + 1, "text": text})
+    return pages
 
 
-def extract_day_section(text: str, target_date: str) -> str:
+def is_index_page(text: str) -> bool:
+    t = text.lower()
+    return (
+        "i n d i c e c o n v o c a z i o n i" in t
+        or "indice convocazioni alla data" in t
+    )
+
+
+def extract_day_pages(pages, target_date: str):
     """
-    Usa l'ULTIMA occorrenza della data target nel PDF:
-    copertina/indice la citano più volte, ma l'ultima è la sezione vera.
+    Cerca l'ULTIMA pagina che contiene la data target:
+    in genere è l'inizio della sezione vera, non l'indice.
     """
-    text = text.replace("\r", "\n")
-    text_low = text.lower()
-
     full_marker, short_marker = build_date_strings(target_date)
 
-    start = text_low.rfind(full_marker)
-    if start == -1:
-        start = text_low.rfind(short_marker)
-    if start == -1:
+    candidate_indexes = []
+    for idx, page in enumerate(pages):
+        low = page["text"].lower()
+        if full_marker in low or short_marker in low:
+            candidate_indexes.append(idx)
+
+    if not candidate_indexes:
         raise Exception("Data target non trovata nel PDF")
 
+    start_idx = candidate_indexes[-1]
+
+    out = []
     next_day_pattern = re.compile(
         r"\b(lunedì|martedì|mercoledì|giovedì|venerdì|sabato|domenica)\s+\d{1,2}\s+"
         r"(gennaio|febbraio|marzo|aprile|maggio|giugno|luglio|agosto|settembre|ottobre|novembre|dicembre)\s+\d{4}",
         re.IGNORECASE
     )
 
-    next_match = next_day_pattern.search(text, start + 40)
-    end = next_match.start() if next_match else len(text)
+    started = False
 
-    section = text[start:end]
-    return section
+    for idx in range(start_idx, len(pages)):
+        text = pages[idx]["text"]
 
-
-def split_commissions(day_section: str):
-    """
-    Divide la sezione del giorno per heading commissione:
-    I COMMISSIONE PERMANENTE, II COMMISSIONE PERMANENTE, ...
-    """
-    pattern = re.compile(r"(?=\b[IVX]+\s+COMMISSIONE(?:\s+PERMANENTE)?\b)", re.IGNORECASE)
-    raw_blocks = pattern.split(day_section)
-
-    out = []
-    for block in raw_blocks:
-        block = block.strip()
-        if not block:
+        if is_index_page(text):
             continue
 
-        m = re.match(
-            r"([IVX]+\s+COMMISSIONE(?:\s+PERMANENTE)?(?:\s*\([^)]+\))?)",
-            block,
-            flags=re.IGNORECASE
-        )
-        if not m:
+        if not started:
+            out.append(text)
+            started = True
             continue
 
-        commissione = compact(m.group(1))
-        body = compact(block[m.end():])
+        # se trovi una nuova data esplicita di altro giorno, stop
+        m = next_day_pattern.search(text)
+        if m:
+            found = compact(m.group(0)).lower()
+            if target_date not in found:
+                break
 
-        if body:
-            out.append((commissione, body))
+        out.append(text)
 
-    return out
+    return "\n".join(out)
+
+
+def normalize_lines(text: str):
+    lines = []
+    for raw in text.replace("\r", "\n").split("\n"):
+        line = compact(raw)
+        if not line:
+            continue
+        if re.fullmatch(r"-?\s*\d+\s*-?", line):
+            continue
+        if "i n d i c e c o n v o c a z i o n i" in line.lower():
+            continue
+        if "indice convocazioni alla data" in line.lower():
+            continue
+        lines.append(line)
+    return lines
+
+
+def is_commission_heading(line: str) -> bool:
+    line = compact(line)
+
+    patterns = [
+        r"^[IVX]+\s+[A-ZÀ-Ú].+",
+        r"^COMMISSIONI RIUNITE\b",
+        r"^COMMISSIONE PARLAMENTARE\b",
+        r"^COMMISSIONE PLENARIA\b",
+        r"^COMITATO\b",
+    ]
+
+    return any(re.match(p, line, flags=re.IGNORECASE) for p in patterns)
+
+
+def clean_commission_name(line: str) -> str:
+    line = compact(line)
+    line = re.sub(r"\s+\.\s+\.\s+\.\s+.*$", "", line)
+    return line
+
+
+def split_commissions(day_text: str):
+    lines = normalize_lines(day_text)
+
+    sections = []
+    current_commission = None
+    current_lines = []
+
+    for line in lines:
+        if is_commission_heading(line):
+            if current_commission and current_lines:
+                sections.append((current_commission, "\n".join(current_lines)))
+            current_commission = clean_commission_name(line)
+            current_lines = []
+            continue
+
+        if current_commission:
+            current_lines.append(line)
+
+    if current_commission and current_lines:
+        sections.append((current_commission, "\n".join(current_lines)))
+
+    return sections
 
 
 def infer_type(text: str):
@@ -129,7 +191,7 @@ def infer_type(text: str):
 
     if "termine per la presentazione" in low and ("emend" in low or "proposte emendative" in low):
         return "Termine emendamenti"
-    if "proposte emendative" in low or "esame emendamenti" in low or "emendament" in low:
+    if "esame emendamenti" in low or "proposte emendative" in low or "emendament" in low:
         return "Emendamenti"
     if "audizion" in low:
         return "Audizione"
@@ -145,9 +207,9 @@ def infer_type(text: str):
 def classify(text: str):
     low = text.lower()
 
-    if any(x in low for x in ["marittim", "porto", "porti", "nave", "navi", "navigazion", "armator", "shipping", "adsp"]):
+    if any(x in low for x in ["marittim", "porto", "porti", "nave", "navi", "navigazion", "armator", "shipping", "adsp", "cabotaggio"]):
         return "Interesse trasporto marittimo"
-    if any(x in low for x in ["trasport", "trasporto pubblico locale", "tpl", "mobilità", "logistic", "veicoli", "ferroviar", "aeroport", "autostrad"]):
+    if any(x in low for x in ["trasport", "trasporto pubblico locale", "tpl", "mobilità", "logistic", "veicoli", "ferroviar", "aeroport", "autostrad", "autobus"]):
         return "Interesse industria del trasporto"
     if any(x in low for x in ["energia", "industr", "imprese", "pnrr", "politiche di coesione", "approvvigionamenti", "carburanti"]):
         return "Interesse industriale generale"
@@ -156,26 +218,32 @@ def classify(text: str):
 
 def extract_items(section_text: str, commissione: str, data_seduta: str):
     """
-    Cerca match rilevanti e salva snippet con contesto.
+    Cerca pattern rilevanti all'interno della singola commissione
+    e salva snippet con contesto, senza uscire dalla commissione stessa.
     """
     patterns = [
-        ("Termine emendamenti", r"termine\s+per\s+la\s+presentazione[^\.:\n]{0,400}(emendament|proposte\s+emendative)"),
-        ("Emendamenti", r"(esame\s+emendamenti[^\.:\n]{0,250}|proposte\s+emendative[^\.:\n]{0,250}|emendament[oi][^\.:\n]{0,250})"),
-        ("Audizione", r"(audizion[ei][^\.:\n]{0,350})"),
-        ("DDL / PDL", r"((?:A\.C\.|C\.)\s*\d+[^\n\.]{0,250})"),
-        ("Documento", r"((?:Doc\.)\s*[IVXLCDM]+[^,\n\.]{0,80}(?:,\s*n\.\s*\d+)?[^\n\.]{0,250})"),
-        ("Atto del Governo", r"(Atto\s+n\.\s*\d+[^\n\.]{0,250})"),
+        ("Termine emendamenti", r"termine\s+per\s+la\s+presentazione[^\.:\n]{0,400}(?:emendament|proposte\s+emendative)"),
+        ("Emendamenti", r"(?:esame\s+emendamenti[^\.:\n]{0,280}|proposte\s+emendative[^\.:\n]{0,280}|ed\s+emendamenti[^\.:\n]{0,280})"),
+        ("Audizione", r"(?:AUDIZIONI(?:\s+INFORMALI)?[^\.:\n]{0,280}|audizion[ei][^\.:\n]{0,320})"),
+        ("DDL / PDL", r"(?:A\.C\.|C\.)\s*\d+[^\n\.]{0,250}"),
+        ("Documento", r"(?:Doc\.)\s*[IVXLCDM]+(?:,\s*n\.\s*\d+)?[^\n\.]{0,250}"),
+        ("Atto del Governo", r"Atto\s+n\.\s*\d+[^\n\.]{0,250}"),
     ]
 
     items = []
 
     for tipo, pattern in patterns:
         for m in re.finditer(pattern, section_text, flags=re.IGNORECASE):
-            start = max(0, m.start() - 180)
-            end = min(len(section_text), m.end() + 220)
+            start = max(0, m.start() - 120)
+            end = min(len(section_text), m.end() + 180)
             snippet = compact(section_text[start:end])
 
-            if len(snippet) < 40:
+            if len(snippet) < 35:
+                continue
+
+            if "i n d i c e c o n v o c a z i o n i" in snippet.lower():
+                continue
+            if "indice convocazioni alla data" in snippet.lower():
                 continue
 
             items.append({
@@ -269,9 +337,9 @@ def main():
     pdf_url, pdf_bytes = find_pdf(date)
     print("PDF:", pdf_url)
 
-    text = extract_text(pdf_bytes)
-    day_section = extract_day_section(text, date)
-    commissions = split_commissions(day_section)
+    pages = extract_pages(pdf_bytes)
+    day_text = extract_day_pages(pages, date)
+    commissions = split_commissions(day_text)
 
     print("COMMISSIONS:", len(commissions))
 
