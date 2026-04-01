@@ -16,46 +16,54 @@ with open(PDF_FILE, "wb") as f:
 text = extract_text(PDF_FILE)
 
 # pulizia minima
-text = re.sub(r"-\s+\d+\s+-", " ", text)   # rimuove numeri pagina tipo - 28 -
-text = re.sub(r"\n{2,}", "\n\n", text)
+text = re.sub(r"-\s*\d+\s*-", "\n", text)          # numeri pagina tipo - 28 -
+text = re.sub(r"[ \t]+\n", "\n", text)
+text = re.sub(r"\n{3,}", "\n\n", text)
 
-# split per commissioni / organismi
-blocchi = re.split(
-    r"\n(?=(?:[IVXLC]+\s+COMMISSIONE PERMANENTE|COMMISSIONE PARLAMENTARE DI INCHIESTA|COMMISSIONE PARLAMENTARE PER|COMITATO PARLAMENTARE PER|GIUNTA PER LE AUTORIZZAZIONI))",
-    text
+# taglia via l'indice iniziale: inizia dalla prima vera commissione
+start_match = re.search(r"\bI COMMISSIONE PERMANENTE\b", text)
+if not start_match:
+    raise RuntimeError("Inizio sezioni commissioni non trovato")
+text = text[start_match.start():]
+
+# pattern intestazioni sezione
+header_pattern = re.compile(
+    r"^(?P<header>("
+    r"[IVXLC]+\s+COMMISSIONE PERMANENTE.*"
+    r"|GIUNTA PER LE AUTORIZZAZIONI.*"
+    r"|COMITATO PARLAMENTARE PER.*"
+    r"|COMMISSIONE PARLAMENTARE DI INCHIESTA.*"
+    r"|COMMISSIONE PARLAMENTARE PER LA SEMPLIFICAZIONE.*"
+    r"|COMMISSIONE PARLAMENTARE DI VIGILANZA.*"
+    r"))$",
+    re.MULTILINE
 )
+
+matches = list(header_pattern.finditer(text))
+sections = []
+
+for i, m in enumerate(matches):
+    start = m.start()
+    end = matches[i + 1].start() if i + 1 < len(matches) else len(text)
+    header = m.group("header").strip()
+    content = text[start:end].strip()
+    sections.append((header, content))
 
 eventi = []
 
-def estrai_nome_commissione(blocco):
-    righe = [r.strip() for r in blocco.splitlines() if r.strip()]
-    if not righe:
-        return "Commissione non identificata"
-    prime = " ".join(righe[:3])
-    return prime[:180]
-
-for blocco in blocchi:
-    blocco = blocco.strip()
-    if not blocco:
-        continue
-
-    commissione = estrai_nome_commissione(blocco)
-
-    pezzi = re.split(r"\nOre\s+", blocco)
+for header, content in sections:
+    pezzi = re.split(r"\nOre\s+", content)
     for pezzo in pezzi[1:]:
         evento_testo = "Ore " + pezzo.strip()
 
-        # taglia quando inizia chiaramente un altro blocco
-        evento_testo = re.split(
-            r"\n(?=(?:[IVXLC]+\s+COMMISSIONE PERMANENTE|COMMISSIONE PARLAMENTARE DI INCHIESTA|COMMISSIONE PARLAMENTARE PER|COMITATO PARLAMENTARE PER|GIUNTA PER LE AUTORIZZAZIONI))",
-            evento_testo
-        )[0].strip()
+        # tronca rumore finale
+        evento_testo = re.split(r"\n(?:AVVISO\s+I N D I C E|I N D I C E)\b", evento_testo)[0].strip()
 
-        m_ora = re.match(r"Ore\s+([0-9]{1,2}(?:[.,][0-9]{2})?)", evento_testo)
+        m_ora = re.match(r"Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", evento_testo)
         ora = m_ora.group(1).replace(",", ".") if m_ora else ""
 
         eventi.append({
-            "commissione": commissione,
+            "commissione": header,
             "ora": ora,
             "testo": evento_testo,
             "aggiornato": "convocazione è stata aggiornata" in evento_testo.lower(),
@@ -66,14 +74,14 @@ def rilevante(e):
     txt = e["testo"].lower()
     comm = e["commissione"].lower()
 
-    keywords = [
-        "trasport", "porto", "nave", "marittim", "logistica",
-        "capitaneria", "moby prince", "infrastrutture e trasporti"
-    ]
-
-    if "trasporti" in comm:
+    # IX Trasporti sempre rilevante
+    if "ix commissione permanente" in comm or "(trasporti" in comm:
         return True
 
+    keywords = [
+        "porto", "porto di", "capitaneria", "nave", "marittim",
+        "moby prince", "infrastrutture e trasporti", "logistica"
+    ]
     return any(k in txt for k in keywords)
 
 rilevanti = [e for e in eventi if rilevante(e)]
