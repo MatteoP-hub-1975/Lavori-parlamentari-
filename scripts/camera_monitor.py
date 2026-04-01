@@ -8,34 +8,43 @@ import os
 PDF_URL = "https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/3032026.pdf"
 PDF_FILE = "camera.pdf"
 
+# --- scarica PDF ---
 r = requests.get(PDF_URL, timeout=30)
 r.raise_for_status()
 with open(PDF_FILE, "wb") as f:
     f.write(r.content)
 
+# --- estrai testo ---
 text = extract_text(PDF_FILE)
 
+# --- pulizia base ---
 text = re.sub(r"-\s*\d+\s*-", "\n", text)
 text = re.sub(r"[ \t]+\n", "\n", text)
 text = re.sub(r"\n{3,}", "\n\n", text)
 
-start_marker = "IX COMMISSIONE PERMANENTE"
-end_marker = "X COMMISSIONE PERMANENTE"
+# --- estrai sezione IX Commissione (robusto) ---
+match_ix = re.search(
+    r"IX\s+COMMISSIONE\s+PERMANENTE.*?(?=X\s+COMMISSIONE\s+PERMANENTE)",
+    text,
+    re.DOTALL
+)
 
-start = text.find(start_marker)
-end = text.find(end_marker)
+if not match_ix:
+    # salva debug per capire come è scritto nel PDF
+    with open("debug_camera_text.txt", "w", encoding="utf-8") as f:
+        f.write(text)
+    raise RuntimeError("Sezione IX Commissione non trovata. Vedi debug_camera_text.txt")
 
-if start == -1 or end == -1 or end <= start:
-    raise RuntimeError("Sezione IX Commissione non trovata correttamente")
+sezione_ix = match_ix.group(0).strip()
 
-sezione_ix = text[start:end].strip()
-
+# --- estrai eventi ---
 eventi_raw = re.split(r"\nOre\s+", sezione_ix)
 eventi = []
 
 for pezzo in eventi_raw[1:]:
     evento_testo = "Ore " + pezzo.strip()
 
+    # estrai ora
     m_ora = re.match(r"Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", evento_testo)
     ora = m_ora.group(1).replace(",", ".") if m_ora else ""
 
@@ -47,6 +56,7 @@ for pezzo in eventi_raw[1:]:
         "cancellato": "non avrà luogo" in evento_testo.lower(),
     })
 
+# --- costruisci email ---
 body = "MONITOR CAMERA – IX COMMISSIONE TRASPORTI\n\n"
 
 if not eventi:
@@ -61,6 +71,7 @@ else:
             body += "Cancellato\n"
         body += "\n---\n\n"
 
+# --- invio email ---
 to_email = os.environ.get("EMAIL_TO", os.environ["EMAIL_USER"])
 
 msg = MIMEText(body, _charset="utf-8")
@@ -71,7 +82,11 @@ msg["To"] = to_email
 with smtplib.SMTP("smtp.gmail.com", 587) as server:
     server.starttls()
     server.login(os.environ["EMAIL_USER"], os.environ["EMAIL_PASS"])
-    server.sendmail(os.environ["EMAIL_USER"], [to_email], msg.as_string())
+    server.sendmail(
+        os.environ["EMAIL_USER"],
+        [to_email],
+        msg.as_string()
+    )
 
 print(f"Email inviata a: {to_email}")
 print(f"Eventi trovati nella IX Commissione: {len(eventi)}")
