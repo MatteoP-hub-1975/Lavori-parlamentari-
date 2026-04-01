@@ -9,7 +9,8 @@ PDF_URL = "https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini
 PDF_FILE = "camera.pdf"
 
 # --- scarica PDF ---
-r = requests.get(PDF_URL)
+r = requests.get(PDF_URL, timeout=30)
+r.raise_for_status()
 with open(PDF_FILE, "wb") as f:
     f.write(r.content)
 
@@ -60,12 +61,20 @@ else:
         body += "\n---\n\n"
 
 # --- invio email ---
-msg = MIMEText(body)
+to_email = os.environ.get("EMAIL_TO", os.environ["EMAIL_USER"])
+
+msg = MIMEText(body, _charset="utf-8")
 msg["Subject"] = "Monitor Camera"
 msg["From"] = os.environ["EMAIL_USER"]
-msg["To"] = os.environ["EMAIL_USER"]
+msg["To"] = to_email
 
 with smtplib.SMTP("smtp.gmail.com", 587) as server:
     server.starttls()
     server.login(os.environ["EMAIL_USER"], os.environ["EMAIL_PASS"])
-    server.send_message(msg)
+    server.sendmail(
+        os.environ["EMAIL_USER"],
+        [to_email],
+        msg.as_string()
+    )
+
+print(f"Email inviata a: {to_email}")
