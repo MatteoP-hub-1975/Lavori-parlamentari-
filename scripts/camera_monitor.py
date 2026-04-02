@@ -27,7 +27,7 @@ text = re.sub(r"-\s*\d+\s*-", "\n", text)
 text = re.sub(r"[ \t]+\n", "\n", text)
 text = re.sub(r"\n{3,}", "\n\n", text)
 
-# --- estrai sezione IX Commissione (robusto) ---
+# --- estrai sezione IX Commissione ---
 match_ix = re.search(
     r"IX\s+COMMISSIONE\s+PERMANENTE.*?(?=X\s+COMMISSIONE\s+PERMANENTE)",
     text,
@@ -41,24 +41,53 @@ if not match_ix:
 
 sezione_ix = match_ix.group(0).strip()
 
-# --- estrai eventi ---
-eventi_raw = re.split(r"\nOre\s+", sezione_ix)
+# --- parsing riga per riga ---
+righe = [r.strip() for r in sezione_ix.splitlines() if r.strip()]
+
+pattern_data = re.compile(
+    r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato)\s+\d{1,2}\s+\w+\s+\d{4}$"
+)
+pattern_ora = re.compile(r"^Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)\b")
+
 eventi = []
+data_corrente = ""
+evento_corrente = None
 
-for pezzo in eventi_raw[1:]:
-    evento_testo = "Ore " + pezzo.strip()
-    evento_testo = pulisci_testo(evento_testo)
+for riga in righe:
+    if pattern_data.match(riga):
+        data_corrente = riga
+        continue
 
-    m_ora = re.match(r"Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", evento_testo)
-    ora = m_ora.group(1).replace(",", ".") if m_ora else ""
+    m_ora = pattern_ora.match(riga)
+    if m_ora:
+        if evento_corrente:
+            evento_corrente["testo"] = pulisci_testo(evento_corrente["testo"])
+            eventi.append(evento_corrente)
 
-    eventi.append({
-        "commissione": "IX COMMISSIONE PERMANENTE (TRASPORTI, POSTE E TELECOMUNICAZIONI)",
-        "ora": ora,
-        "testo": evento_testo,
-        "aggiornato": "convocazione è stata aggiornata" in evento_testo.lower(),
-        "cancellato": "non avrà luogo" in evento_testo.lower(),
-    })
+        evento_corrente = {
+            "commissione": "IX COMMISSIONE PERMANENTE (TRASPORTI, POSTE E TELECOMUNICAZIONI)",
+            "data": data_corrente,
+            "ora": m_ora.group(1).replace(",", "."),
+            "testo": riga,
+            "aggiornato": False,
+            "cancellato": False,
+        }
+        continue
+
+    if evento_corrente:
+        evento_corrente["testo"] += "\n" + riga
+
+# chiusura ultimo evento
+if evento_corrente:
+    evento_corrente["testo"] = pulisci_testo(evento_corrente["testo"])
+    evento_corrente["aggiornato"] = "convocazione è stata aggiornata" in evento_corrente["testo"].lower()
+    evento_corrente["cancellato"] = "non avrà luogo" in evento_corrente["testo"].lower()
+    eventi.append(evento_corrente)
+
+# aggiorna flag anche per gli altri eventi
+for e in eventi:
+    e["aggiornato"] = "convocazione è stata aggiornata" in e["testo"].lower()
+    e["cancellato"] = "non avrà luogo" in e["testo"].lower()
 
 # --- costruisci email ---
 body = "MONITOR CAMERA – IX COMMISSIONE TRASPORTI\n\n"
@@ -67,7 +96,7 @@ if not eventi:
     body += "Nessun evento trovato.\n"
 else:
     for e in eventi:
-        body += f"{e['ora']} | {e['commissione']}\n"
+        body += f"{e['data']} - {e['ora']} | {e['commissione']}\n"
         body += e["testo"][:800] + "\n"
         if e["aggiornato"]:
             body += "Aggiornato\n"
