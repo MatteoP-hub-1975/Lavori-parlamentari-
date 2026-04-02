@@ -8,6 +8,11 @@ import os
 PDF_URL = "https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/3032026.pdf"
 PDF_FILE = "camera.pdf"
 
+def pulisci_testo(t):
+    t = re.split(r"\nAVVISO", t)[0]
+    t = re.split(r"I deputati possono partecipare", t)[0]
+    return t.strip()
+
 # --- scarica PDF ---
 r = requests.get(PDF_URL, timeout=30)
 r.raise_for_status()
@@ -30,7 +35,6 @@ match_ix = re.search(
 )
 
 if not match_ix:
-    # salva debug per capire come è scritto nel PDF
     with open("debug_camera_text.txt", "w", encoding="utf-8") as f:
         f.write(text)
     raise RuntimeError("Sezione IX Commissione non trovata. Vedi debug_camera_text.txt")
@@ -43,8 +47,8 @@ eventi = []
 
 for pezzo in eventi_raw[1:]:
     evento_testo = "Ore " + pezzo.strip()
+    evento_testo = pulisci_testo(evento_testo)
 
-    # estrai ora
     m_ora = re.match(r"Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", evento_testo)
     ora = m_ora.group(1).replace(",", ".") if m_ora else ""
 
