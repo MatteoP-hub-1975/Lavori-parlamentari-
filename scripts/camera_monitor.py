@@ -325,23 +325,33 @@ def parse_camera_pdf_text(text):
 # EMAIL
 # ---------------------------
 def build_email_body(pdf_url, eventi_rilevanti):
-    body = "MONITOR CAMERA – EVENTI RILEVANTI\n\n"
+    body = "MONITOR CAMERA – ANALISI COMPLETA PDF\n\n"
     body += f"Fonte PDF: {pdf_url}\n\n"
-    body += f"Score: {e['score']}\n"
-    body += "Match: " + ", ".join(e["match_reasons"][:10]) + "\n"
 
     if not eventi_rilevanti:
-        body += "Nessun evento rilevante trovato.\n"
+        body += "Nessun elemento rilevante trovato.\n"
         return body
 
     for e in eventi_rilevanti:
-        body += f"{e['data']} - {e['ora']} | {e['commissione']}\n"
-        body += e["testo"][:1200] + "\n"
-        body += "Match: " + ", ".join(e["match_reasons"][:10]) + "\n"
+        body += f"{e.get('data','')} - {e.get('ora','')} | {e.get('commissione','')}\n"
+        body += e["testo"][:800] + "\n"
+
+        # QUI dentro il loop → corretto
+        if "score" in e:
+            body += f"Score: {e['score']}\n"
+
+        if "match_reasons" in e:
+            body += "Match: " + ", ".join(e["match_reasons"][:10]) + "\n"
+
+        if e.get("aggiornato"):
+            body += "Aggiornato\n"
+
+        if e.get("cancellato"):
+            body += "Cancellato\n"
+
         body += "\n---\n\n"
 
     return body
-
 
 def send_email(subject, body):
     to_email = os.environ.get("EMAIL_TO", os.environ["EMAIL_USER"])
