@@ -18,17 +18,16 @@ def trova_pdf_camera(max_giorni=5):
 
         try:
             print(f"Tento: {url}")
-            r = requests.head(url, timeout=10)
+            r = requests.get(url, stream=True, timeout=15)
 
             if r.status_code == 200:
                 print(f"Trovato PDF: {url}")
                 return url
 
-        except requests.RequestException:
-            pass
+        except requests.RequestException as e:
+            print(f"Errore: {e}")
 
     raise RuntimeError("Nessun PDF trovato negli ultimi giorni")
-
 PDF_URL = trova_pdf_camera()
 PDF_FILE = "camera.pdf"
 
