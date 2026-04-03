@@ -374,13 +374,15 @@ def main():
     text = extract_text(PDF_FILE)
     eventi = parse_camera_pdf_text(text)
 
+    compiled_rules = build_literal_patterns(compiled_rules)
+
     eventi_rilevanti = []
     for e in eventi:
-        ok, reasons = evento_rilevante(e, compiled_rules)
+        ok, reasons, score = evento_rilevante(e, compiled_rules)
         if ok:
             e["match_reasons"] = reasons
+            e["score"] = score
             eventi_rilevanti.append(e)
-
     body = build_email_body(pdf_url, eventi_rilevanti)
     send_email("Monitor Camera - Eventi rilevanti", body)
 
