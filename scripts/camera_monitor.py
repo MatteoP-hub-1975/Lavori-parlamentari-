@@ -149,43 +149,93 @@ def norm_text(s):
     return " ".join(s.lower().split())
 
 
-def is_excluded_organ(commissione, compiled_rules):
-    c = norm_text(commissione)
-    return any(x in c for x in compiled_rules["excluded_organs"])
+def literal_pattern(term):
+    term = norm_text(term)
+    escaped = re.escape(term)
+    return re.compile(rf"(?<!\w){escaped}(?!\w)", re.IGNORECASE)
+
+
+def build_literal_patterns(compiled_rules):
+    compiled_rules["resoconto_keyword_patterns"] = [
+        (kw, literal_pattern(kw))
+        for kw in compiled_rules["resoconto_keywords"]
+        if len(norm_text(kw)) >= 3
+    ]
+
+    compiled_rules["confitarma_keyword_patterns"] = [
+        (kw, literal_pattern(kw))
+        for kw in compiled_rules["confitarma_keywords"]
+        if len(norm_text(kw)) >= 4
+    ]
+
+    compiled_rules["keyphrase_patterns"] = [
+        (kp, literal_pattern(kp))
+        for kp in compiled_rules["keyphrases"]
+        if len(norm_text(kp)) >= 4
+    ]
+
+    compiled_rules["norm_ref_patterns"] = [
+        (nr, literal_pattern(nr))
+        for nr in compiled_rules["norm_refs"]
+        if len(norm_text(nr)) >= 4
+    ]
+
+    compiled_rules["program_patterns"] = [
+        (pg, literal_pattern(pg))
+        for pg in compiled_rules["programs_tools"]
+        if len(norm_text(pg)) >= 3
+    ]
+
+    # per entities: tengo solo quelle abbastanza specifiche
+    compiled_rules["entity_patterns"] = [
+        (ent, literal_pattern(ent))
+        for ent in compiled_rules["entities"]
+        if len(norm_text(ent)) >= 4
+    ]
+
+    return compiled_rules
 
 
 def collect_match_reasons(text, commissione, compiled_rules):
     haystack = norm_text(f"{commissione}\n{text}")
     reasons = []
+    score = 0
 
-    for kw in compiled_rules["resoconto_keywords"]:
-        if kw in haystack:
+    for kw, rx in compiled_rules["resoconto_keyword_patterns"]:
+        if rx.search(haystack):
             reasons.append(f"keyword:{kw}")
+            score += 3
 
-    for kw in compiled_rules["confitarma_keywords"]:
-        if kw in haystack:
+    for kw, rx in compiled_rules["confitarma_keyword_patterns"]:
+        if rx.search(haystack):
             reasons.append(f"confitarma_keyword:{kw}")
+            score += 3
 
-    for kp in compiled_rules["keyphrases"]:
-        if kp in haystack:
+    for kp, rx in compiled_rules["keyphrase_patterns"]:
+        if rx.search(haystack):
             reasons.append(f"keyphrase:{kp}")
+            score += 4
 
-    for nr in compiled_rules["norm_refs"]:
-        if nr in haystack:
+    for nr, rx in compiled_rules["norm_ref_patterns"]:
+        if rx.search(haystack):
             reasons.append(f"norm_ref:{nr}")
+            score += 4
 
-    for ent in compiled_rules["entities"]:
-        if ent in haystack:
+    for ent, rx in compiled_rules["entity_patterns"]:
+        if rx.search(haystack):
             reasons.append(f"entity:{ent}")
+            score += 2
 
-    for tool in compiled_rules["programs_tools"]:
-        if tool in haystack:
-            reasons.append(f"program:{tool}")
+    for pg, rx in compiled_rules["program_patterns"]:
+        if rx.search(haystack):
+            reasons.append(f"program:{pg}")
+            score += 2
 
     raw_text = f"{commissione}\n{text}"
     for rx in compiled_rules["normative_patterns"]:
         if rx.search(raw_text):
             reasons.append(f"normative_pattern:{rx.pattern}")
+            score += 4
 
     seen = set()
     unique = []
@@ -194,20 +244,24 @@ def collect_match_reasons(text, commissione, compiled_rules):
             seen.add(r)
             unique.append(r)
 
-    return unique
+    return unique, score
 
 
 def evento_rilevante(evento, compiled_rules):
     if is_excluded_organ(evento["commissione"], compiled_rules):
-        return False, []
+        return False, [], 0
 
-    reasons = collect_match_reasons(
+    reasons, score = collect_match_reasons(
         evento["testo"],
         evento["commissione"],
         compiled_rules
     )
-    return len(reasons) > 0, reasons
 
+    # mostra solo blocchi con almeno una vera densità tematica
+    if score >= 4:
+        return True, reasons, score
+
+    return False, reasons, score
 
 # ---------------------------
 # PARSING PDF
