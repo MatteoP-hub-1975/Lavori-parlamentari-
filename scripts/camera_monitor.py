@@ -7,8 +7,11 @@ from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from pdfminer.high_level import extract_text
 
-PDF_FILE = "camera.pdf"
-RULES_FILE = "senato_monitor_rules.json"
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+REPO_DIR = os.path.dirname(BASE_DIR)
+
+PDF_FILE = os.path.join(BASE_DIR, "camera.pdf")
+RULES_FILE = os.path.join(REPO_DIR, "config", "senato_monitor_rules.json")
 
 
 # ---------------------------
@@ -184,7 +187,6 @@ def collect_match_reasons(text, commissione, compiled_rules):
         if rx.search(raw_text):
             reasons.append(f"normative_pattern:{rx.pattern}")
 
-    # deduplica mantenendo ordine
     seen = set()
     unique = []
     for r in reasons:
@@ -305,6 +307,8 @@ def send_email(subject, body):
 # MAIN
 # ---------------------------
 def main():
+    print(f"Uso file regole: {RULES_FILE}")
+
     rules = load_rules(RULES_FILE)
     compiled_rules = compile_rules(rules)
 
