@@ -265,19 +265,33 @@ def evento_rilevante(evento, compiled_rules):
     if solo_pnrr:
         return False, reasons, score
 
-    has_strong_topic = any(
-        r.startswith("keyword:") or
-        r.startswith("confitarma_keyword:") or
-        r.startswith("norm_ref:") or
-        r.startswith("normative_pattern:")
+    has_maritime_core = any(
+        r in reasons for r in [
+            "keyword:porto",
+            "keyword:porti",
+            "keyword:portuale",
+            "keyword:portualità",
+            "keyword:marittimo",
+            "keyword:marittima",
+            "keyword:navigazione",
+            "confitarma_keyword:trasporto marittimo",
+            "confitarma_keyword:cabotaggio",
+            "confitarma_keyword:autostrade del mare",
+            "confitarma_keyword:sea modal shift",
+            "confitarma_keyword:continuità territoriale",
+            "confitarma_keyword:autorità di sistema portuale",
+            "confitarma_keyword:demanio marittimo",
+            "confitarma_keyword:economia del mare"
+        ]
+    ) or any(
+        r.startswith("norm_ref:") or r.startswith("normative_pattern:")
         for r in reasons
     )
-
-    if has_strong_topic and score >= 4:
+    
+    if has_maritime_core:
         return True, reasons, score
-
+    
     return False, reasons, score
-
 
 # ---------------------------
 # PULIZIA / PARSING
