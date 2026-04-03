@@ -194,6 +194,10 @@ def build_literal_patterns(compiled_rules):
     ]
 
     return compiled_rules
+    
+def is_excluded_organ(commissione, compiled_rules):
+    c = norm_text(commissione)
+    return any(x in c for x in compiled_rules["excluded_organs"])
 
 
 def collect_match_reasons(text, commissione, compiled_rules):
