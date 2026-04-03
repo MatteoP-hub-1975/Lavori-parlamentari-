@@ -1,11 +1,13 @@
-import requests
+import os
 import re
 import json
 import smtplib
-import os
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
+
+import requests
 from pdfminer.high_level import extract_text
+
 
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 REPO_DIR = os.path.dirname(BASE_DIR)
@@ -15,7 +17,7 @@ RULES_FILE = os.path.join(REPO_DIR, "config", "senato_monitor_rules.json")
 
 
 # ---------------------------
-# URL PDF CAMERA
+# PDF CAMERA
 # ---------------------------
 def build_url(date_obj):
     return (
@@ -137,14 +139,8 @@ def compile_rules(rules):
 
 
 # ---------------------------
-# TESTO / MATCH
+# NORMALIZZAZIONE / MATCH
 # ---------------------------
-def pulisci_testo(t):
-    t = re.sub(r"[ \t]+\n", "\n", t)
-    t = re.sub(r"\n{3,}", "\n\n", t)
-    return t.strip()
-
-
 def norm_text(s):
     return " ".join(s.lower().split())
 
@@ -165,7 +161,7 @@ def build_literal_patterns(compiled_rules):
     compiled_rules["confitarma_keyword_patterns"] = [
         (kw, literal_pattern(kw))
         for kw in compiled_rules["confitarma_keywords"]
-        if len(norm_text(kw)) >= 4
+        if len(norm_text(kw)) >= 4 and kw != "ri"
     ]
 
     compiled_rules["keyphrase_patterns"] = [
@@ -186,7 +182,6 @@ def build_literal_patterns(compiled_rules):
         if len(norm_text(pg)) >= 3
     ]
 
-    # per entities: tengo solo quelle abbastanza specifiche
     compiled_rules["entity_patterns"] = [
         (ent, literal_pattern(ent))
         for ent in compiled_rules["entities"]
@@ -194,7 +189,8 @@ def build_literal_patterns(compiled_rules):
     ]
 
     return compiled_rules
-    
+
+
 def is_excluded_organ(commissione, compiled_rules):
     c = norm_text(commissione)
     return any(x in c for x in compiled_rules["excluded_organs"])
@@ -225,15 +221,15 @@ def collect_match_reasons(text, commissione, compiled_rules):
             reasons.append(f"norm_ref:{nr}")
             score += 4
 
-    for ent, rx in compiled_rules["entity_patterns"]:
-        if rx.search(haystack):
-            reasons.append(f"entity:{ent}")
-            score += 2
-
     for pg, rx in compiled_rules["program_patterns"]:
         if rx.search(haystack):
             reasons.append(f"program:{pg}")
             score += 2
+
+    # entities sì nei match, ma NON nello score
+    for ent, rx in compiled_rules["entity_patterns"]:
+        if rx.search(haystack):
+            reasons.append(f"entity:{ent}")
 
     raw_text = f"{commissione}\n{text}"
     for rx in compiled_rules["normative_patterns"]:
@@ -261,7 +257,6 @@ def evento_rilevante(evento, compiled_rules):
         compiled_rules
     )
 
-    # PNRR da solo non basta
     solo_pnrr = all(
         r in ("keyphrase:pnrr", "program:pnrr")
         for r in reasons
@@ -270,14 +265,29 @@ def evento_rilevante(evento, compiled_rules):
     if solo_pnrr:
         return False, reasons, score
 
-    # soglia minima
-    if score >= 4:
+    has_strong_topic = any(
+        r.startswith("keyword:") or
+        r.startswith("confitarma_keyword:") or
+        r.startswith("norm_ref:") or
+        r.startswith("normative_pattern:")
+        for r in reasons
+    )
+
+    if has_strong_topic and score >= 4:
         return True, reasons, score
 
     return False, reasons, score
+
+
 # ---------------------------
-# PARSING PDF
+# PULIZIA / PARSING
 # ---------------------------
+def pulisci_testo(t):
+    t = re.sub(r"[ \t]+\n", "\n", t)
+    t = re.sub(r"\n{3,}", "\n\n", t)
+    return t.strip()
+
+
 def parse_camera_pdf_text(text):
     text = re.sub(r"-\s*\d+\s*-", "\n", text)
     text = re.sub(r"[ \t]+\n", "\n", text)
@@ -341,25 +351,19 @@ def build_email_body(pdf_url, eventi_rilevanti):
         return body
 
     for e in eventi_rilevanti:
-        body += f"{e.get('data','')} - {e.get('ora','')} | {e.get('commissione','')}\n"
-        body += e["testo"][:800] + "\n"
+        body += f"{e.get('data', '')} - {e.get('ora', '')} | {e.get('commissione', '')}\n"
+        body += e["testo"][:1200] + "\n"
 
-        # QUI dentro il loop → corretto
         if "score" in e:
             body += f"Score: {e['score']}\n"
 
         if "match_reasons" in e:
             body += "Match: " + ", ".join(e["match_reasons"][:10]) + "\n"
 
-        if e.get("aggiornato"):
-            body += "Aggiornato\n"
-
-        if e.get("cancellato"):
-            body += "Cancellato\n"
-
         body += "\n---\n\n"
 
     return body
+
 
 def send_email(subject, body):
     to_email = os.environ.get("EMAIL_TO", os.environ["EMAIL_USER"])
@@ -389,6 +393,7 @@ def main():
 
     rules = load_rules(RULES_FILE)
     compiled_rules = compile_rules(rules)
+    compiled_rules = build_literal_patterns(compiled_rules)
 
     pdf_url, pdf_content = trova_pdf_camera()
 
@@ -398,8 +403,6 @@ def main():
     text = extract_text(PDF_FILE)
     eventi = parse_camera_pdf_text(text)
 
-    compiled_rules = build_literal_patterns(compiled_rules)
-
     eventi_rilevanti = []
     for e in eventi:
         ok, reasons, score = evento_rilevante(e, compiled_rules)
@@ -407,8 +410,9 @@ def main():
             e["match_reasons"] = reasons
             e["score"] = score
             eventi_rilevanti.append(e)
+
     body = build_email_body(pdf_url, eventi_rilevanti)
-    send_email("Monitor Camera - Eventi rilevanti", body)
+    send_email("Monitor Camera - Analisi completa PDF", body)
 
     print(f"PDF usato: {pdf_url}")
     print(f"Eventi totali: {len(eventi)}")
