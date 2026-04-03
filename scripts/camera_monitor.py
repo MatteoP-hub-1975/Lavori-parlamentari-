@@ -4,75 +4,69 @@ from pdfminer.high_level import extract_text
 import smtplib
 from email.mime.text import MIMEText
 import os
-
 from datetime import datetime, timedelta
+import time
 
-def trova_pdf_camera(max_giorni=5):
-    oggi = datetime.now()
+PDF_FILE = "camera.pdf"
 
-    for i in range(1, max_giorni + 1):
-        data = oggi - timedelta(days=i)
-        data_str = data.strftime("%d%m%Y")
+# ---------------------------
+# TROVA PDF (LOGICA CORRETTA)
+# ---------------------------
+def build_url(date_obj):
+    return f"https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/{date_obj.day}{date_obj.month}{date_obj.year}.pdf"
 
-        url = f"https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/{data_str}.pdf"
+def trova_pdf_camera():
+    oggi = datetime.now().date()
+
+    monday_current = oggi - timedelta(days=oggi.weekday())
+    monday_previous = monday_current - timedelta(days=7)
+
+    candidati = [monday_current, monday_previous]
+
+    for data in candidati:
+        url = build_url(data)
+        print(f"Tento: {url}")
 
         try:
-            print(f"Tento: {url}")
-            r = requests.get(url, stream=True, timeout=15)
-
-            if r.status_code == 200:
+            r = requests.get(url, timeout=(15, 90))
+            if r.status_code == 200 and r.content[:4] == b"%PDF":
                 print(f"Trovato PDF: {url}")
-                return url
-
+                return r.content
+            else:
+                print(f"Non valido: status={r.status_code}")
         except requests.RequestException as e:
             print(f"Errore: {e}")
 
-    raise RuntimeError("Nessun PDF trovato negli ultimi giorni")
-PDF_URL = trova_pdf_camera()
-PDF_FILE = "camera.pdf"
+    raise RuntimeError("Nessun PDF valido trovato")
 
+# ---------------------------
+# DOWNLOAD
+# ---------------------------
+pdf_content = trova_pdf_camera()
+
+with open(PDF_FILE, "wb") as f:
+    f.write(pdf_content)
+
+# ---------------------------
+# PULIZIA TESTO
+# ---------------------------
 def pulisci_testo(t):
     t = re.split(r"\nAVVISO", t)[0]
     t = re.split(r"I deputati possono partecipare", t)[0]
     return t.strip()
 
-# --- scarica PDF ---
-import time
-
-def scarica_pdf(url, output_path, tentativi=3, timeout=(15, 90)):
-    ultimo_errore = None
-
-    for i in range(1, tentativi + 1):
-        try:
-            print(f"Tentativo download {i}/{tentativi}: {url}")
-            r = requests.get(url, timeout=timeout)
-            r.raise_for_status()
-
-            with open(output_path, "wb") as f:
-                f.write(r.content)
-
-            print(f"Download completato: {output_path}")
-            return
-
-        except requests.exceptions.RequestException as e:
-            ultimo_errore = e
-            print(f"Errore download tentativo {i}: {e}")
-
-            if i < tentativi:
-                time.sleep(10)
-
-    raise RuntimeError(f"Download PDF fallito dopo {tentativi} tentativi: {ultimo_errore}")
-
-scarica_pdf(PDF_URL, PDF_FILE)
-# --- estrai testo ---
+# ---------------------------
+# ESTRAZIONE TESTO
+# ---------------------------
 text = extract_text(PDF_FILE)
 
-# --- pulizia base ---
 text = re.sub(r"-\s*\d+\s*-", "\n", text)
 text = re.sub(r"[ \t]+\n", "\n", text)
 text = re.sub(r"\n{3,}", "\n\n", text)
 
-# --- estrai sezione IX Commissione ---
+# ---------------------------
+# SEZIONE IX
+# ---------------------------
 match_ix = re.search(
     r"IX\s+COMMISSIONE\s+PERMANENTE.*?(?=X\s+COMMISSIONE\s+PERMANENTE)",
     text,
@@ -82,11 +76,13 @@ match_ix = re.search(
 if not match_ix:
     with open("debug_camera_text.txt", "w", encoding="utf-8") as f:
         f.write(text)
-    raise RuntimeError("Sezione IX Commissione non trovata. Vedi debug_camera_text.txt")
+    raise RuntimeError("Sezione IX non trovata")
 
 sezione_ix = match_ix.group(0).strip()
 
-# --- parsing riga per riga ---
+# ---------------------------
+# PARSING
+# ---------------------------
 righe = [r.strip() for r in sezione_ix.splitlines() if r.strip()]
 
 pattern_data = re.compile(
@@ -110,31 +106,24 @@ for riga in righe:
             eventi.append(evento_corrente)
 
         evento_corrente = {
-            "commissione": "IX COMMISSIONE PERMANENTE (TRASPORTI, POSTE E TELECOMUNICAZIONI)",
+            "commissione": "IX COMMISSIONE PERMANENTE (TRASPORTI)",
             "data": data_corrente,
             "ora": m_ora.group(1).replace(",", "."),
             "testo": riga,
-            "aggiornato": False,
-            "cancellato": False,
         }
         continue
 
     if evento_corrente:
         evento_corrente["testo"] += "\n" + riga
 
-# chiusura ultimo evento
+# ultimo evento
 if evento_corrente:
     evento_corrente["testo"] = pulisci_testo(evento_corrente["testo"])
-    evento_corrente["aggiornato"] = "convocazione è stata aggiornata" in evento_corrente["testo"].lower()
-    evento_corrente["cancellato"] = "non avrà luogo" in evento_corrente["testo"].lower()
     eventi.append(evento_corrente)
 
-# aggiorna flag anche per gli altri eventi
-for e in eventi:
-    e["aggiornato"] = "convocazione è stata aggiornata" in e["testo"].lower()
-    e["cancellato"] = "non avrà luogo" in e["testo"].lower()
-
-# --- costruisci email ---
+# ---------------------------
+# EMAIL
+# ---------------------------
 body = "MONITOR CAMERA – IX COMMISSIONE TRASPORTI\n\n"
 
 if not eventi:
@@ -143,13 +132,8 @@ else:
     for e in eventi:
         body += f"{e['data']} - {e['ora']} | {e['commissione']}\n"
         body += e["testo"][:800] + "\n"
-        if e["aggiornato"]:
-            body += "Aggiornato\n"
-        if e["cancellato"]:
-            body += "Cancellato\n"
         body += "\n---\n\n"
 
-# --- invio email ---
 to_email = os.environ.get("EMAIL_TO", os.environ["EMAIL_USER"])
 
 msg = MIMEText(body, _charset="utf-8")
@@ -167,4 +151,4 @@ with smtplib.SMTP("smtp.gmail.com", 587) as server:
     )
 
 print(f"Email inviata a: {to_email}")
-print(f"Eventi trovati nella IX Commissione: {len(eventi)}")
+print(f"Eventi trovati: {len(eventi)}")
