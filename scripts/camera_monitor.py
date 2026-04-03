@@ -323,6 +323,8 @@ def parse_camera_pdf_text(text):
 def build_email_body(pdf_url, eventi_rilevanti):
     body = "MONITOR CAMERA – EVENTI RILEVANTI\n\n"
     body += f"Fonte PDF: {pdf_url}\n\n"
+    body += f"Score: {e['score']}\n"
+    body += "Match: " + ", ".join(e["match_reasons"][:10]) + "\n"
 
     if not eventi_rilevanti:
         body += "Nessun evento rilevante trovato.\n"
