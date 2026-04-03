@@ -5,7 +5,16 @@ import smtplib
 from email.mime.text import MIMEText
 import os
 
-PDF_URL = "https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/3032026.pdf"
+from datetime import datetime, timedelta
+
+# --- calcola ieri ---
+oggi = datetime.now()
+ieri = oggi - timedelta(days=1)
+
+# formato: DDMMYYYY senza separatori
+data_str = ieri.strftime("%d%m%Y")
+
+PDF_URL = f"https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/{data_str}.pdf"
 PDF_FILE = "camera.pdf"
 
 def pulisci_testo(t):
