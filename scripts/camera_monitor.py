@@ -23,11 +23,33 @@ def pulisci_testo(t):
     return t.strip()
 
 # --- scarica PDF ---
-r = requests.get(PDF_URL, timeout=30)
-r.raise_for_status()
-with open(PDF_FILE, "wb") as f:
-    f.write(r.content)
+import time
 
+def scarica_pdf(url, output_path, tentativi=3, timeout=(15, 90)):
+    ultimo_errore = None
+
+    for i in range(1, tentativi + 1):
+        try:
+            print(f"Tentativo download {i}/{tentativi}: {url}")
+            r = requests.get(url, timeout=timeout)
+            r.raise_for_status()
+
+            with open(output_path, "wb") as f:
+                f.write(r.content)
+
+            print(f"Download completato: {output_path}")
+            return
+
+        except requests.exceptions.RequestException as e:
+            ultimo_errore = e
+            print(f"Errore download tentativo {i}: {e}")
+
+            if i < tentativi:
+                time.sleep(10)
+
+    raise RuntimeError(f"Download PDF fallito dopo {tentativi} tentativi: {ultimo_errore}")
+
+scarica_pdf(PDF_URL, PDF_FILE)
 # --- estrai testo ---
 text = extract_text(PDF_FILE)
 
