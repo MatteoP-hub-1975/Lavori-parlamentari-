@@ -8,112 +8,111 @@ from datetime import datetime, timedelta
 
 PDF_FILE = "camera.pdf"
 
-
+# ---------------------------
+# COSTRUZIONE URL PDF
+# ---------------------------
 def build_url(date_obj):
-    # La Camera usa il formato senza zeri iniziali: es. 30/3/2026 -> 3032026.pdf
-    return (
-        "https://documenti.camera.it/_dati/leg19/lavori/Commissioni/"
-        f"Bollettini/{date_obj.day}{date_obj.month}{date_obj.year}.pdf"
-    )
+    return f"https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/{date_obj.day}{date_obj.month}{date_obj.year}.pdf"
 
-
-def is_valid_pdf_response(response):
+def is_valid_pdf(response):
     return response.status_code == 200 and response.content[:4] == b"%PDF"
 
-
-def try_download_pdf(url, timeout=(15, 90)):
+def download_pdf(url):
     try:
-        r = requests.get(url, timeout=timeout)
-        if is_valid_pdf_response(r):
+        r = requests.get(url, timeout=(15, 90))
+        if is_valid_pdf(r):
             return r.content
-        return None
     except requests.RequestException as e:
         print(f"Errore download {url}: {e}")
-        return None
+    return None
 
-
+# ---------------------------
+# TROVA PDF CORRETTO
+# ---------------------------
 def trova_pdf_camera():
     oggi = datetime.now().date()
 
-    # Settimana corrente: da lunedì fino a oggi
     monday_current = oggi - timedelta(days=oggi.weekday())
-    giorni_settimana_corrente = [
+    monday_previous = monday_current - timedelta(days=7)
+
+    # giorni settimana corrente (lun → oggi)
+    giorni_corrente = [
         monday_current + timedelta(days=i)
         for i in range((oggi - monday_current).days + 1)
     ]
 
-    # Settimana precedente: da lunedì a venerdì
-    monday_previous = monday_current - timedelta(days=7)
-    giorni_settimana_precedente = [
+    # settimana precedente (lun → ven)
+    giorni_precedente = [
         monday_previous + timedelta(days=i)
         for i in range(5)
     ]
 
-    # Prima cerca nella settimana corrente, poi nella precedente
-    candidati = giorni_settimana_corrente + giorni_settimana_precedente
+    candidati = giorni_corrente + giorni_precedente
 
     for data in candidati:
         url = build_url(data)
         print(f"Tento: {url}")
-        content = try_download_pdf(url)
-        if content is not None:
+        content = download_pdf(url)
+        if content:
             print(f"Trovato PDF: {url}")
             return url, content
 
-    raise RuntimeError("Nessun PDF valido trovato né nella settimana corrente né nella precedente.")
+    raise RuntimeError("Nessun PDF trovato")
 
-
+# ---------------------------
+# PULIZIA TESTO
+# ---------------------------
 def pulisci_testo(t):
     t = re.split(r"\nAVVISO", t)[0]
     t = re.split(r"I deputati possono partecipare", t)[0]
     return t.strip()
 
-
-# --- trova e salva PDF ---
+# ---------------------------
+# DOWNLOAD PDF
+# ---------------------------
 PDF_URL, pdf_content = trova_pdf_camera()
 
 with open(PDF_FILE, "wb") as f:
     f.write(pdf_content)
 
-# --- estrai testo ---
+# ---------------------------
+# ESTRAZIONE TESTO
+# ---------------------------
 text = extract_text(PDF_FILE)
 
-# --- pulizia base ---
 text = re.sub(r"-\s*\d+\s*-", "\n", text)
 text = re.sub(r"[ \t]+\n", "\n", text)
 text = re.sub(r"\n{3,}", "\n\n", text)
 
-# --- estrai sezione IX Commissione ---
-match_ix = re.search(
-    r"IX\s+COMMISSIONE\s+PERMANENTE.*?(?=X\s+COMMISSIONE\s+PERMANENTE)",
-    text,
-    re.DOTALL
-)
+# ---------------------------
+# PARSING COMPLETO
+# ---------------------------
+righe = [r.strip() for r in text.splitlines() if r.strip()]
 
-if not match_ix:
-    with open("debug_camera_text.txt", "w", encoding="utf-8") as f:
-        f.write(text)
-    raise RuntimeError("Sezione IX Commissione non trovata. Vedi debug_camera_text.txt")
-
-sezione_ix = match_ix.group(0).strip()
-
-# --- parsing riga per riga ---
-righe = [r.strip() for r in sezione_ix.splitlines() if r.strip()]
-
+pattern_commissione = re.compile(r"^[IVXLC]+\s+COMMISSIONE\s+PERMANENTE.*")
 pattern_data = re.compile(
     r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato)\s+\d{1,2}\s+\w+\s+\d{4}$"
 )
 pattern_ora = re.compile(r"^Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)\b")
 
 eventi = []
+commissione_corrente = ""
 data_corrente = ""
 evento_corrente = None
 
 for riga in righe:
+
+    # Commissione
+    if pattern_commissione.match(riga):
+        commissione_corrente = riga
+        continue
+
+    # Data
     if pattern_data.match(riga):
         data_corrente = riga
         continue
 
+    # Nuovo evento
     m_ora = pattern_ora.match(riga)
     if m_ora:
         if evento_corrente:
@@ -121,22 +120,26 @@ for riga in righe:
             eventi.append(evento_corrente)
 
         evento_corrente = {
-            "commissione": "IX COMMISSIONE PERMANENTE (TRASPORTI)",
+            "commissione": commissione_corrente,
             "data": data_corrente,
             "ora": m_ora.group(1).replace(",", "."),
             "testo": riga,
         }
         continue
 
+    # Accumulo testo
     if evento_corrente:
         evento_corrente["testo"] += "\n" + riga
 
+# ultimo evento
 if evento_corrente:
     evento_corrente["testo"] = pulisci_testo(evento_corrente["testo"])
     eventi.append(evento_corrente)
 
-# --- costruisci email ---
-body = "MONITOR CAMERA – IX COMMISSIONE TRASPORTI\n\n"
+# ---------------------------
+# EMAIL
+# ---------------------------
+body = "MONITOR CAMERA – TUTTE LE COMMISSIONI\n\n"
 body += f"Fonte PDF: {PDF_URL}\n\n"
 
 if not eventi:
@@ -147,11 +150,10 @@ else:
         body += e["testo"][:800] + "\n"
         body += "\n---\n\n"
 
-# --- invio email ---
 to_email = os.environ.get("EMAIL_TO", os.environ["EMAIL_USER"])
 
 msg = MIMEText(body, _charset="utf-8")
-msg["Subject"] = "Monitor Camera - IX Trasporti"
+msg["Subject"] = "Monitor Camera - Tutte le Commissioni"
 msg["From"] = os.environ["EMAIL_USER"]
 msg["To"] = to_email
 
