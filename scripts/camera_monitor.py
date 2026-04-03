@@ -7,14 +7,29 @@ import os
 
 from datetime import datetime, timedelta
 
-# --- calcola ieri ---
-oggi = datetime.now()
-ieri = oggi - timedelta(days=1)
+def trova_pdf_camera(max_giorni=5):
+    oggi = datetime.now()
 
-# formato: DDMMYYYY senza separatori
-data_str = ieri.strftime("%d%m%Y")
+    for i in range(1, max_giorni + 1):
+        data = oggi - timedelta(days=i)
+        data_str = data.strftime("%d%m%Y")
 
-PDF_URL = f"https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/{data_str}.pdf"
+        url = f"https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/{data_str}.pdf"
+
+        try:
+            print(f"Tento: {url}")
+            r = requests.head(url, timeout=10)
+
+            if r.status_code == 200:
+                print(f"Trovato PDF: {url}")
+                return url
+
+        except requests.RequestException:
+            pass
+
+    raise RuntimeError("Nessun PDF trovato negli ultimi giorni")
+
+PDF_URL = trova_pdf_camera()
 PDF_FILE = "camera.pdf"
 
 def pulisci_testo(t):
