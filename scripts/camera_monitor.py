@@ -261,12 +261,20 @@ def evento_rilevante(evento, compiled_rules):
         compiled_rules
     )
 
-    # mostra solo blocchi con almeno una vera densità tematica
+    # PNRR da solo non basta
+    solo_pnrr = all(
+        r in ("keyphrase:pnrr", "program:pnrr")
+        for r in reasons
+    ) and len(reasons) > 0
+
+    if solo_pnrr:
+        return False, reasons, score
+
+    # soglia minima
     if score >= 4:
         return True, reasons, score
 
     return False, reasons, score
-
 # ---------------------------
 # PARSING PDF
 # ---------------------------
