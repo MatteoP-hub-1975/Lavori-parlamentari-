@@ -1,11 +1,11 @@
-import requests
-import re
-from pdfminer.high_level import extract_text
-import smtplib
-from email.mime.text import MIMEText
 import os
+import re
 import json
+import requests
+import smtplib
 from datetime import datetime, timedelta
+from email.mime.text import MIMEText
+from pdfminer.high_level import extract_text
 
 
 # =========================
@@ -24,96 +24,60 @@ def load_rules(path):
         return json.load(f)
 
 
-def normalize_text(text):
-    if not text:
-        return ""
-    text = text.lower()
-    text = text.replace("’", "'").replace("“", '"').replace("”", '"')
-    text = re.sub(r"\s+", " ", text)
-    return text.strip()
-
-
-def build_compiled_rules(rules):
-    compiled = {
-        "excluded_organs": [],
+def flatten_rules(rules):
+    """
+    Appiattisce solo le parti utili del file senato_monitor_rules.json
+    in liste semplici di keyword/keyphrase/normative/entity/program.
+    """
+    flattened = {
         "resoconto_keywords": [],
         "normative_patterns": [],
         "confitarma_keywords": [],
         "keyphrases": [],
-        "norm_refs": [],
+        "norm_refs_italia": [],
+        "norm_refs_ue_int": [],
         "programs_tools": [],
         "entities": [],
     }
 
-    # excluded_organs
-    for item in rules.get("excluded_organs", []):
-        if isinstance(item, str):
-            compiled["excluded_organs"].append(normalize_text(item))
+    flattened["resoconto_keywords"] = [
+        x.lower() for x in rules.get("resoconto_keywords", [])
+    ]
 
-    # resoconto_keywords
-    for item in rules.get("resoconto_keywords", []):
-        if isinstance(item, str):
-            compiled["resoconto_keywords"].append(normalize_text(item))
-
-    # normative_patterns
     for item in rules.get("normative_patterns", []):
-        if isinstance(item, dict):
-            label = item.get("label", "")
-            for p in item.get("patterns", []):
-                if isinstance(p, str):
-                    compiled["normative_patterns"].append({
-                        "label": label,
-                        "pattern": p
-                    })
+        for p in item.get("patterns", []):
+            flattened["normative_patterns"].append((item.get("label", ""), p.lower()))
 
-    # confitarma_kb
-    kb = rules.get("confitarma_kb", {})
+    confitarma_kb = rules.get("confitarma_kb", {})
 
-    # confitarma keywords nested
-    kb_keywords = kb.get("keywords", {})
-    for group_name, items in kb_keywords.items():
-        if isinstance(items, list):
-            for item in items:
-                if isinstance(item, str):
-                    compiled["confitarma_keywords"].append({
-                        "group": group_name,
-                        "value": normalize_text(item)
-                    })
+    for _, values in confitarma_kb.get("keywords", {}).items():
+        for v in values:
+            flattened["confitarma_keywords"].append(v.lower())
 
-    # keyphrases
-    for item in kb.get("keyphrases", []):
-        if isinstance(item, str):
-            compiled["keyphrases"].append(normalize_text(item))
+    flattened["keyphrases"] = [x.lower() for x in confitarma_kb.get("keyphrases", [])]
+    flattened["norm_refs_italia"] = [x.lower() for x in confitarma_kb.get("norm_refs", {}).get("italia", [])]
+    flattened["norm_refs_ue_int"] = [x.lower() for x in confitarma_kb.get("norm_refs", {}).get("ue_internazionale", [])]
+    flattened["programs_tools"] = [x.lower() for x in confitarma_kb.get("programs_tools", [])]
+    flattened["entities"] = [x.lower() for x in confitarma_kb.get("entities", [])]
 
-    # norm refs
-    norm_refs = kb.get("norm_refs", {})
-    for bucket in ["italia", "ue_internazionale"]:
-        for item in norm_refs.get(bucket, []):
-            if isinstance(item, str):
-                compiled["norm_refs"].append(normalize_text(item))
-
-    # programs_tools
-    for item in kb.get("programs_tools", []):
-        if isinstance(item, str):
-            compiled["programs_tools"].append(normalize_text(item))
-
-    # entities
-    for item in kb.get("entities", []):
-        if isinstance(item, str):
-            compiled["entities"].append(normalize_text(item))
-
-    return compiled
+    return flattened
 
 
 # =========================
 # PDF CAMERA
 # =========================
-def trova_pdf_camera(max_giorni=7):
+def trova_pdf_camera(max_giorni=10):
+    """
+    La Camera usa URL del tipo:
+    3032026.pdf = 30/3/2026
+    cioè giorno e mese SENZA zero iniziale.
+    """
     oggi = datetime.now()
 
     for i in range(1, max_giorni + 1):
         data = oggi - timedelta(days=i)
-        data_str = data.strftime("%d%m%Y")
+        data_str = f"{data.day}{data.month}{data.year}"
+
         url = f"https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini/{data_str}.pdf"
 
         try:
@@ -128,35 +92,37 @@ def trova_pdf_camera(max_giorni=7):
     raise RuntimeError("Nessun PDF trovato negli ultimi giorni")
 
 
-def scarica_pdf(url, output):
-    r = requests.get(url, timeout=90)
+def scarica_pdf(url, output_path):
+    r = requests.get(url, timeout=60)
     r.raise_for_status()
 
-    with open(output, "wb") as f:
+    with open(output_path, "wb") as f:
         f.write(r.content)
 
 
 # =========================
-# PARSING PDF
+# PULIZIA TESTO
 # =========================
-def clean_extracted_text(text):
-    text = text.replace("\x0c", "\n")
-    text = text.replace(" ", " ")
-    text = re.sub(r"-\s*\d+\s*-", "\n", text)
-    text = re.sub(r"\n[ \t]+\n", "\n", text)
-    text = re.sub(r"[ \t]+\n", "\n", text)
+def normalize_text(text):
+    text = text.replace("\xa0", " ")
+    text = re.sub(r"-\s*\d+\s*-", "\n", text)  # rimuove numeri pagina tipo - 6 -
+    text = re.sub(r"[ \t]+", " ", text)
     text = re.sub(r"\n{3,}", "\n\n", text)
     return text.strip()
 
 
+# =========================
+# PARSING EVENTI
+# =========================
 def parse_eventi(text):
     righe = [r.strip() for r in text.splitlines() if r.strip()]
 
     pattern_data = re.compile(
-        r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato|Domenica)\s+\d{1,2}\s+\w+\s+\d{4}",
+        r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato)\s+\d{1,2}\s+\w+\s+\d{4}",
         re.IGNORECASE
     )
     pattern_ora = re.compile(r"^Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", re.IGNORECASE)
+    pattern_commissione = re.compile(r"^[IVXLC]+\s+COMMISSIONE\s+PERMANENTE", re.IGNORECASE)
 
     eventi = []
     data_corrente = ""
@@ -168,7 +134,7 @@ def parse_eventi(text):
             data_corrente = riga
             continue
 
-        if "COMMISSIONE" in riga.upper():
+        if pattern_commissione.match(riga):
             commissione_corrente = riga
             continue
 
@@ -195,135 +161,121 @@ def parse_eventi(text):
 
 
 # =========================
-# MATCHING RULES
+# MATCH RULES
 # =========================
-def is_excluded_organ(commissione, compiled_rules):
-    text = normalize_text(commissione)
-    if not text:
-        return False
-
-    for organ in compiled_rules["excluded_organs"]:
-        if organ and organ in text:
-            return True
-
-    return False
-
-
-def match_rules(text, compiled_rules):
-    raw_text = text or ""
-    normalized = normalize_text(raw_text)
-
+def match_rules(text, rules_flat):
+    text_l = text.lower()
     reasons = []
     score = 0
 
-    # resoconto_keywords
-    for kw in compiled_rules["resoconto_keywords"]:
-        if kw and kw in normalized:
-            reasons.append(f"keyword:{kw}")
+    # resoconto keywords
+    for k in rules_flat["resoconto_keywords"]:
+        if k and k in text_l:
+            reasons.append(f"keyword:{k}")
             score += 3
 
-    # normative_patterns
-    for item in compiled_rules["normative_patterns"]:
-        pattern = item["pattern"]
-        label = item["label"] or pattern
-
-        try:
-            if re.search(pattern, normalized, re.IGNORECASE):
-                reasons.append(f"normativa:{label}")
-                score += 4
-        except re.error:
-            if normalize_text(pattern) in normalized:
-                reasons.append(f"normativa:{label}")
-                score += 4
-
     # confitarma keywords
-    for item in compiled_rules["confitarma_keywords"]:
-        value = item["value"]
-        group = item["group"]
-        if value and value in normalized:
-            reasons.append(f"confitarma_keyword:{value}")
+    for k in rules_flat["confitarma_keywords"]:
+        if k and k in text_l:
+            reasons.append(f"confitarma_keyword:{k}")
             score += 3
 
     # keyphrases
-    for kp in compiled_rules["keyphrases"]:
-        if kp and kp in normalized:
-            reasons.append(f"keyphrase:{kp}")
+    for k in rules_flat["keyphrases"]:
+        if k and k in text_l:
+            reasons.append(f"keyphrase:{k}")
             score += 6
 
-    # norm refs
-    for ref in compiled_rules["norm_refs"]:
-        if ref and ref in normalized:
-            reasons.append(f"norm_ref:{ref}")
-            score += 5
+    # norm refs italia
+    for k in rules_flat["norm_refs_italia"]:
+        if k and k in text_l:
+            reasons.append(f"norm_italia:{k}")
+            score += 4
 
-    # programs_tools
-    for prog in compiled_rules["programs_tools"]:
-        if prog and prog in normalized:
-            reasons.append(f"program:{prog}")
-            score += 6
+    # norm refs ue/int
+    for k in rules_flat["norm_refs_ue_int"]:
+        if k and k in text_l:
+            reasons.append(f"norm_ue_int:{k}")
+            score += 4
 
-    # entities
-    for ent in compiled_rules["entities"]:
-        if ent and ent in normalized:
-            reasons.append(f"entity:{ent}")
+    # programs
+    for k in rules_flat["programs_tools"]:
+        if k and k in text_l:
+            reasons.append(f"program:{k}")
             score += 2
 
-    # dedup reasons preserving order
+    # entities
+    for k in rules_flat["entities"]:
+        if k and k in text_l:
+            reasons.append(f"entity:{k}")
+            score += 2
+
+    # normative regex patterns
+    for label, pattern in rules_flat["normative_patterns"]:
+        try:
+            if re.search(pattern, text_l, re.IGNORECASE):
+                reasons.append(f"norm_pattern:{label}")
+                score += 4
+        except re.error:
+            pass
+
+    # dedup mantenendo ordine
     seen = set()
-    unique_reasons = []
+    dedup = []
     for r in reasons:
         if r not in seen:
             seen.add(r)
-            unique_reasons.append(r)
+            dedup.append(r)
 
-    return unique_reasons, score
+    return dedup, score
 
 
 # =========================
-# CATEGORIZZAZIONE
+# CLASSIFICAZIONE
 # =========================
-def assegna_categoria(evento, reasons, score):
-    text = normalize_text((evento.get("commissione", "") + " " + evento.get("testo", "")))
+def assegna_categoria(evento, reasons):
+    text = (evento["commissione"] + "\n" + evento["testo"]).lower()
 
-    # 1) Trasporto marittimo
-    marittimo_signals = [
+    # trasporto marittimo
+    marittimo_terms = [
         "porto", "porti", "portuale", "portualità",
+        "autorità di sistema portuale", "adsp",
         "marittimo", "marittima", "navigazione",
         "codice della navigazione", "demanio marittimo",
-        "autorità di sistema portuale", "economia del mare",
-        "autostrade del mare", "sea modal shift",
-        "shipping", "cabotaggio", "armatore",
-        "compagnie di navigazione", "gente di mare",
-        "lavoro marittimo", "sanità marittima",
-        "fueleu maritime", "ets marittimo", "bunkeraggio",
-        "registro internazionale", "tonnage tax",
-        "capitanerie", "guardia costiera"
+        "economia del mare", "autostrade del mare",
+        "sea modal shift", "shipping",
+        "lavoro marittimo", "gente di mare",
+        "cold ironing", "shore power",
+        "fueleu", "fueleu maritime", "eu ets", "ets marittimo",
+        "mlc 2006", "stcw", "solas", "marpol",
+        "cabotaggio", "registro internazionale",
+        "capitaneria di porto", "capitanerie di porto"
     ]
-    if any(s in text for s in marittimo_signals):
+
+    # industria del trasporto
+    trasporto_terms = [
+        "trasport", "logistica", "mobilità",
+        "intermodalità", "infrastrutture", "collegamenti",
+        "ministero delle infrastrutture e dei trasporti"
+    ]
+
+    # industria generale
+    generale_terms = [
+        "industria", "decarbonizzazione", "energia",
+        "pnrr", "fondo complementare", "aiuti di stato",
+        "innovazione", "cantieristica", "supply chain"
+    ]
+
+    if any(t in text for t in marittimo_terms):
         return "INTERESSE TRASPORTO MARITTIMO"
 
-    # 2) Industria del trasporto
-    trasporto_signals = [
-        "trasport", "logistica", "intermodal", "mobilità",
-        "mit", "ministero delle infrastrutture e dei trasporti",
-        "infrastrutture", "collegamenti", "tpl",
-        "trasporto merci", "trasporto pubblico",
-        "autobus", "linee marittime"
-    ]
-    if any(s in text for s in trasporto_signals):
+    if any(t in text for t in trasporto_terms):
         return "INTERESSE INDUSTRIA DEL TRASPORTO"
 
-    # 3) Industria generale
-    industria_generale_signals = [
-        "energia", "pnrr", "decarbonizzazione", "industria",
-        "mimit", "mase", "green finance", "cantieristica",
-        "innovazione", "fit for 55", "eu ets", "nucleare"
-    ]
-    if any(s in text for s in industria_generale_signals):
+    if any(t in text for t in generale_terms):
         return "INTERESSE INDUSTRIALE GENERALE"
 
-    # fallback: se ha score sufficiente ma non segnali diretti
-    if score >= 6:
+    if reasons:
         return "INTERESSE INDUSTRIALE GENERALE"
 
     return None
@@ -340,32 +292,30 @@ def build_email(pdf_url, eventi):
     }
 
     for e in eventi:
-        cat = e.get("categoria")
-        if cat in categorie:
-            categorie[cat].append(e)
+        if e.get("categoria"):
+            categorie[e["categoria"]].append(e)
 
     body = "MONITOR CAMERA – ANALISI COMPLETA PDF\n\n"
     body += f"Fonte PDF: {pdf_url}\n\n"
 
-    found_any = False
+    vuoto = True
 
     for cat, items in categorie.items():
         if not items:
             continue
 
-        found_any = True
+        vuoto = False
         body += f"{cat}\n\n"
 
         for e in items:
-            header = f"{e.get('data', '')} - {e.get('ora', '')} | {e.get('commissione', '')}".strip(" -|")
-            body += f"{header}\n"
-            body += e.get("testo", "")[:1200] + "\n"
-            body += f"Score: {e.get('score', 0)}\n"
-            body += f"Match: {', '.join(e.get('reasons', []))}\n"
+            body += f"{e['data']} - {e['ora']} | {e['commissione']}\n"
+            body += e["testo"][:1200] + "\n"
+            body += f"Score: {e['score']}\n"
+            body += f"Match: {', '.join(e['reasons']) if e['reasons'] else 'nessuno'}\n"
             body += "\n---\n\n"
 
-    if not found_any:
-        body += "Nessun evento classificato.\n"
+    if vuoto:
+        body += "Nessun evento classificato come rilevante.\n"
 
     return body
 
@@ -375,27 +325,23 @@ def build_email(pdf_url, eventi):
 # =========================
 def main():
     rules = load_rules(RULES_FILE)
-    compiled_rules = build_compiled_rules(rules)
+    rules_flat = flatten_rules(rules)
 
     pdf_url = trova_pdf_camera()
     scarica_pdf(pdf_url, PDF_FILE)
 
     text = extract_text(PDF_FILE)
-    text = clean_extracted_text(text)
+    text = normalize_text(text)
 
     eventi = parse_eventi(text)
     eventi_finali = []
 
     for e in eventi:
-        if is_excluded_organ(e.get("commissione", ""), compiled_rules):
-            continue
+        analysis_text = f"{e['commissione']}\n{e['testo']}"
+        reasons, score = match_rules(analysis_text, rules_flat)
+        categoria = assegna_categoria(e, reasons)
 
-        combined_text = f"{e.get('commissione', '')}\n{e.get('testo', '')}"
-        reasons, score = match_rules(combined_text, compiled_rules)
-        categoria = assegna_categoria(e, reasons, score)
-
-        # Tieni un po' di rumore, ma serve almeno un match
-        if reasons and categoria:
+        if categoria:
             e["reasons"] = reasons
             e["score"] = score
             e["categoria"] = categoria
@@ -404,20 +350,20 @@ def main():
     body = build_email(pdf_url, eventi_finali)
 
     print("DEBUG EMAIL:")
-    print("USER:", os.environ.get("SMTP_USER"))
-    print("TO:", os.environ.get("SMTP_TO"))
+    print("USER:", os.environ.get("EMAIL_USER"))
+    print("TO:", os.environ.get("EMAIL_TO"))
 
     msg = MIMEText(body, _charset="utf-8")
     msg["Subject"] = "Monitor Camera"
-    msg["From"] = os.environ["SMTP_USER"]
-    msg["To"] = os.environ["SMTP_TO"]
+    msg["From"] = os.environ["EMAIL_USER"]
+    msg["To"] = os.environ["EMAIL_TO"]
 
     with smtplib.SMTP("smtp.gmail.com", 587) as server:
         server.starttls()
-        server.login(os.environ["SMTP_USER"], os.environ["SMTP_PASSWORD"])
+        server.login(os.environ["EMAIL_USER"], os.environ["EMAIL_PASS"])
         server.sendmail(
-            os.environ["SMTP_USER"],
-            [os.environ["SMTP_TO"]],
+            os.environ["EMAIL_USER"],
+            [os.environ["EMAIL_TO"]],
             msg.as_string()
         )
 
