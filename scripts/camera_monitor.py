@@ -118,16 +118,47 @@ def parse_eventi(text):
     righe = [r.strip() for r in text.splitlines() if r.strip()]
 
     pattern_data = re.compile(
-        r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato)\s+\d{1,2}\s+\w+\s+\d{4}",
+        r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato)\s+\d{1,2}\s+\w+\s+\d{4}(?:\s*\(\*\))?$",
         re.IGNORECASE
     )
     pattern_ora = re.compile(r"^Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", re.IGNORECASE)
     pattern_commissione = re.compile(r"^[IVXLC]+\s+COMMISSIONE\s+PERMANENTE", re.IGNORECASE)
 
+    stop_patterns = [
+        re.compile(r"^I\s*N\s*D\s*I\s*C\s*E", re.IGNORECASE),
+        re.compile(r"^Pag\.\s*$", re.IGNORECASE),
+        re.compile(r"^Pag\.\s*\d+", re.IGNORECASE),
+        re.compile(r"^[IVXLC]+\s+[A-ZÀ-Ú].*\. \. \.$"),
+        re.compile(r"^[IVXLC]+\s+[A-ZÀ-Ú].*\.\s*\.\s*\.\s*$"),
+    ]
+
     eventi = []
     data_corrente = ""
     commissione_corrente = ""
     evento_corrente = None
+
+    def chiudi_evento(ev):
+        if not ev:
+            return None
+        testo = ev["testo"]
+
+        righe_ev = []
+        for r in testo.splitlines():
+            stop = False
+            for p in stop_patterns:
+                if p.search(r):
+                    stop = True
+                    break
+            if stop:
+                break
+            righe_ev.append(r)
+
+        ev["testo"] = "\n".join(righe_ev).strip()
+
+        if len(ev["testo"]) < 40:
+            return None
+
+        return ev
 
     for riga in righe:
         if pattern_data.match(riga):
@@ -140,8 +171,9 @@ def parse_eventi(text):
 
         m_ora = pattern_ora.match(riga)
         if m_ora:
-            if evento_corrente:
-                eventi.append(evento_corrente)
+            chiuso = chiudi_evento(evento_corrente)
+            if chiuso:
+                eventi.append(chiuso)
 
             evento_corrente = {
                 "data": data_corrente,
@@ -154,11 +186,11 @@ def parse_eventi(text):
         if evento_corrente:
             evento_corrente["testo"] += "\n" + riga
 
-    if evento_corrente:
-        eventi.append(evento_corrente)
+    chiuso = chiudi_evento(evento_corrente)
+    if chiuso:
+        eventi.append(chiuso)
 
     return eventi
-
 
 # =========================
 # MATCH RULES
@@ -236,37 +268,26 @@ def match_rules(text, rules_flat):
 def assegna_categoria(evento, reasons):
     text = (evento["commissione"] + "\n" + evento["testo"]).lower()
 
-    # trasporto marittimo
-    marittimo_terms = [
-        "porto", "porti", "portuale", "portualità",
-        "autorità di sistema portuale", "adsp",
-        "marittimo", "marittima", "navigazione",
+    marittimo_terms_forti = [
+        "marittimo", "marittima", "porto", "porti", "portuale",
+        "autorità di sistema portuale", "adsp", "navigazione",
         "codice della navigazione", "demanio marittimo",
-        "economia del mare", "autostrade del mare",
-        "sea modal shift", "shipping",
-        "lavoro marittimo", "gente di mare",
-        "cold ironing", "shore power",
-        "fueleu", "fueleu maritime", "eu ets", "ets marittimo",
-        "mlc 2006", "stcw", "solas", "marpol",
-        "cabotaggio", "registro internazionale",
-        "capitaneria di porto", "capitanerie di porto"
+        "economia del mare", "autostrade del mare", "sea modal shift",
+        "shipping", "cabotaggio", "capitaneria di porto", "capitanerie di porto",
+        "cold ironing", "shore power", "fueleu", "ets marittimo",
+        "mlc 2006", "stcw", "solas", "marpol"
     ]
 
-    # industria del trasporto
     trasporto_terms = [
-        "trasport", "logistica", "mobilità",
-        "intermodalità", "infrastrutture", "collegamenti",
-        "ministero delle infrastrutture e dei trasporti"
+        "trasporti", "trasporto", "logistica", "mobilità", "infrastrutture"
     ]
 
-    # industria generale
     generale_terms = [
-        "industria", "decarbonizzazione", "energia",
-        "pnrr", "fondo complementare", "aiuti di stato",
-        "innovazione", "cantieristica", "supply chain"
+        "energia", "decarbonizzazione", "pnrr", "industria", "innovazione",
+        "cantieristica", "supply chain"
     ]
 
-    if any(t in text for t in marittimo_terms):
+    if any(t in text for t in marittimo_terms_forti):
         return "INTERESSE TRASPORTO MARITTIMO"
 
     if any(t in text for t in trasporto_terms):
@@ -275,11 +296,7 @@ def assegna_categoria(evento, reasons):
     if any(t in text for t in generale_terms):
         return "INTERESSE INDUSTRIALE GENERALE"
 
-    if reasons:
-        return "INTERESSE INDUSTRIALE GENERALE"
-
     return None
-
 
 # =========================
 # EMAIL
