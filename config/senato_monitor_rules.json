@@ -203,14 +203,10 @@
         "pilotaggio",
         "ormeggio",
         "rimorchio",
-        "tariffe",
-        "dinamiche tariffarie",
         "costi portuali",
         "consumi in banchina",
         "approdo",
-        "sosta",
         "oneri di sistema",
-        "o.d.s.",
         "cold ironing",
         "shore power",
         "piani regolatori portuali",
@@ -253,11 +249,10 @@
         "cabotaggio",
         "reg. 3577/92",
         "3577/92",
-        "supply chain visibility",
         "intermodalità",
         "piattaforme logistiche",
-        "interoperabilità pcs–msw",
         "interoperabilità pcs-msw"
+        "continuità territoriale"
       ],
       "ordinamento_marittimo_registri_bandiera": [
         "ordinamento marittimo",
@@ -265,13 +260,16 @@
         "documenti di bordo",
         "dismissione della bandiera",
         "cancellazione dal registro",
-        "registro mediterraneo",
-        "registro bareboat",
+        "bareboat",
         "armamento",
         "disarmo",
         "impresa di navigazione",
         "compagnie di navigazione",
         "armatore"
+        "armatori"
+        "nave"
+        "navi"
+        "navigazione"
       ],
       "lavoro_marittimo_relazioni_industriali_welfare": [
         "lavoro marittimo",
@@ -288,7 +286,6 @@
         "salario minimo",
         "specificità lavoro marittimo",
         "marittimi non comunitari",
-        "work/rest hours",
         "work rest hours",
         "riconoscimento titoli extra-ue",
         "alloggi equipaggio",
@@ -299,10 +296,11 @@
         "sanità marittima",
         "sanità marittima di bordo",
         "sanità di bordo",
-        "disciplina sanità di bordo",
         "telemedicina marittima",
-        "tmas",
-        "dotazioni mediche obbligatorie"
+        "dotazioni mediche delle navi"
+        "decreto 10 marzo 2022"
+        "medici di bordo"
+        "servizio sanitario di bordo"
       ],
       "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale": [
         "decarbonizzazione",
@@ -333,7 +331,6 @@
         "carbon intensity indicator",
         "cii",
         "eexi",
-        "well-to-wake",
         "well to wake",
         "lca",
         "biofuels",
@@ -343,7 +340,6 @@
       "sicurezza_marittima_cyber_security": [
         "sicurezza equipaggi",
         "sicurezza navi",
-        "aree ad alto rischio",
         "marsec",
         "livelli marsec",
         "cybersicurezza",
@@ -353,9 +349,7 @@
         "bandiere ue",
         "bandiere see",
         "isps",
-        "isps code",
         "cyber risk management imo 2021",
-        "eumss",
         "eu maritime security strategy"
       ],
       "relazioni_internazionali_rotte_sanzioni_compliance": [
@@ -381,18 +375,13 @@
         "tonnage tax",
         "green finance",
         "linee guida ue aiuti di stato marittimo",
-        "eib",
-        "eif"
       ],
       "education_capitale_umano": [
         "stcw",
         "ufficiali di coperta",
         "bonus marittimi",
         "istituti nautici",
-        "rete dei nautici d’italia",
         "rete dei nautici d'italia",
-        "simulatori addestrativi",
-        "dual education",
         "training centers imo",
         "formazione marittimi",
         "formazione della gente di mare",
@@ -414,18 +403,14 @@
       "nuovo incentivo al trasferimento modale delle merci",
       "incentivi alle autostrade del mare",
       "sea modal shift",
-      "continuità territoriale",
       "creazione di green shipping corridors",
-      "interoperabilità pcs–msw",
       "semplificazioni in materia di ordinamento marittimo",
       "digitalizzazione dei documenti di bordo",
       "cancellazione dal registro e dismissione della bandiera",
       "sostegno al primo registro",
       "armonizzazione mlc–stcw",
       "semplificazione arruolamento equipaggi non ue",
-      "medici di bordo",
-      "regolamento di sanità marittima",
-      "telemedicina marittima (tmas)",
+      "telemedicina marittima",
       "semplificazione procedure di sottoscrizione delle convenzioni di arruolamento",
       "esenzione annotazioni imbarco e sbarco",
       "special tripartite committee",
@@ -473,19 +458,14 @@
         "legge 122/2016",
         "d.lgs. 271/99",
         "legge 1045/1939",
-        "ccnl 2024",
-        "piano del mare 2026–2028",
-        "piano del mare 2026-2028",
+        "ccnl marittimo",
+        "piano del mare",
         "dm 121/2016",
-        "norme antincendio portuali",
         "cold ironing",
-        "shore power",
-        "gdpr",
-        "codice privacy"
+        "shore power"
       ],
       "ue_internazionale": [
         "com(2020) 682",
-        "art. 108 tfue",
         "reg. 852/2020",
         "regolamento 852/2020",
         "fueleu maritime",
@@ -495,7 +475,6 @@
         "mlc 2006",
         "marpol 73/78",
         "imo ghg framework",
-        "nis2",
         "reg. 2019/1239",
         "maritime single window 2019/1239",
         "reg. 2023/1804",
@@ -545,11 +524,7 @@
       "ocse-itf",
       "iacs",
       "rina",
-      "dnv",
-      "bv",
-      "lloyd’s register",
       "lloyd's register",
-      "abs",
       "rempec",
       "helcom",
       "frontex"
