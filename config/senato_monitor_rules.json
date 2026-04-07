@@ -251,7 +251,7 @@
         "3577/92",
         "intermodalità",
         "piattaforme logistiche",
-        "interoperabilità pcs-msw"
+        "interoperabilità pcs-msw",
         "continuità territoriale"
       ],
       "ordinamento_marittimo_registri_bandiera": [
@@ -265,10 +265,10 @@
         "disarmo",
         "impresa di navigazione",
         "compagnie di navigazione",
-        "armatore"
-        "armatori"
-        "nave"
-        "navi"
+        "armatore",
+        "armatori",
+        "nave",
+        "navi",
         "navigazione"
       ],
       "lavoro_marittimo_relazioni_industriali_welfare": [
@@ -297,9 +297,9 @@
         "sanità marittima di bordo",
         "sanità di bordo",
         "telemedicina marittima",
-        "dotazioni mediche delle navi"
-        "decreto 10 marzo 2022"
-        "medici di bordo"
+        "dotazioni mediche delle navi",
+        "decreto 10 marzo 2022",
+        "medici di bordo",
         "servizio sanitario di bordo"
       ],
       "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale": [
@@ -374,7 +374,7 @@
         "aiuti di stato",
         "tonnage tax",
         "green finance",
-        "linee guida ue aiuti di stato marittimo",
+        "linee guida ue aiuti di stato marittimo"
       ],
       "education_capitale_umano": [
         "stcw",
