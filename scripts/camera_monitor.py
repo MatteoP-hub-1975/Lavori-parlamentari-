@@ -32,9 +32,9 @@ CATEGORY_INDUSTRIA = "INTERESSE INDUSTRIALE GENERALE"
 
 
 # =========================================================
-# PAROLE A RISCHIO FALSO POSITIVO
-# per queste serve vicinanza con: marittimo/marittima/marittime/navigazione
-# salvo la parola "navigazione" stessa
+# TERMINI RUMOROSI
+# per questi serve vicinanza con anchor marittimi
+# salvo "navigazione" stessa
 # =========================================================
 RISKY_TERMS = {
     "porto",
@@ -44,26 +44,15 @@ RISKY_TERMS = {
     "logistica",
     "trasporti",
     "trasporto merci",
-    "pot",
-    "pcs",
-    "psc",
-    "smart port",
     "approdo",
     "rimorchio",
     "pilotaggio",
     "ormeggio",
     "nave",
     "navi",
-    "armamento",
-    "disarmo",
-    "digitalizzazione",
-    "innovazione",
-    "salute e sicurezza",
     "mit",
-    "ram",
-    "rina",
-    "espo",
-    "ustr",
+    "salute e sicurezza",
+    "digitalizzazione",
 }
 
 MARITIME_ANCHORS = {
@@ -107,13 +96,11 @@ def contains_phrase(text_norm: str, phrase: str) -> bool:
     return phrase_norm in text_norm
 
 
-def proximity_match(text: str, term: str, anchors: set[str], window: int = 10) -> bool:
-    """
-    Verifica se 'term' compare entro N parole da uno degli anchor.
-    """
+def proximity_match(text: str, term: str, anchors: set, window: int = 10) -> bool:
     text_norm = normalize_for_match(text)
     tokens = tokenize(text_norm)
     term_tokens = tokenize(term)
+
     if not term_tokens:
         return False
 
@@ -146,14 +133,18 @@ def is_risky_term(term: str) -> bool:
 
 def term_passes_filter(text: str, term: str) -> bool:
     term_norm = normalize_for_match(term)
+    text_norm = normalize_for_match(text)
+
+    if not term_norm:
+        return False
 
     if term_norm == "navigazione":
-        return contains_phrase(normalize_for_match(text), term_norm)
+        return term_norm in text_norm
 
     if is_risky_term(term_norm):
         return proximity_match(text, term_norm, MARITIME_ANCHORS, PROXIMITY_WINDOW)
 
-    return contains_phrase(normalize_for_match(text), term_norm)
+    return term_norm in text_norm
 
 
 # =========================================================
@@ -167,8 +158,7 @@ def load_rules(path: str) -> Dict[str, Any]:
             return json.load(f)
     except json.JSONDecodeError as e:
         raise RuntimeError(
-            f"Il file JSON delle regole non è valido: riga {e.lineno}, colonna {e.colno}. "
-            f"Errore: {e.msg}"
+            f"Il file JSON delle regole non è valido: riga {e.lineno}, colonna {e.colno}. Errore: {e.msg}"
         ) from e
     except FileNotFoundError as e:
         raise RuntimeError(f"File regole non trovato: {path}") from e
@@ -250,7 +240,7 @@ def candidate_camera_urls(date_obj: datetime) -> List[str]:
     mm = date_obj.month
     yyyy = date_obj.year
 
-    compact = f"{dd}{mm}{yyyy}"       # es. 642026
+    compact = f"{dd}{mm}{yyyy}"         # es. 642026
     padded = f"{dd:02d}{mm:02d}{yyyy}"  # es. 06042026
 
     base = "https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini"
@@ -260,7 +250,6 @@ def candidate_camera_urls(date_obj: datetime) -> List[str]:
         f"{base}/{padded}.pdf",
     ]
 
-    # evita duplicati quando il formato coincide
     seen = set()
     out = []
     for u in urls:
@@ -273,7 +262,8 @@ def candidate_camera_urls(date_obj: datetime) -> List[str]:
 def url_exists(url: str, timeout: int = 15) -> bool:
     try:
         r = requests.get(url, timeout=timeout)
-        return r.status_code == 200 and "application/pdf" in r.headers.get("Content-Type", "").lower()
+        content_type = r.headers.get("Content-Type", "").lower()
+        return r.status_code == 200 and ("pdf" in content_type or url.lower().endswith(".pdf"))
     except requests.RequestException:
         return False
 
@@ -307,16 +297,37 @@ def scarica_pdf(url: str, output_path: str) -> None:
 # =========================================================
 # PARSING EVENTI
 # =========================================================
-def parse_eventi(text: str) -> List[Dict[str, str]]:
-    righe_raw = text.splitlines()
-    righe = [r.strip() for r in righe_raw if r.strip()]
-
-    pattern_data = re.compile(
+def is_date_line(line: str) -> bool:
+    pattern = re.compile(
         r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato|Domenica)\s+\d{1,2}\s+\w+\s+\d{4}",
         re.IGNORECASE,
     )
-    pattern_ora = re.compile(r"^Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", re.IGNORECASE)
-    pattern_commissione = re.compile(r"^[IVXLC]+\s+COMMISSIONE", re.IGNORECASE)
+    return bool(pattern.match(line))
+
+
+def is_time_line(line: str) -> bool:
+    return bool(re.match(r"^Ore\s+[0-9]{1,2}(?:[.,][0-9]{1,2})?", line, re.IGNORECASE))
+
+
+def is_commission_line(line: str) -> bool:
+    line_up = line.upper()
+    if re.search(r"\b[IVXLC]+\s+COMMISSIONE\b", line_up):
+        return True
+    if "COMMISSIONE PERMANENTE" in line_up:
+        return True
+    if "COMMISSIONI RIUNITE" in line_up:
+        return True
+    return False
+
+
+def clean_commission_name(line: str) -> str:
+    line = normalize_text(line)
+    line = re.sub(r"^\(?[IVXLC]+\)?\s*-\s*", "", line, flags=re.IGNORECASE)
+    return line.strip()
+
+
+def parse_eventi(text: str) -> List[Dict[str, str]]:
+    righe = [normalize_text(r) for r in text.splitlines() if normalize_text(r)]
 
     eventi: List[Dict[str, str]] = []
     data_corrente = ""
@@ -324,31 +335,31 @@ def parse_eventi(text: str) -> List[Dict[str, str]]:
     evento_corrente: Optional[Dict[str, str]] = None
 
     for riga in righe:
-        riga_norm = normalize_text(riga)
-
-        if pattern_data.match(riga_norm):
-            data_corrente = riga_norm
+        if is_date_line(riga):
+            data_corrente = riga
             continue
 
-        if pattern_commissione.search(riga_norm):
-            commissione_corrente = riga_norm
+        if is_commission_line(riga):
+            commissione_corrente = clean_commission_name(riga)
             continue
 
-        m_ora = pattern_ora.match(riga_norm)
-        if m_ora:
+        if is_time_line(riga):
             if evento_corrente:
                 eventi.append(evento_corrente)
 
+            ora_match = re.match(r"^Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", riga, re.IGNORECASE)
+            ora = ora_match.group(1) if ora_match else ""
+
             evento_corrente = {
                 "data": data_corrente,
-                "ora": m_ora.group(1),
+                "ora": ora,
                 "commissione": commissione_corrente,
-                "testo": riga_norm,
+                "testo": riga,
             }
             continue
 
         if evento_corrente:
-            evento_corrente["testo"] += " " + riga_norm
+            evento_corrente["testo"] += " " + riga
 
     if evento_corrente:
         eventi.append(evento_corrente)
@@ -397,12 +408,10 @@ def match_rules(text: str, rule_sets: Dict[str, Any]) -> Tuple[List[str], int]:
                 reasons.append(f"norma:{label}")
                 score += 4
         except re.error:
-            # fallback se il pattern non è regex valida
             if pattern.lower() in text_norm:
                 reasons.append(f"norma:{label}")
                 score += 4
 
-    # dedup
     deduped = []
     seen = set()
     for r in reasons:
@@ -418,9 +427,43 @@ def match_rules(text: str, rule_sets: Dict[str, Any]) -> Tuple[List[str], int]:
 # =========================================================
 def assegna_categoria(evento: Dict[str, str], reasons: List[str]) -> Optional[str]:
     text = normalize_for_match(evento.get("testo", "") + " " + evento.get("commissione", ""))
+    joined_reasons = " | ".join(reasons).lower()
 
     # 1) marittimo
     if any(tag.startswith("keyword:") for tag in reasons):
+        return CATEGORY_MARITTIMO
+
+    if any(
+        x in joined_reasons for x in [
+            "confitarma_keyword:risorsa mare",
+            "confitarma_keyword:confitarma",
+            "confitarma_keyword:assarmatori",
+            "confitarma_keyword:salario minimo",
+            "confitarma_keyword:lavoro marittimo",
+            "confitarma_keyword:gente di mare",
+            "confitarma_keyword:convenzioni di arruolamento",
+            "confitarma_keyword:annotazioni imbarco",
+            "confitarma_keyword:annotazioni sbarco",
+            "confitarma_keyword:telemedicina marittima",
+            "confitarma_keyword:medici di bordo",
+            "confitarma_keyword:servizio sanitario di bordo",
+            "confitarma_keyword:dotazioni mediche delle navi",
+            "confitarma_keyword:armatore",
+            "confitarma_keyword:armatori",
+            "confitarma_keyword:nave",
+            "confitarma_keyword:navi",
+            "confitarma_keyword:compagnie di navigazione",
+            "confitarma_keyword:impresa di navigazione",
+            "confitarma_keyword:autorità di sistema portuale",
+            "confitarma_keyword:cabotaggio",
+            "confitarma_keyword:porto",
+            "confitarma_keyword:porti",
+            "confitarma_keyword:portuale",
+            "confitarma_keyword:marittimo",
+            "confitarma_keyword:marittima",
+            "confitarma_keyword:navigazione",
+        ]
+    ):
         return CATEGORY_MARITTIMO
 
     if any(
@@ -443,6 +486,14 @@ def assegna_categoria(evento: Dict[str, str], reasons: List[str]) -> Optional[st
 
     # 2) trasporto generale
     if any(
+        x in joined_reasons for x in [
+            "confitarma_keyword:logistica",
+            "confitarma_keyword:intermodalità",
+        ]
+    ):
+        return CATEGORY_TRASPORTO
+
+    if any(
         x in text for x in [
             "trasporti",
             "trasporto",
@@ -455,6 +506,18 @@ def assegna_categoria(evento: Dict[str, str], reasons: List[str]) -> Optional[st
         return CATEGORY_TRASPORTO
 
     # 3) industria generale
+    if any(
+        x in joined_reasons for x in [
+            "confitarma_keyword:pnrr",
+            "confitarma_keyword:decarbonizzazione",
+            "confitarma_keyword:innovazione",
+            "confitarma_keyword:fit for 55",
+            "confitarma_keyword:eu ets",
+            "confitarma_keyword:fueleu maritime",
+        ]
+    ):
+        return CATEGORY_INDUSTRIA
+
     if any(
         x in text for x in [
             "pnrr",
@@ -469,7 +532,6 @@ def assegna_categoria(evento: Dict[str, str], reasons: List[str]) -> Optional[st
     ):
         return CATEGORY_INDUSTRIA
 
-    # se non classificabile ma c'è almeno una reason forte normativa
     if any(r.startswith("norma:") for r in reasons):
         return CATEGORY_MARITTIMO
 
@@ -639,7 +701,8 @@ def main() -> None:
         if is_excluded_organ(commissione, rule_sets["excluded_organs"]):
             continue
 
-        reasons, score = match_rules(e.get("testo", ""), rule_sets)
+        full_text = f"{e.get('commissione', '')} {e.get('testo', '')}"
+        reasons, score = match_rules(full_text, rule_sets)
         categoria = assegna_categoria(e, reasons)
 
         if categoria and reasons:
