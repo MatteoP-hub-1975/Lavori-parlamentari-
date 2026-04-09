@@ -4,7 +4,6 @@ import re
 import smtplib
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
-from html import unescape
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
@@ -26,19 +25,15 @@ EMAIL_TO_ENV = "EMAIL_TO"
 
 MAX_LOOKBACK_DAYS = 10
 PROXIMITY_WINDOW = 10
-REQUEST_TIMEOUT = 30
 
 CATEGORY_MARITTIMO = "INTERESSE TRASPORTO MARITTIMO"
 CATEGORY_TRASPORTO = "INTERESSE INDUSTRIA DEL TRASPORTO"
 CATEGORY_INDUSTRIA = "INTERESSE INDUSTRIALE GENERALE"
 
-HEADERS = {
-    "User-Agent": "Mozilla/5.0 (compatible; CameraMonitor/1.0)"
-}
-
 
 # =========================================================
-# TERMINI RUMOROSI
+# PAROLE A RISCHIO FALSO POSITIVO
+# queste valgono solo se vicine a contesto marittimo
 # =========================================================
 RISKY_TERMS = {
     "porto",
@@ -60,22 +55,41 @@ RISKY_TERMS = {
     "navi",
     "armamento",
     "disarmo",
-    "digitalizzazione",
-    "innovazione",
-    "salute e sicurezza",
-    "salario minimo",
     "mit",
     "ram",
     "rina",
     "espo",
     "ustr",
+    "digitalizzazione",
+    "salute e sicurezza",
 }
 
 MARITIME_ANCHORS = {
     "marittimo",
     "marittima",
     "marittime",
+    "marittimi",
+    "marittime",
     "navigazione",
+    "nave",
+    "navi",
+    "porto",
+    "porti",
+    "portuale",
+    "portualità",
+    "equipaggio",
+    "equipaggi",
+    "armatore",
+    "armatori",
+    "gente",
+    "mare",
+    "marina",
+    "demanio",
+    "cabotaggio",
+    "adsp",
+    "autorità",
+    "sistema",
+    "portuale",
 }
 
 
@@ -83,14 +97,12 @@ MARITIME_ANCHORS = {
 # UTILS TESTO
 # =========================================================
 def normalize_text(text: str) -> str:
-    text = unescape(text)
+    if not text:
+        return ""
     text = text.replace("\xa0", " ")
     text = text.replace("’", "'")
-    text = text.replace("`", "'")
     text = text.replace("–", "-")
     text = text.replace("—", "-")
-    text = text.replace("“", '"')
-    text = text.replace("”", '"')
     text = re.sub(r"\s+", " ", text)
     return text.strip()
 
@@ -100,7 +112,7 @@ def normalize_for_match(text: str) -> str:
 
 
 def tokenize(text: str) -> List[str]:
-    return re.findall(r"\b[\w/.-]+\b", text.lower())
+    return re.findall(r"\b[\w/.-]+\b", normalize_for_match(text))
 
 
 def contains_phrase(text_norm: str, phrase: str) -> bool:
@@ -147,14 +159,18 @@ def is_risky_term(term: str) -> bool:
 
 def term_passes_filter(text: str, term: str) -> bool:
     term_norm = normalize_for_match(term)
+    text_norm = normalize_for_match(text)
+
+    if not term_norm:
+        return False
 
     if term_norm == "navigazione":
-        return contains_phrase(normalize_for_match(text), term_norm)
+        return contains_phrase(text_norm, term_norm)
 
     if is_risky_term(term_norm):
         return proximity_match(text, term_norm, MARITIME_ANCHORS, PROXIMITY_WINDOW)
 
-    return contains_phrase(normalize_for_match(text), term_norm)
+    return contains_phrase(text_norm, term_norm)
 
 
 # =========================================================
@@ -206,8 +222,9 @@ def flatten_confitarma_keywords(confitarma_kb: Dict[str, Any]) -> List[str]:
                 if isinstance(v, str) and v.strip():
                     out.append(v.strip())
 
+    # dedup preservando ordine
+    deduped: List[str] = []
     seen = set()
-    deduped = []
     for item in out:
         key = normalize_for_match(item)
         if key not in seen:
@@ -251,15 +268,15 @@ def build_rule_sets(rules: Dict[str, Any]) -> Dict[str, Any]:
 
 
 # =========================================================
-# URL BOLLETTINI CAMERA
+# TROVA PDF CAMERA
 # =========================================================
-def candidate_camera_pdf_urls(date_obj: datetime) -> List[str]:
+def candidate_camera_urls(date_obj: datetime) -> List[str]:
     dd = date_obj.day
     mm = date_obj.month
     yyyy = date_obj.year
 
-    compact = f"{dd}{mm}{yyyy}"
-    padded = f"{dd:02d}{mm:02d}{yyyy}"
+    compact = f"{dd}{mm}{yyyy}"           # es. 742026
+    padded = f"{dd:02d}{mm:02d}{yyyy}"    # es. 07042026
 
     base = "https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini"
 
@@ -277,15 +294,11 @@ def candidate_camera_pdf_urls(date_obj: datetime) -> List[str]:
     return out
 
 
-def pdf_url_to_html_url(pdf_url: str) -> str:
-    return pdf_url[:-4] + ".htm" if pdf_url.lower().endswith(".pdf") else pdf_url
-
-
-def url_exists(url: str, timeout: int = REQUEST_TIMEOUT) -> bool:
+def url_exists(url: str, timeout: int = 15) -> bool:
     try:
-        r = requests.get(url, timeout=timeout, headers=HEADERS)
+        r = requests.get(url, timeout=timeout)
         content_type = r.headers.get("Content-Type", "").lower()
-        return r.status_code == 200 and ("application/pdf" in content_type or url.lower().endswith(".pdf"))
+        return r.status_code == 200 and ("pdf" in content_type or url.lower().endswith(".pdf"))
     except requests.RequestException:
         return False
 
@@ -296,7 +309,7 @@ def trova_pdf_camera(max_giorni: int = MAX_LOOKBACK_DAYS) -> str:
     for i in range(1, max_giorni + 1):
         data = oggi - timedelta(days=i)
 
-        for url in candidate_camera_pdf_urls(data):
+        for url in candidate_camera_urls(data):
             print(f"Tento: {url}")
             if url_exists(url):
                 print(f"Trovato PDF: {url}")
@@ -306,98 +319,97 @@ def trova_pdf_camera(max_giorni: int = MAX_LOOKBACK_DAYS) -> str:
 
 
 # =========================================================
-# DOWNLOAD
+# DOWNLOAD PDF
 # =========================================================
 def scarica_pdf(url: str, output_path: str) -> None:
-    r = requests.get(url, timeout=REQUEST_TIMEOUT, headers=HEADERS)
+    r = requests.get(url, timeout=30)
     r.raise_for_status()
-
     with open(output_path, "wb") as f:
         f.write(r.content)
 
 
-def scarica_html(url: str) -> str:
-    try:
-        r = requests.get(url, timeout=REQUEST_TIMEOUT, headers=HEADERS)
-        r.raise_for_status()
-        return r.text
-    except requests.RequestException:
-        return ""
+# =========================================================
+# CLEAN COMMISSION NAMES
+# =========================================================
+def clean_commission_name(name: str) -> str:
+    name = normalize_text(name)
+
+    if not name:
+        return "non rilevato"
+
+    name = re.sub(r"^-\s*", "", name).strip()
+    name = re.sub(r"\s+", " ", name).strip()
+
+    # taglia intestazioni spurie
+    bad_prefixes = [
+        "alla ",
+        "al termine",
+        "pag.",
+        "ore ",
+        "rel. ",
+        "rell. ",
+    ]
+    low = normalize_for_match(name)
+    if any(low.startswith(p) for p in bad_prefixes):
+        return "non rilevato"
+
+    return name
+
+
+def canonicalize_organo_for_dedup(organo: str) -> str:
+    s = normalize_for_match(organo)
+    s = re.sub(r"\([^)]*\)", "", s)
+    s = re.sub(r"\s+", " ", s).strip()
+    s = s.strip(" -:")
+    return s
+
+
+def organ_quality(organo: str) -> int:
+    organo_clean = clean_commission_name(organo)
+    organo_norm = normalize_for_match(organo_clean)
+
+    score = 0
+
+    if organo_norm and organo_norm != "non rilevato":
+        score += 1
+
+    if "commissione permanente" in organo_norm:
+        score += 10
+    elif re.search(r"\b[ivxlc]+\s+commissione\b", organo_norm):
+        score += 9
+    elif "commissioni riunite" in organo_norm:
+        score += 4
+
+    if "aula" in organo_norm:
+        score -= 1
+    if "nuova aula dei gruppi parlamentari" in organo_norm:
+        score -= 2
+
+    if organo_clean.endswith("("):
+        score -= 4
+    if organo_norm.startswith("alla "):
+        score -= 6
+    if organo_norm == "non rilevato":
+        score -= 10
+
+    return score
 
 
 # =========================================================
 # PARSING EVENTI
 # =========================================================
-def is_commission_line(line: str) -> bool:
-    line_up = normalize_text(line).upper()
-
-    if line_up.startswith("ALLA "):
-        return False
-    if line_up.startswith("- ALLA "):
-        return False
-    if line_up.startswith("REL."):
-        return False
-    if re.match(r"^ATTO\s+N\.?\s*\d+", line_up):
-        return False
-    if re.match(r"^C\.\s*\d+", line_up):
-        return False
-
-    if re.search(r"\b[IVXLC]+\s+COMMISSIONE\b", line_up):
-        return True
-    if "COMMISSIONE PERMANENTE" in line_up:
-        return True
-    if "COMMISSIONI RIUNITE" in line_up:
-        return True
-
-    return False
-
-
-def clean_commission_name(line: str) -> str:
-    line = normalize_text(line)
-
-    if not line:
-        return "non rilevato"
-
-    if line.upper().startswith("ALLA "):
-        return "non rilevato"
-
-    if line.upper().startswith("- ALLA "):
-        return "non rilevato"
-
-    if "Rel." in line and "COMMISSIONE" not in line.upper():
-        return "non rilevato"
-
-    line = re.sub(r"\s+", " ", line).strip()
-
-    # taglia code spazzatura
-    line = re.sub(r"\s+-\s*Rel\..*$", "", line, flags=re.IGNORECASE)
-    line = re.sub(r"\s+Rel\..*$", "", line, flags=re.IGNORECASE)
-    line = re.sub(r"\s+$begin:math:text$Non sono previste votazioni$end:math:text$.*$", "", line, flags=re.IGNORECASE)
-    line = re.sub(r"\s+$begin:math:text$Sono previste votazioni$end:math:text$.*$", "", line, flags=re.IGNORECASE)
-    line = re.sub(r"\s+Atto\s+n\.?\s*\d+.*$", "", line, flags=re.IGNORECASE)
-    line = re.sub(r"\s+C\.\s*\d+.*$", "", line, flags=re.IGNORECASE)
-
-    # se parentesi aperta ma non chiusa, chiudila tagliando
-    if "(" in line and ")" not in line:
-        line = line.split("(", 1)[0].strip()
-
-    line = line.strip(" -:")
-
-    # fallback minimo sensato
-    if not line:
-        return "non rilevato"
-
-    return line
-
-
 def parse_eventi(text: str) -> List[Dict[str, str]]:
     righe = [normalize_text(r) for r in text.splitlines() if normalize_text(r)]
 
     pattern_data = re.compile(
-        r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato|Domenica)\s+\d{1,2}\s+\w+\s+\d{4}(?:\s*$begin:math:text$\\\*$end:math:text$)?$",
+        r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato|Domenica)\s+\d{1,2}\s+\w+\s+\d{4}",
         re.IGNORECASE,
     )
     pattern_ora = re.compile(r"^Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", re.IGNORECASE)
+    pattern_commissione = re.compile(
+        r"^([IVXLC]+\s+COMMISSIONE|COMMISSIONI\s+RIUNITE|COMITATO|GIUNTA)",
+        re.IGNORECASE,
+    )
 
     eventi: List[Dict[str, str]] = []
     data_corrente = ""
@@ -409,10 +421,8 @@ def parse_eventi(text: str) -> List[Dict[str, str]]:
             data_corrente = riga
             continue
 
-        if is_commission_line(riga):
-            comm = clean_commission_name(riga)
-            if comm != "non rilevato":
-                commissione_corrente = comm
+        if pattern_commissione.search(riga):
+            commissione_corrente = clean_commission_name(riga)
             continue
 
         m_ora = pattern_ora.match(riga)
@@ -423,7 +433,7 @@ def parse_eventi(text: str) -> List[Dict[str, str]]:
             evento_corrente = {
                 "data": data_corrente,
                 "ora": m_ora.group(1),
-                "commissione": commissione_corrente or "non rilevato",
+                "commissione": commissione_corrente,
                 "testo": riga,
             }
             continue
@@ -442,7 +452,7 @@ def parse_eventi(text: str) -> List[Dict[str, str]]:
 # =========================================================
 def is_excluded_organ(organo: str, excluded_organs: List[str]) -> bool:
     organo_norm = normalize_for_match(organo)
-    if not organo_norm or organo_norm == "non rilevato":
+    if not organo_norm:
         return False
 
     for excl in excluded_organs:
@@ -459,16 +469,19 @@ def match_rules(text: str, rule_sets: Dict[str, Any]) -> Tuple[List[str], int]:
     score = 0
     text_norm = normalize_for_match(text)
 
+    # keywords resoconto
     for kw in rule_sets["resoconto_keywords"]:
         if term_passes_filter(text, kw):
             reasons.append(f"keyword:{kw}")
             score += 3
 
+    # confitarma keywords
     for kw in rule_sets["confitarma_keywords"]:
         if term_passes_filter(text, kw):
             reasons.append(f"confitarma_keyword:{kw}")
             score += 2
 
+    # normative patterns
     for label, pattern in rule_sets["normative_patterns"]:
         try:
             if re.search(pattern, text_norm, flags=re.IGNORECASE):
@@ -479,8 +492,9 @@ def match_rules(text: str, rule_sets: Dict[str, Any]) -> Tuple[List[str], int]:
                 reasons.append(f"norma:{label}")
                 score += 4
 
+    # dedup motivazioni
+    deduped: List[str] = []
     seen = set()
-    deduped = []
     for r in reasons:
         if r not in seen:
             seen.add(r)
@@ -495,62 +509,47 @@ def match_rules(text: str, rule_sets: Dict[str, Any]) -> Tuple[List[str], int]:
 def assegna_categoria(evento: Dict[str, str], reasons: List[str]) -> Optional[str]:
     text = normalize_for_match(evento.get("testo", "") + " " + evento.get("commissione", ""))
 
+    marittimo_hits = [
+        "marittimo",
+        "marittima",
+        "marittime",
+        "navigazione",
+        "autorità di sistema portuale",
+        "codice della navigazione",
+        "demanio marittimo",
+        "economia del mare",
+        "trasporto marittimo",
+        "lavoro marittimo",
+        "portuale",
+        "portualità",
+        "cabotaggio",
+        "risorsa mare",
+        "autostrade del mare",
+        "sea modal shift",
+        "armatore",
+        "armatori",
+        "gente di mare",
+        "sanità marittima",
+    ]
+
     if any(tag.startswith("keyword:") for tag in reasons):
         return CATEGORY_MARITTIMO
 
     if any(
-        x in text for x in [
-            "marittimo",
-            "marittima",
-            "marittime",
-            "navigazione",
-            "autorità di sistema portuale",
-            "codice della navigazione",
-            "demanio marittimo",
-            "economia del mare",
-            "trasporto marittimo",
-            "lavoro marittimo",
-            "portuale",
-            "portualità",
-            "risorsa mare",
-            "armatore",
-            "armatori",
-            "compagnie di navigazione",
-            "gente di mare",
-            "sanità marittima",
-            "telemedicina marittima",
-        ]
+        r.startswith("norma:")
+        and any(x in normalize_for_match(r) for x in ["solas", "marpol", "stcw", "mlc", "navigazione", "84/1994", "3577/92"])
+        for r in reasons
     ):
         return CATEGORY_MARITTIMO
 
-    if any(
-        x in text for x in [
-            "trasporti",
-            "trasporto",
-            "mobilità",
-            "logistica",
-            "intermodalità",
-            "infrastrutture",
-        ]
-    ):
+    if any(x in text for x in marittimo_hits):
+        return CATEGORY_MARITTIMO
+
+    if any(x in text for x in ["trasporti", "trasporto", "mobilità", "logistica", "intermodalità", "infrastrutture"]):
         return CATEGORY_TRASPORTO
 
-    if any(
-        x in text for x in [
-            "pnrr",
-            "decarbonizzazione",
-            "energia",
-            "industria",
-            "innovazione",
-            "fit for 55",
-            "eu ets",
-            "fueleu",
-        ]
-    ):
+    if any(x in text for x in ["pnrr", "decarbonizzazione", "energia", "industria", "innovazione", "fit for 55", "eu ets", "fueleu"]):
         return CATEGORY_INDUSTRIA
-
-    if any(r.startswith("norma:") for r in reasons):
-        return CATEGORY_MARITTIMO
 
     return None
 
@@ -559,6 +558,8 @@ def assegna_categoria(evento: Dict[str, str], reasons: List[str]) -> Optional[st
 # ESTRAZIONE CAMPI
 # =========================================================
 def extract_numero_atto(testo: str) -> str:
+    testo_norm = normalize_text(testo)
+
     patterns = [
         r"\bAtto\s+n\.?\s*\d+\b",
         r"\batto\s+n\.?\s*\d+\b",
@@ -570,14 +571,43 @@ def extract_numero_atto(testo: str) -> str:
         r"\bDL\s+\d+/\d{4}\b",
     ]
 
-    testo_norm = normalize_text(testo)
-
     for pattern in patterns:
         m = re.search(pattern, testo_norm, flags=re.IGNORECASE)
         if m:
             return m.group(0).strip()
 
     return "non rilevato"
+
+
+def canonicalize_numero_atto(numero_atto: str) -> str:
+    s = normalize_for_match(numero_atto)
+    s = re.sub(r"\s+", "", s)
+
+    m = re.match(r"c\.(\d+[a-z\-]*)", s, flags=re.IGNORECASE)
+    if m:
+        return f"c.{m.group(1)}"
+
+    m = re.match(r"s\.(\d+[a-z\-]*)", s, flags=re.IGNORECASE)
+    if m:
+        return f"s.{m.group(1)}"
+
+    m = re.match(r"atton\.?(\d+)", s, flags=re.IGNORECASE)
+    if m:
+        return f"atto{m.group(1)}"
+
+    m = re.match(r"doc\.lxxxvi,n\.?(\d+)", s, flags=re.IGNORECASE)
+    if m:
+        return f"doclxxxvi.{m.group(1)}"
+
+    m = re.match(r"(\d+-\d+)", s)
+    if m:
+        return m.group(1)
+
+    m = re.match(r"dl(\d+/\d{4})", s, flags=re.IGNORECASE)
+    if m:
+        return f"dl{m.group(1)}"
+
+    return s
 
 
 def extract_scadenza_emendamenti(testo: str) -> str:
@@ -601,7 +631,7 @@ def format_motivazione(reasons: List[str]) -> str:
     if not reasons:
         return "nessuna parola chiave trovata"
 
-    valori = []
+    valori: List[str] = []
     seen = set()
 
     for r in reasons:
@@ -611,8 +641,9 @@ def format_motivazione(reasons: List[str]) -> str:
             val = r
 
         val = val.strip()
-        if val and val not in seen:
-            seen.add(val)
+        key = normalize_for_match(val)
+        if key and key not in seen:
+            seen.add(key)
             valori.append(val)
 
     return "; ".join(valori) if valori else "nessuna parola chiave trovata"
@@ -621,83 +652,41 @@ def format_motivazione(reasons: List[str]) -> str:
 # =========================================================
 # LINK DOCUMENTO EFFETTIVO
 # =========================================================
-def absolutize_url(url: str) -> str:
-    if url.startswith("http://") or url.startswith("https://"):
-        return url
-    if url.startswith("/"):
-        return "https://www.camera.it" + url
-    return "https://www.camera.it/" + url.lstrip("./")
+def build_camera_doc_link(numero_atto: str) -> str:
+    numero_atto_norm = normalize_text(numero_atto)
+    canon = canonicalize_numero_atto(numero_atto_norm)
 
-
-def find_link_near_label(html: str, label: str) -> Optional[str]:
-    if not label or label == "non rilevato":
-        return None
-
-    label_escaped = re.escape(label)
-
-    patterns = [
-        rf'{label_escaped}.{{0,800}}?href="([^"]+)"',
-        rf'href="([^"]+)".{{0,800}}?{label_escaped}',
-    ]
-
-    for pattern in patterns:
-        m = re.search(pattern, html, flags=re.IGNORECASE | re.DOTALL)
-        if m:
-            return absolutize_url(unescape(m.group(1)))
-
-    return None
-
-
-def build_document_link(numero_atto: str, pdf_url: str, html_text: str) -> str:
-    numero_norm = normalize_text(numero_atto)
-
-    if html_text:
-        link = find_link_near_label(html_text, numero_norm)
-        if link:
-            return link
-
-    numero_low = numero_norm.lower()
-
-    m = re.search(r"\bc\.\s*(\d+)\b", numero_low)
+    m = re.match(r"c\.(\d+[a-z\-]*)", canon, flags=re.IGNORECASE)
     if m:
         return f"https://www.camera.it/leg19/126?tab=&leg=19&idDocumento={m.group(1)}"
 
-    m = re.search(r"\batto\s+n\.?\s*(\d+)\b", numero_low)
+    m = re.match(r"s\.(\d+[a-z\-]*)", canon, flags=re.IGNORECASE)
+    if m:
+        return f"https://www.camera.it/leg19/126?tab=&leg=19&idDocumento={m.group(1)}"
+
+    m = re.match(r"atto(\d+)", canon)
     if m:
         return f"https://www.camera.it/leg19/682?atto={m.group(1)}"
 
-    return pdf_url
+    # per interrogazioni / risoluzioni non sempre ricostruibile
+    return ""
+
+
+def resolve_document_link(numero_atto: str, pdf_url: str) -> str:
+    direct = build_camera_doc_link(numero_atto)
+    return direct if direct else pdf_url
 
 
 # =========================================================
-# QUALITÀ RECORD / DEDUP
+# DEDUP EVENTI
 # =========================================================
-def organ_quality(organo: str) -> int:
-    organo_norm = normalize_for_match(organo)
-
-    score = 0
-    if organo_norm and organo_norm != "non rilevato":
-        score += 1
-    if "commissione permanente" in organo_norm:
-        score += 4
-    if "commissioni riunite" in organo_norm:
-        score += 3
-    if "aula" in organo_norm:
-        score += 1
-    if len(organo_norm) > 20:
-        score += 1
-    if organo.endswith("("):
-        score -= 4
-    if organo_norm.startswith("alla "):
-        score -= 5
-    return score
-
-
 def dedup_eventi(eventi: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     best_by_key: Dict[Tuple[str, str, str, str], Dict[str, Any]] = {}
 
     for e in eventi:
-        numero_atto = normalize_for_match(extract_numero_atto(e.get("testo", "")))
+        numero_atto_raw = extract_numero_atto(e.get("testo", ""))
+        numero_atto = canonicalize_numero_atto(numero_atto_raw)
+
         motivazione = normalize_for_match(format_motivazione(e.get("reasons", [])))
         categoria = normalize_for_match(e.get("categoria", ""))
         data = normalize_for_match(e.get("data", ""))
@@ -705,9 +694,9 @@ def dedup_eventi(eventi: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
         key = (categoria, data, numero_atto, motivazione)
 
         current_score = (
-            organ_quality(clean_commission_name(e.get("commissione", ""))),
-            len(normalize_text(e.get("testo", ""))),
+            organ_quality(e.get("commissione", "")),
             int(e.get("score", 0)),
+            len(normalize_text(e.get("testo", ""))),
         )
 
         old = best_by_key.get(key)
@@ -716,9 +705,9 @@ def dedup_eventi(eventi: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
             continue
 
         old_score = (
-            organ_quality(clean_commission_name(old.get("commissione", ""))),
-            len(normalize_text(old.get("testo", ""))),
+            organ_quality(old.get("commissione", "")),
             int(old.get("score", 0)),
+            len(normalize_text(old.get("testo", ""))),
         )
 
         if current_score > old_score:
@@ -728,9 +717,9 @@ def dedup_eventi(eventi: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
 
 
 # =========================================================
-# EMAIL
+# COSTRUZIONE EMAIL
 # =========================================================
-def build_email(pdf_url: str, html_text: str, eventi: List[Dict[str, Any]]) -> str:
+def build_email(pdf_url: str, eventi: List[Dict[str, Any]]) -> str:
     categorie: Dict[str, List[Dict[str, Any]]] = {
         CATEGORY_MARITTIMO: [],
         CATEGORY_TRASPORTO: [],
@@ -749,20 +738,20 @@ def build_email(pdf_url: str, html_text: str, eventi: List[Dict[str, Any]]) -> s
         if not items:
             continue
 
-        items = sorted(
+        items_sorted = sorted(
             items,
             key=lambda x: (
                 normalize_for_match(x.get("data", "")),
                 normalize_for_match(clean_commission_name(x.get("commissione", ""))),
-                normalize_for_match(extract_numero_atto(x.get("testo", ""))),
-            ),
+                canonicalize_numero_atto(extract_numero_atto(x.get("testo", ""))),
+            )
         )
 
         body += f"{categoria}\n\n"
 
-        for e in items:
+        for e in items_sorted:
             numero_atto = extract_numero_atto(e.get("testo", ""))
-            link_atto = build_document_link(numero_atto, pdf_url, html_text)
+            link_documento = resolve_document_link(numero_atto, pdf_url)
             scadenza = extract_scadenza_emendamenti(e.get("testo", ""))
             motivazione = format_motivazione(e.get("reasons", []))
 
@@ -772,7 +761,7 @@ def build_email(pdf_url: str, html_text: str, eventi: List[Dict[str, Any]]) -> s
             body += f"Data riunione: {data_riunione}\n"
             body += f"Organo: {organo}\n"
             body += f"Atto: {numero_atto}\n"
-            body += f"Link documento: {link_atto}\n"
+            body += f"Link documento: {link_documento}\n"
             body += f"Motivazione: {motivazione}\n"
             body += f"Scadenza emendamenti: {scadenza}\n"
             body += "\n---\n\n"
@@ -821,9 +810,6 @@ def main() -> None:
     pdf_url = trova_pdf_camera()
     scarica_pdf(pdf_url, PDF_LOCAL_PATH)
 
-    html_url = pdf_url_to_html_url(pdf_url)
-    html_text = scarica_html(html_url)
-
     text = extract_text(PDF_LOCAL_PATH)
     if not text or not text.strip():
         raise RuntimeError("Il testo del PDF risulta vuoto")
@@ -835,7 +821,7 @@ def main() -> None:
     eventi_finali: List[Dict[str, Any]] = []
 
     for e in eventi:
-        commissione = e.get("commissione", "")
+        commissione = clean_commission_name(e.get("commissione", ""))
 
         if is_excluded_organ(commissione, rule_sets["excluded_organs"]):
             continue
@@ -844,6 +830,7 @@ def main() -> None:
         categoria = assegna_categoria(e, reasons)
 
         if categoria and reasons:
+            e["commissione"] = commissione
             e["reasons"] = reasons
             e["score"] = score
             e["categoria"] = categoria
@@ -858,7 +845,7 @@ def main() -> None:
             "Nessun evento rilevante trovato.\n"
         )
     else:
-        body = build_email(pdf_url, html_text, eventi_finali)
+        body = build_email(pdf_url, eventi_finali)
 
     print(body)
     send_email(body)
