@@ -39,7 +39,6 @@ HEADERS = {
 
 # =========================================================
 # TERMINI RUMOROSI
-# questi valgono solo se vicini a parole marittime
 # =========================================================
 RISKY_TERMS = {
     "porto",
@@ -307,7 +306,7 @@ def trova_pdf_camera(max_giorni: int = MAX_LOOKBACK_DAYS) -> str:
 
 
 # =========================================================
-# DOWNLOAD PDF / HTML
+# DOWNLOAD
 # =========================================================
 def scarica_pdf(url: str, output_path: str) -> None:
     r = requests.get(url, timeout=REQUEST_TIMEOUT, headers=HEADERS)
@@ -334,19 +333,19 @@ def is_commission_line(line: str) -> bool:
 
     if line_up.startswith("ALLA "):
         return False
-
     if line_up.startswith("- ALLA "):
         return False
-
     if line_up.startswith("REL."):
+        return False
+    if re.match(r"^ATTO\s+N\.?\s*\d+", line_up):
+        return False
+    if re.match(r"^C\.\s*\d+", line_up):
         return False
 
     if re.search(r"\b[IVXLC]+\s+COMMISSIONE\b", line_up):
         return True
-
     if "COMMISSIONE PERMANENTE" in line_up:
         return True
-
     if "COMMISSIONI RIUNITE" in line_up:
         return True
 
@@ -355,8 +354,6 @@ def is_commission_line(line: str) -> bool:
 
 def clean_commission_name(line: str) -> str:
     line = normalize_text(line)
-
-    line = re.sub(r"\s+", " ", line).strip()
 
     if not line:
         return "non rilevato"
@@ -370,10 +367,27 @@ def clean_commission_name(line: str) -> str:
     if "Rel." in line and "COMMISSIONE" not in line.upper():
         return "non rilevato"
 
-    line = re.sub(r"$begin:math:text$\[\^\)\]\*$end:math:text$", lambda m: m.group(0) if "Aula" in m.group(0) or "Nuova aula" in m.group(0) else "", line)
-    line = re.sub(r"\s+", " ", line).strip(" -")
+    line = re.sub(r"\s+", " ", line).strip()
 
-    return line if line else "non rilevato"
+    # taglia code spazzatura
+    line = re.sub(r"\s+-\s*Rel\..*$", "", line, flags=re.IGNORECASE)
+    line = re.sub(r"\s+Rel\..*$", "", line, flags=re.IGNORECASE)
+    line = re.sub(r"\s+$begin:math:text$Non sono previste votazioni$end:math:text$.*$", "", line, flags=re.IGNORECASE)
+    line = re.sub(r"\s+$begin:math:text$Sono previste votazioni$end:math:text$.*$", "", line, flags=re.IGNORECASE)
+    line = re.sub(r"\s+Atto\s+n\.?\s*\d+.*$", "", line, flags=re.IGNORECASE)
+    line = re.sub(r"\s+C\.\s*\d+.*$", "", line, flags=re.IGNORECASE)
+
+    # se parentesi aperta ma non chiusa, chiudila tagliando
+    if "(" in line and ")" not in line:
+        line = line.split("(", 1)[0].strip()
+
+    line = line.strip(" -:")
+
+    # fallback minimo sensato
+    if not line:
+        return "non rilevato"
+
+    return line
 
 
 def parse_eventi(text: str) -> List[Dict[str, str]]:
@@ -616,11 +630,14 @@ def absolutize_url(url: str) -> str:
 
 
 def find_link_near_label(html: str, label: str) -> Optional[str]:
+    if not label or label == "non rilevato":
+        return None
+
     label_escaped = re.escape(label)
 
     patterns = [
-        rf'{label_escaped}.{0,600}?href="([^"]+)"',
-        rf'href="([^"]+)".{0,600}?{label_escaped}',
+        rf'{label_escaped}.{{0,800}}?href="([^"]+)"',
+        rf'href="([^"]+)".{{0,800}}?{label_escaped}',
     ]
 
     for pattern in patterns:
@@ -639,17 +656,6 @@ def build_document_link(numero_atto: str, pdf_url: str, html_text: str) -> str:
         if link:
             return link
 
-        # fallback su forma con spazi normalizzati
-        numero_relaxed = re.sub(r"\s+", r"\\s+", re.escape(numero_norm))
-        patterns = [
-            rf'{numero_relaxed}.{0,800}?href="([^"]+)"',
-            rf'href="([^"]+)".{0,800}?{numero_relaxed}',
-        ]
-        for pattern in patterns:
-            m = re.search(pattern, html_text, flags=re.IGNORECASE | re.DOTALL)
-            if m:
-                return absolutize_url(unescape(m.group(1)))
-
     numero_low = numero_norm.lower()
 
     m = re.search(r"\bc\.\s*(\d+)\b", numero_low)
@@ -664,28 +670,61 @@ def build_document_link(numero_atto: str, pdf_url: str, html_text: str) -> str:
 
 
 # =========================================================
-# DEDUP EVENTI
+# QUALITÀ RECORD / DEDUP
 # =========================================================
+def organ_quality(organo: str) -> int:
+    organo_norm = normalize_for_match(organo)
+
+    score = 0
+    if organo_norm and organo_norm != "non rilevato":
+        score += 1
+    if "commissione permanente" in organo_norm:
+        score += 4
+    if "commissioni riunite" in organo_norm:
+        score += 3
+    if "aula" in organo_norm:
+        score += 1
+    if len(organo_norm) > 20:
+        score += 1
+    if organo.endswith("("):
+        score -= 4
+    if organo_norm.startswith("alla "):
+        score -= 5
+    return score
+
+
 def dedup_eventi(eventi: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    seen = set()
-    out = []
+    best_by_key: Dict[Tuple[str, str, str, str], Dict[str, Any]] = {}
 
     for e in eventi:
-        numero_atto = extract_numero_atto(e.get("testo", ""))
-        motivazione = format_motivazione(e.get("reasons", []))
+        numero_atto = normalize_for_match(extract_numero_atto(e.get("testo", "")))
+        motivazione = normalize_for_match(format_motivazione(e.get("reasons", [])))
+        categoria = normalize_for_match(e.get("categoria", ""))
+        data = normalize_for_match(e.get("data", ""))
 
-        key = (
-            normalize_for_match(e.get("data", "")),
-            normalize_for_match(clean_commission_name(e.get("commissione", ""))),
-            normalize_for_match(numero_atto),
-            normalize_for_match(motivazione),
+        key = (categoria, data, numero_atto, motivazione)
+
+        current_score = (
+            organ_quality(clean_commission_name(e.get("commissione", ""))),
+            len(normalize_text(e.get("testo", ""))),
+            int(e.get("score", 0)),
         )
 
-        if key not in seen:
-            seen.add(key)
-            out.append(e)
+        old = best_by_key.get(key)
+        if not old:
+            best_by_key[key] = e
+            continue
 
-    return out
+        old_score = (
+            organ_quality(clean_commission_name(old.get("commissione", ""))),
+            len(normalize_text(old.get("testo", ""))),
+            int(old.get("score", 0)),
+        )
+
+        if current_score > old_score:
+            best_by_key[key] = e
+
+    return list(best_by_key.values())
 
 
 # =========================================================
@@ -709,6 +748,15 @@ def build_email(pdf_url: str, html_text: str, eventi: List[Dict[str, Any]]) -> s
     for categoria, items in categorie.items():
         if not items:
             continue
+
+        items = sorted(
+            items,
+            key=lambda x: (
+                normalize_for_match(x.get("data", "")),
+                normalize_for_match(clean_commission_name(x.get("commissione", ""))),
+                normalize_for_match(extract_numero_atto(x.get("testo", ""))),
+            ),
+        )
 
         body += f"{categoria}\n\n"
 
