@@ -2,99 +2,126 @@ import json
 import os
 import re
 import smtplib
+from copy import deepcopy
 from datetime import datetime, timedelta
 from email.mime.text import MIMEText
 from typing import Any, Dict, List, Optional, Tuple
 
 import requests
 from pdfminer.high_level import extract_text
+from openai import OpenAI
 
 
 # =========================================================
 # CONFIG
 # =========================================================
 RULES_FILE = os.path.join(os.getcwd(), "config", "senato_monitor_rules.json")
-PDF_LOCAL_PATH = "camera.pdf"
+PDF_LOCAL_PATH = os.path.join(os.getcwd(), "camera.pdf")
+STATE_DIR = os.path.join(os.getcwd(), "data", "camera_ai")
+STATE_FILE = os.path.join(STATE_DIR, "camera_ai_last.json")
 
-SMTP_HOST = "smtp.gmail.com"
-SMTP_PORT = 587
+OPENAI_API_KEY_ENV = "OPENAI_API_KEY"
 
 EMAIL_USER_ENV = "EMAIL_USER"
 EMAIL_PASS_ENV = "EMAIL_PASS"
 EMAIL_TO_ENV = "EMAIL_TO"
 
+SMTP_HOST = "smtp.gmail.com"
+SMTP_PORT = 587
+
 MAX_LOOKBACK_DAYS = 10
-PROXIMITY_WINDOW = 10
 
 CATEGORY_MARITTIMO = "INTERESSE TRASPORTO MARITTIMO"
 CATEGORY_TRASPORTO = "INTERESSE INDUSTRIA DEL TRASPORTO"
 CATEGORY_INDUSTRIA = "INTERESSE INDUSTRIALE GENERALE"
 
-
-# =========================================================
-# PAROLE A RISCHIO FALSO POSITIVO
-# queste valgono solo se vicine a contesto marittimo
-# =========================================================
-RISKY_TERMS = {
-    "porto",
-    "porti",
-    "portuale",
-    "portualità",
-    "logistica",
-    "trasporti",
-    "trasporto merci",
-    "pot",
-    "pcs",
-    "psc",
-    "smart port",
-    "approdo",
-    "rimorchio",
-    "pilotaggio",
-    "ormeggio",
-    "nave",
-    "navi",
-    "armamento",
-    "disarmo",
-    "mit",
-    "ram",
-    "rina",
-    "espo",
-    "ustr",
-    "digitalizzazione",
-    "salute e sicurezza",
+ALLOWED_CATEGORIES = {
+    CATEGORY_MARITTIMO,
+    CATEGORY_TRASPORTO,
+    CATEGORY_INDUSTRIA,
 }
 
-MARITIME_ANCHORS = {
-    "marittimo",
-    "marittima",
-    "marittime",
-    "marittimi",
-    "marittime",
-    "navigazione",
-    "nave",
-    "navi",
-    "porto",
-    "porti",
-    "portuale",
-    "portualità",
-    "equipaggio",
-    "equipaggi",
-    "armatore",
-    "armatori",
-    "gente",
-    "mare",
-    "marina",
-    "demanio",
-    "cabotaggio",
-    "adsp",
-    "autorità",
-    "sistema",
-    "portuale",
-}
+OPENAI_MODEL = "gpt-5.4"
+
+SYSTEM_PROMPT = """
+Sei un assistente esperto di analisi parlamentare italiana.
+
+Devi analizzare un bollettino ufficiale della Camera dei Deputati.
+
+Obiettivo:
+individuare esclusivamente gli atti parlamentari rilevanti per il settore del trasporto marittimo
+e per gli interessi di Confitarma, utilizzando come base valutativa il knowledge base fornito.
+
+REGOLE FONDAMENTALI:
+1. Non inventare informazioni.
+2. Non dedurre contenuti non presenti nel testo.
+3. Non duplicare atti uguali.
+4. Se un dato non è presente, restituisci stringa vuota.
+5. Non includere atti non rilevanti.
+6. Non includere riunioni senza veri atti rilevanti.
+7. Usa il knowledge base solo per valutare la rilevanza, non per aggiungere contenuti.
+8. 'porto', 'porti', 'logistica', 'MIT', 'innovazione', 'digitalizzazione', 'salute e sicurezza'
+   non bastano da soli: devono essere collegati a contesto marittimo se vuoi classificare
+   come INTERESSE TRASPORTO MARITTIMO.
+9. 'salario minimo' è rilevante solo se collegato a lavoro marittimo, equipaggi, gente di mare,
+   marittimi, bordo, navigazione, navi.
+10. Evita organi sporchi o spezzati: restituisci un nome di organo pulito e sintetico.
+11. Se lo stesso atto compare più volte nello stesso bollettino, restituiscilo una sola volta.
+12. Restituisci solo JSON valido, senza markdown e senza testo extra.
+
+CATEGORIE AMMESSE:
+- INTERESSE TRASPORTO MARITTIMO
+- INTERESSE INDUSTRIA DEL TRASPORTO
+- INTERESSE INDUSTRIALE GENERALE
+
+Per ogni atto devi restituire:
+- data_riunione
+- organo
+- categoria
+- atto_numero
+- motivazione
+- parole_chiave
+- scadenza_emendamenti
+
+La motivazione deve essere breve e concreta.
+Le parole_chiave devono contenere solo i termini davvero trovati nel testo.
+"""
+
+USER_PROMPT_TEMPLATE = """
+DATA OGGI: {today}
+
+KNOWLEDGE BASE CONFITARMA:
+{rules_json}
+
+TESTO BOLLETTINO:
+{text}
+
+ISTRUZIONI OPERATIVE:
+1. Analizza il bollettino.
+2. Estrai solo gli atti rilevanti.
+3. Considera solo atti con data uguale o successiva a DATA OGGI.
+4. Non duplicare atti identici.
+5. Se un atto è dubbio, meglio escluderlo.
+6. Restituisci solo questo JSON:
+
+{{
+  "atti_rilevanti": [
+    {{
+      "data_riunione": "",
+      "organo": "",
+      "categoria": "",
+      "atto_numero": "",
+      "motivazione": "",
+      "parole_chiave": [],
+      "scadenza_emendamenti": ""
+    }}
+  ]
+}}
+"""
 
 
 # =========================================================
-# UTILS TESTO
+# UTILS GENERALI
 # =========================================================
 def normalize_text(text: str) -> str:
     if not text:
@@ -107,164 +134,66 @@ def normalize_text(text: str) -> str:
     return text.strip()
 
 
-def normalize_for_match(text: str) -> str:
+def normalize_for_compare(text: str) -> str:
     return normalize_text(text).lower()
 
 
-def tokenize(text: str) -> List[str]:
-    return re.findall(r"\b[\w/.-]+\b", normalize_for_match(text))
+def ensure_dir(path: str) -> None:
+    os.makedirs(path, exist_ok=True)
 
 
-def contains_phrase(text_norm: str, phrase: str) -> bool:
-    phrase_norm = normalize_for_match(phrase)
-    if not phrase_norm:
-        return False
-    return phrase_norm in text_norm
+def load_json_file(path: str) -> Dict[str, Any]:
+    with open(path, "r", encoding="utf-8") as f:
+        return json.load(f)
 
 
-def proximity_match(text: str, term: str, anchors: set, window: int = 10) -> bool:
-    text_norm = normalize_for_match(text)
-    tokens = tokenize(text_norm)
-    term_tokens = tokenize(term)
-
-    if not term_tokens:
-        return False
-
-    anchor_positions: List[int] = []
-    for i, tok in enumerate(tokens):
-        if tok in anchors:
-            anchor_positions.append(i)
-
-    if not anchor_positions:
-        return False
-
-    term_len = len(term_tokens)
-    term_positions: List[int] = []
-
-    for i in range(len(tokens) - term_len + 1):
-        if tokens[i:i + term_len] == term_tokens:
-            term_positions.append(i)
-
-    for tp in term_positions:
-        for ap in anchor_positions:
-            if abs(tp - ap) <= window:
-                return True
-
-    return False
+def save_json_file(path: str, data: Dict[str, Any]) -> None:
+    ensure_dir(os.path.dirname(path))
+    with open(path, "w", encoding="utf-8") as f:
+        json.dump(data, f, ensure_ascii=False, indent=2)
 
 
-def is_risky_term(term: str) -> bool:
-    return normalize_for_match(term) in RISKY_TERMS
+def parse_date_it(date_str: str) -> Optional[datetime.date]:
+    if not date_str:
+        return None
 
+    s = normalize_text(date_str)
+    s = re.sub(r"\(\*\)", "", s).strip()
 
-def term_passes_filter(text: str, term: str) -> bool:
-    term_norm = normalize_for_match(term)
-    text_norm = normalize_for_match(text)
+    mesi = {
+        "gennaio": 1,
+        "febbraio": 2,
+        "marzo": 3,
+        "aprile": 4,
+        "maggio": 5,
+        "giugno": 6,
+        "luglio": 7,
+        "agosto": 8,
+        "settembre": 9,
+        "ottobre": 10,
+        "novembre": 11,
+        "dicembre": 12,
+    }
 
-    if not term_norm:
-        return False
+    m = re.search(
+        r"(lunedì|martedì|mercoledì|giovedì|venerdì|sabato|domenica)?\s*(\d{1,2})\s+([a-zà]+)\s+(\d{4})",
+        s,
+        flags=re.IGNORECASE,
+    )
+    if not m:
+        return None
 
-    if term_norm == "navigazione":
-        return contains_phrase(text_norm, term_norm)
-
-    if is_risky_term(term_norm):
-        return proximity_match(text, term_norm, MARITIME_ANCHORS, PROXIMITY_WINDOW)
-
-    return contains_phrase(text_norm, term_norm)
-
-
-# =========================================================
-# LOAD RULES
-# =========================================================
-def load_rules(path: str) -> Dict[str, Any]:
-    print(f"Uso file regole: {path}")
+    day = int(m.group(2))
+    month_name = m.group(3).lower()
+    year = int(m.group(4))
+    month = mesi.get(month_name)
+    if not month:
+        return None
 
     try:
-        with open(path, "r", encoding="utf-8") as f:
-            return json.load(f)
-    except json.JSONDecodeError as e:
-        raise RuntimeError(
-            f"Il file JSON delle regole non è valido: riga {e.lineno}, colonna {e.colno}. Errore: {e.msg}"
-        ) from e
-    except FileNotFoundError as e:
-        raise RuntimeError(f"File regole non trovato: {path}") from e
-
-
-def flatten_confitarma_keywords(confitarma_kb: Dict[str, Any]) -> List[str]:
-    out: List[str] = []
-
-    keywords = confitarma_kb.get("keywords", {})
-    for _, values in keywords.items():
-        if isinstance(values, list):
-            for v in values:
-                if isinstance(v, str) and v.strip():
-                    out.append(v.strip())
-
-    keyphrases = confitarma_kb.get("keyphrases", [])
-    for v in keyphrases:
-        if isinstance(v, str) and v.strip():
-            out.append(v.strip())
-
-    programs_tools = confitarma_kb.get("programs_tools", [])
-    for v in programs_tools:
-        if isinstance(v, str) and v.strip():
-            out.append(v.strip())
-
-    entities = confitarma_kb.get("entities", [])
-    for v in entities:
-        if isinstance(v, str) and v.strip():
-            out.append(v.strip())
-
-    norm_refs = confitarma_kb.get("norm_refs", {})
-    for _, values in norm_refs.items():
-        if isinstance(values, list):
-            for v in values:
-                if isinstance(v, str) and v.strip():
-                    out.append(v.strip())
-
-    # dedup preservando ordine
-    deduped: List[str] = []
-    seen = set()
-    for item in out:
-        key = normalize_for_match(item)
-        if key not in seen:
-            seen.add(key)
-            deduped.append(item)
-
-    return deduped
-
-
-def build_rule_sets(rules: Dict[str, Any]) -> Dict[str, Any]:
-    excluded_organs = [
-        normalize_for_match(x)
-        for x in rules.get("excluded_organs", [])
-        if isinstance(x, str) and x.strip()
-    ]
-
-    resoconto_keywords = [
-        x.strip()
-        for x in rules.get("resoconto_keywords", [])
-        if isinstance(x, str) and x.strip()
-    ]
-
-    normative_patterns: List[Tuple[str, str]] = []
-    for item in rules.get("normative_patterns", []):
-        label = item.get("label", "").strip()
-        patterns = item.get("patterns", [])
-        if label and isinstance(patterns, list):
-            for p in patterns:
-                if isinstance(p, str) and p.strip():
-                    normative_patterns.append((label, p.strip()))
-
-    confitarma_kb = rules.get("confitarma_kb", {})
-    confitarma_keywords = flatten_confitarma_keywords(confitarma_kb)
-
-    return {
-        "excluded_organs": excluded_organs,
-        "resoconto_keywords": resoconto_keywords,
-        "normative_patterns": normative_patterns,
-        "confitarma_keywords": confitarma_keywords,
-    }
+        return datetime(year, month, day).date()
+    except ValueError:
+        return None
 
 
 # =========================================================
@@ -275,30 +204,31 @@ def candidate_camera_urls(date_obj: datetime) -> List[str]:
     mm = date_obj.month
     yyyy = date_obj.year
 
-    compact = f"{dd}{mm}{yyyy}"           # es. 742026
-    padded = f"{dd:02d}{mm:02d}{yyyy}"    # es. 07042026
+    compact = f"{dd}{mm}{yyyy}"
+    padded = f"{dd:02d}{mm:02d}{yyyy}"
 
     base = "https://documenti.camera.it/_dati/leg19/lavori/Commissioni/Bollettini"
-
-    urls = [
+    out = [
         f"{base}/{compact}.pdf",
         f"{base}/{padded}.pdf",
     ]
 
-    out = []
+    deduped = []
     seen = set()
-    for u in urls:
+    for u in out:
         if u not in seen:
             seen.add(u)
-            out.append(u)
-    return out
+            deduped.append(u)
+    return deduped
 
 
-def url_exists(url: str, timeout: int = 15) -> bool:
+def url_exists(url: str, timeout: int = 20) -> bool:
     try:
         r = requests.get(url, timeout=timeout)
+        if r.status_code != 200:
+            return False
         content_type = r.headers.get("Content-Type", "").lower()
-        return r.status_code == 200 and ("pdf" in content_type or url.lower().endswith(".pdf"))
+        return "pdf" in content_type or url.lower().endswith(".pdf")
     except requests.RequestException:
         return False
 
@@ -308,7 +238,6 @@ def trova_pdf_camera(max_giorni: int = MAX_LOOKBACK_DAYS) -> str:
 
     for i in range(1, max_giorni + 1):
         data = oggi - timedelta(days=i)
-
         for url in candidate_camera_urls(data):
             print(f"Tento: {url}")
             if url_exists(url):
@@ -318,9 +247,6 @@ def trova_pdf_camera(max_giorni: int = MAX_LOOKBACK_DAYS) -> str:
     raise RuntimeError("Nessun PDF trovato negli ultimi giorni")
 
 
-# =========================================================
-# DOWNLOAD PDF
-# =========================================================
 def scarica_pdf(url: str, output_path: str) -> None:
     r = requests.get(url, timeout=30)
     r.raise_for_status()
@@ -329,450 +255,292 @@ def scarica_pdf(url: str, output_path: str) -> None:
 
 
 # =========================================================
-# CLEAN COMMISSION NAMES
+# OPENAI ANALISI
 # =========================================================
-def clean_commission_name(name: str) -> str:
-    name = normalize_text(name)
+def call_openai_analysis(rules: Dict[str, Any], pdf_text: str) -> Dict[str, Any]:
+    api_key = os.environ.get(OPENAI_API_KEY_ENV)
+    if not api_key:
+        raise RuntimeError(f"Variabile ambiente mancante: {OPENAI_API_KEY_ENV}")
 
-    if not name:
-        return "non rilevato"
+    client = OpenAI(api_key=api_key)
 
-    name = re.sub(r"^-\s*", "", name).strip()
-    name = re.sub(r"\s+", " ", name).strip()
-
-    # taglia intestazioni spurie
-    bad_prefixes = [
-        "alla ",
-        "al termine",
-        "pag.",
-        "ore ",
-        "rel. ",
-        "rell. ",
-    ]
-    low = normalize_for_match(name)
-    if any(low.startswith(p) for p in bad_prefixes):
-        return "non rilevato"
-
-    return name
-
-
-def canonicalize_organo_for_dedup(organo: str) -> str:
-    s = normalize_for_match(organo)
-    s = re.sub(r"\([^)]*\)", "", s)
-    s = re.sub(r"\s+", " ", s).strip()
-    s = s.strip(" -:")
-    return s
-
-
-def organ_quality(organo: str) -> int:
-    organo_clean = clean_commission_name(organo)
-    organo_norm = normalize_for_match(organo_clean)
-
-    score = 0
-
-    if organo_norm and organo_norm != "non rilevato":
-        score += 1
-
-    if "commissione permanente" in organo_norm:
-        score += 10
-    elif re.search(r"\b[ivxlc]+\s+commissione\b", organo_norm):
-        score += 9
-    elif "commissioni riunite" in organo_norm:
-        score += 4
-
-    if "aula" in organo_norm:
-        score -= 1
-    if "nuova aula dei gruppi parlamentari" in organo_norm:
-        score -= 2
-
-    if organo_clean.endswith("("):
-        score -= 4
-    if organo_norm.startswith("alla "):
-        score -= 6
-    if organo_norm == "non rilevato":
-        score -= 10
-
-    return score
-
-
-# =========================================================
-# PARSING EVENTI
-# =========================================================
-def parse_eventi(text: str) -> List[Dict[str, str]]:
-    righe = [normalize_text(r) for r in text.splitlines() if normalize_text(r)]
-
-    pattern_data = re.compile(
-        r"^(Lunedì|Martedì|Mercoledì|Giovedì|Venerdì|Sabato|Domenica)\s+\d{1,2}\s+\w+\s+\d{4}",
-        re.IGNORECASE,
-    )
-    pattern_ora = re.compile(r"^Ore\s+([0-9]{1,2}(?:[.,][0-9]{1,2})?)", re.IGNORECASE)
-    pattern_commissione = re.compile(
-        r"^([IVXLC]+\s+COMMISSIONE|COMMISSIONI\s+RIUNITE|COMITATO|GIUNTA)",
-        re.IGNORECASE,
+    today_str = datetime.now().strftime("%Y-%m-%d")
+    user_prompt = USER_PROMPT_TEMPLATE.format(
+        today=today_str,
+        rules_json=json.dumps(rules, ensure_ascii=False, indent=2),
+        text=pdf_text,
     )
 
-    eventi: List[Dict[str, str]] = []
-    data_corrente = ""
-    commissione_corrente = ""
-    evento_corrente: Optional[Dict[str, str]] = None
+    response = client.responses.create(
+        model=OPENAI_MODEL,
+        input=[
+            {"role": "system", "content": SYSTEM_PROMPT},
+            {"role": "user", "content": user_prompt},
+        ],
+    )
 
-    for riga in righe:
-        if pattern_data.match(riga):
-            data_corrente = riga
+    raw = getattr(response, "output_text", "") or ""
+    raw = raw.strip()
+
+    if not raw:
+        raise RuntimeError("Risposta OpenAI vuota")
+
+    try:
+        parsed = json.loads(raw)
+    except json.JSONDecodeError as e:
+        raise RuntimeError(f"JSON AI non valido: {e.msg}") from e
+
+    if not isinstance(parsed, dict):
+        raise RuntimeError("Output AI non valido: atteso oggetto JSON")
+
+    if "atti_rilevanti" not in parsed or not isinstance(parsed["atti_rilevanti"], list):
+        raise RuntimeError("Output AI non valido: manca 'atti_rilevanti'")
+
+    return parsed
+
+
+# =========================================================
+# LINK DOCUMENTI
+# =========================================================
+def normalize_atto_numero(atto_numero: str) -> str:
+    return normalize_text(atto_numero)
+
+
+def build_camera_document_link(atto_numero: str, fallback_pdf_url: str) -> str:
+    """
+    Costruisce link Camera al documento effettivo quando possibile.
+    Se non riconosce il formato, usa il bollettino PDF.
+    """
+    a = normalize_atto_numero(atto_numero)
+
+    if not a:
+        return fallback_pdf_url
+
+    # C. 2855
+    m = re.fullmatch(r"C\.\s*([0-9]+[A-Z\-]*)", a, flags=re.IGNORECASE)
+    if m:
+        num = m.group(1)
+        return f"https://www.camera.it/leg19/126?tab=&leg=19&idDocumento={num}"
+
+    # S. 123 -> fallback
+    m = re.fullmatch(r"S\.\s*([0-9]+[A-Z\-]*)", a, flags=re.IGNORECASE)
+    if m:
+        return fallback_pdf_url
+
+    # Atto n. 392
+    m = re.fullmatch(r"Atto\s*n\.?\s*([0-9]+)", a, flags=re.IGNORECASE)
+    if m:
+        num = m.group(1)
+        return f"https://www.camera.it/leg19/682?atto={num}"
+
+    m = re.fullmatch(r"atto\s*n\.?\s*([0-9]+)", a, flags=re.IGNORECASE)
+    if m:
+        num = m.group(1)
+        return f"https://www.camera.it/leg19/682?atto={num}"
+
+    # Doc. LXXXVI, n. 4 -> non facile da ricostruire in modo affidabile
+    # Interrogazioni / risoluzioni 7-00269, 5-04837 -> fallback
+    return fallback_pdf_url
+
+
+# =========================================================
+# PULIZIA / DEDUP / FILTRI
+# =========================================================
+def clean_organo(organo: str) -> str:
+    organo = normalize_text(organo)
+
+    organo = re.sub(r"\(\*\)", "", organo).strip()
+    organo = re.sub(r"\s+", " ", organo).strip()
+
+    # elimina pezzi chiaramente sporchi
+    organo = re.sub(r"^Alla\s+[IVXLC]+\s+Commissione:\s*", "", organo, flags=re.IGNORECASE)
+    organo = re.sub(r"^Rel\.[^)]*\)\s*", "", organo, flags=re.IGNORECASE)
+    organo = re.sub(r"^XII Commissione:[^)]*\)\s*", "", organo, flags=re.IGNORECASE)
+
+    # taglia se contiene "Ore ..."
+    organo = re.sub(r"\bOre\s+\d.*$", "", organo, flags=re.IGNORECASE).strip()
+
+    # mantieni solo organi plausibili
+    if "COMMISSIONE" in organo.upper():
+        return organo
+
+    if organo.upper().startswith("COMMISSIONI RIUNITE"):
+        return organo
+
+    return organo
+
+
+def act_key(item: Dict[str, Any]) -> Tuple[str, str, str]:
+    return (
+        normalize_for_compare(item.get("data_riunione", "")),
+        normalize_for_compare(item.get("organo", "")),
+        normalize_for_compare(item.get("atto_numero", "")),
+    )
+
+
+def payload_signature(item: Dict[str, Any]) -> Tuple[str, str, str]:
+    return (
+        normalize_for_compare(item.get("categoria", "")),
+        normalize_for_compare(item.get("motivazione", "")),
+        normalize_for_compare("; ".join(item.get("parole_chiave", []))),
+    )
+
+
+def dedupe_items(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    out: List[Dict[str, Any]] = []
+    seen = set()
+
+    for item in items:
+        key = act_key(item)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append(item)
+
+    return out
+
+
+def filter_only_today_or_future(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
+    today = datetime.now().date()
+    out = []
+
+    for item in items:
+        d = parse_date_it(item.get("data_riunione", ""))
+        if d is None:
+            continue
+        if d >= today:
+            out.append(item)
+
+    return out
+
+
+def sanitize_ai_items(ai_data: Dict[str, Any], pdf_url: str) -> List[Dict[str, Any]]:
+    raw_items = ai_data.get("atti_rilevanti", [])
+    cleaned: List[Dict[str, Any]] = []
+
+    for item in raw_items:
+        if not isinstance(item, dict):
             continue
 
-        if pattern_commissione.search(riga):
-            commissione_corrente = clean_commission_name(riga)
+        data_riunione = normalize_text(item.get("data_riunione", ""))
+        organo = clean_organo(item.get("organo", ""))
+        categoria = normalize_text(item.get("categoria", ""))
+        atto_numero = normalize_text(item.get("atto_numero", ""))
+        motivazione = normalize_text(item.get("motivazione", ""))
+        scadenza = normalize_text(item.get("scadenza_emendamenti", ""))
+
+        parole = item.get("parole_chiave", [])
+        if not isinstance(parole, list):
+            parole = []
+        parole = [normalize_text(x) for x in parole if isinstance(x, str) and normalize_text(x)]
+
+        if categoria not in ALLOWED_CATEGORIES:
+            continue
+        if not data_riunione or not organo:
             continue
 
-        m_ora = pattern_ora.match(riga)
-        if m_ora:
-            if evento_corrente:
-                eventi.append(evento_corrente)
+        link_documento = build_camera_document_link(atto_numero, pdf_url)
 
-            evento_corrente = {
-                "data": data_corrente,
-                "ora": m_ora.group(1),
-                "commissione": commissione_corrente,
-                "testo": riga,
+        cleaned.append(
+            {
+                "data_riunione": data_riunione,
+                "organo": organo,
+                "categoria": categoria,
+                "atto_numero": atto_numero if atto_numero else "non rilevato",
+                "link_documento": link_documento,
+                "motivazione": motivazione if motivazione else "",
+                "parole_chiave": parole,
+                "scadenza_emendamenti": scadenza if scadenza else "non rilevata",
             }
-            continue
-
-        if evento_corrente:
-            evento_corrente["testo"] += " " + riga
-
-    if evento_corrente:
-        eventi.append(evento_corrente)
-
-    return eventi
-
-
-# =========================================================
-# FILTRI
-# =========================================================
-def is_excluded_organ(organo: str, excluded_organs: List[str]) -> bool:
-    organo_norm = normalize_for_match(organo)
-    if not organo_norm:
-        return False
-
-    for excl in excluded_organs:
-        if excl in organo_norm:
-            return True
-    return False
-
-
-# =========================================================
-# MATCH REGOLE
-# =========================================================
-def match_rules(text: str, rule_sets: Dict[str, Any]) -> Tuple[List[str], int]:
-    reasons: List[str] = []
-    score = 0
-    text_norm = normalize_for_match(text)
-
-    # keywords resoconto
-    for kw in rule_sets["resoconto_keywords"]:
-        if term_passes_filter(text, kw):
-            reasons.append(f"keyword:{kw}")
-            score += 3
-
-    # confitarma keywords
-    for kw in rule_sets["confitarma_keywords"]:
-        if term_passes_filter(text, kw):
-            reasons.append(f"confitarma_keyword:{kw}")
-            score += 2
-
-    # normative patterns
-    for label, pattern in rule_sets["normative_patterns"]:
-        try:
-            if re.search(pattern, text_norm, flags=re.IGNORECASE):
-                reasons.append(f"norma:{label}")
-                score += 4
-        except re.error:
-            if pattern.lower() in text_norm:
-                reasons.append(f"norma:{label}")
-                score += 4
-
-    # dedup motivazioni
-    deduped: List[str] = []
-    seen = set()
-    for r in reasons:
-        if r not in seen:
-            seen.add(r)
-            deduped.append(r)
-
-    return deduped, score
-
-
-# =========================================================
-# CLASSIFICAZIONE
-# =========================================================
-def assegna_categoria(evento: Dict[str, str], reasons: List[str]) -> Optional[str]:
-    text = normalize_for_match(evento.get("testo", "") + " " + evento.get("commissione", ""))
-
-    marittimo_hits = [
-        "marittimo",
-        "marittima",
-        "marittime",
-        "navigazione",
-        "autorità di sistema portuale",
-        "codice della navigazione",
-        "demanio marittimo",
-        "economia del mare",
-        "trasporto marittimo",
-        "lavoro marittimo",
-        "portuale",
-        "portualità",
-        "cabotaggio",
-        "risorsa mare",
-        "autostrade del mare",
-        "sea modal shift",
-        "armatore",
-        "armatori",
-        "gente di mare",
-        "sanità marittima",
-    ]
-
-    if any(tag.startswith("keyword:") for tag in reasons):
-        return CATEGORY_MARITTIMO
-
-    if any(
-        r.startswith("norma:")
-        and any(x in normalize_for_match(r) for x in ["solas", "marpol", "stcw", "mlc", "navigazione", "84/1994", "3577/92"])
-        for r in reasons
-    ):
-        return CATEGORY_MARITTIMO
-
-    if any(x in text for x in marittimo_hits):
-        return CATEGORY_MARITTIMO
-
-    if any(x in text for x in ["trasporti", "trasporto", "mobilità", "logistica", "intermodalità", "infrastrutture"]):
-        return CATEGORY_TRASPORTO
-
-    if any(x in text for x in ["pnrr", "decarbonizzazione", "energia", "industria", "innovazione", "fit for 55", "eu ets", "fueleu"]):
-        return CATEGORY_INDUSTRIA
-
-    return None
-
-
-# =========================================================
-# ESTRAZIONE CAMPI
-# =========================================================
-def extract_numero_atto(testo: str) -> str:
-    testo_norm = normalize_text(testo)
-
-    patterns = [
-        r"\bAtto\s+n\.?\s*\d+\b",
-        r"\batto\s+n\.?\s*\d+\b",
-        r"\bC\.\s*\d+[A-Z\-]*\b",
-        r"\bS\.\s*\d+[A-Z\-]*\b",
-        r"\bDoc\.\s*LXXXVI,\s*n\.?\s*\d+\b",
-        r"\b7-\d+\b",
-        r"\b5-\d+\b",
-        r"\bDL\s+\d+/\d{4}\b",
-    ]
-
-    for pattern in patterns:
-        m = re.search(pattern, testo_norm, flags=re.IGNORECASE)
-        if m:
-            return m.group(0).strip()
-
-    return "non rilevato"
-
-
-def canonicalize_numero_atto(numero_atto: str) -> str:
-    s = normalize_for_match(numero_atto)
-    s = re.sub(r"\s+", "", s)
-
-    m = re.match(r"c\.(\d+[a-z\-]*)", s, flags=re.IGNORECASE)
-    if m:
-        return f"c.{m.group(1)}"
-
-    m = re.match(r"s\.(\d+[a-z\-]*)", s, flags=re.IGNORECASE)
-    if m:
-        return f"s.{m.group(1)}"
-
-    m = re.match(r"atton\.?(\d+)", s, flags=re.IGNORECASE)
-    if m:
-        return f"atto{m.group(1)}"
-
-    m = re.match(r"doc\.lxxxvi,n\.?(\d+)", s, flags=re.IGNORECASE)
-    if m:
-        return f"doclxxxvi.{m.group(1)}"
-
-    m = re.match(r"(\d+-\d+)", s)
-    if m:
-        return m.group(1)
-
-    m = re.match(r"dl(\d+/\d{4})", s, flags=re.IGNORECASE)
-    if m:
-        return f"dl{m.group(1)}"
-
-    return s
-
-
-def extract_scadenza_emendamenti(testo: str) -> str:
-    testo_norm = normalize_text(testo)
-
-    patterns = [
-        r"Entro le ore [^.]+",
-        r"Il termine per la presentazione[^.]+",
-        r"termine per la presentazione[^.]+",
-    ]
-
-    for pattern in patterns:
-        m = re.search(pattern, testo_norm, flags=re.IGNORECASE)
-        if m:
-            return m.group(0).strip()
-
-    return "non rilevata"
-
-
-def format_motivazione(reasons: List[str]) -> str:
-    if not reasons:
-        return "nessuna parola chiave trovata"
-
-    valori: List[str] = []
-    seen = set()
-
-    for r in reasons:
-        if ":" in r:
-            _, val = r.split(":", 1)
-        else:
-            val = r
-
-        val = val.strip()
-        key = normalize_for_match(val)
-        if key and key not in seen:
-            seen.add(key)
-            valori.append(val)
-
-    return "; ".join(valori) if valori else "nessuna parola chiave trovata"
-
-
-# =========================================================
-# LINK DOCUMENTO EFFETTIVO
-# =========================================================
-def build_camera_doc_link(numero_atto: str) -> str:
-    numero_atto_norm = normalize_text(numero_atto)
-    canon = canonicalize_numero_atto(numero_atto_norm)
-
-    m = re.match(r"c\.(\d+[a-z\-]*)", canon, flags=re.IGNORECASE)
-    if m:
-        return f"https://www.camera.it/leg19/126?tab=&leg=19&idDocumento={m.group(1)}"
-
-    m = re.match(r"s\.(\d+[a-z\-]*)", canon, flags=re.IGNORECASE)
-    if m:
-        return f"https://www.camera.it/leg19/126?tab=&leg=19&idDocumento={m.group(1)}"
-
-    m = re.match(r"atto(\d+)", canon)
-    if m:
-        return f"https://www.camera.it/leg19/682?atto={m.group(1)}"
-
-    # per interrogazioni / risoluzioni non sempre ricostruibile
-    return ""
-
-
-def resolve_document_link(numero_atto: str, pdf_url: str) -> str:
-    direct = build_camera_doc_link(numero_atto)
-    return direct if direct else pdf_url
-
-
-# =========================================================
-# DEDUP EVENTI
-# =========================================================
-def dedup_eventi(eventi: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    best_by_key: Dict[Tuple[str, str, str, str], Dict[str, Any]] = {}
-
-    for e in eventi:
-        numero_atto_raw = extract_numero_atto(e.get("testo", ""))
-        numero_atto = canonicalize_numero_atto(numero_atto_raw)
-
-        motivazione = normalize_for_match(format_motivazione(e.get("reasons", [])))
-        categoria = normalize_for_match(e.get("categoria", ""))
-        data = normalize_for_match(e.get("data", ""))
-
-        key = (categoria, data, numero_atto, motivazione)
-
-        current_score = (
-            organ_quality(e.get("commissione", "")),
-            int(e.get("score", 0)),
-            len(normalize_text(e.get("testo", ""))),
         )
 
-        old = best_by_key.get(key)
-        if not old:
-            best_by_key[key] = e
+    cleaned = filter_only_today_or_future(cleaned)
+    cleaned = dedupe_items(cleaned)
+    return cleaned
+
+
+# =========================================================
+# DIFF CON RUN PRECEDENTE
+# =========================================================
+def load_previous_state() -> Dict[str, Any]:
+    if not os.path.exists(STATE_FILE):
+        return {"atti_rilevanti": []}
+    return load_json_file(STATE_FILE)
+
+
+def compute_diff(
+    previous_items: List[Dict[str, Any]],
+    current_items: List[Dict[str, Any]],
+) -> List[Dict[str, Any]]:
+    prev_map = {act_key(x): x for x in previous_items}
+    curr_map = {act_key(x): x for x in current_items}
+
+    changes: List[Dict[str, Any]] = []
+
+    for key, curr in curr_map.items():
+        prev = prev_map.get(key)
+
+        if prev is None:
+            c = deepcopy(curr)
+            c["_change_type"] = "NUOVO"
+            changes.append(c)
             continue
 
-        old_score = (
-            organ_quality(old.get("commissione", "")),
-            int(old.get("score", 0)),
-            len(normalize_text(old.get("testo", ""))),
-        )
+        if payload_signature(prev) != payload_signature(curr):
+            c = deepcopy(curr)
+            c["_change_type"] = "MODIFICATO"
+            changes.append(c)
 
-        if current_score > old_score:
-            best_by_key[key] = e
-
-    return list(best_by_key.values())
+    return changes
 
 
 # =========================================================
-# COSTRUZIONE EMAIL
+# EMAIL
 # =========================================================
-def build_email(pdf_url: str, eventi: List[Dict[str, Any]]) -> str:
-    categorie: Dict[str, List[Dict[str, Any]]] = {
+def motivazione_for_mail(item: Dict[str, Any]) -> str:
+    parole = item.get("parole_chiave", [])
+    if parole:
+        return "; ".join(parole)
+
+    motivazione = normalize_text(item.get("motivazione", ""))
+    return motivazione if motivazione else "non rilevata"
+
+
+def build_email_body(pdf_url: str, items: List[Dict[str, Any]]) -> str:
+    grouped = {
         CATEGORY_MARITTIMO: [],
         CATEGORY_TRASPORTO: [],
         CATEGORY_INDUSTRIA: [],
     }
 
-    for e in eventi:
-        cat = e.get("categoria")
-        if cat in categorie:
-            categorie[cat].append(e)
+    for item in items:
+        cat = item.get("categoria")
+        if cat in grouped:
+            grouped[cat].append(item)
 
     body = "MONITOR CAMERA – ANALISI COMPLETA PDF\n\n"
     body += f"Fonte PDF: {pdf_url}\n\n"
 
-    for categoria, items in categorie.items():
-        if not items:
+    for category in [CATEGORY_MARITTIMO, CATEGORY_TRASPORTO, CATEGORY_INDUSTRIA]:
+        section_items = grouped[category]
+        if not section_items:
             continue
 
-        items_sorted = sorted(
-            items,
-            key=lambda x: (
-                normalize_for_match(x.get("data", "")),
-                normalize_for_match(clean_commission_name(x.get("commissione", ""))),
-                canonicalize_numero_atto(extract_numero_atto(x.get("testo", ""))),
-            )
-        )
+        body += f"{category}\n\n"
 
-        body += f"{categoria}\n\n"
-
-        for e in items_sorted:
-            numero_atto = extract_numero_atto(e.get("testo", ""))
-            link_documento = resolve_document_link(numero_atto, pdf_url)
-            scadenza = extract_scadenza_emendamenti(e.get("testo", ""))
-            motivazione = format_motivazione(e.get("reasons", []))
-
-            data_riunione = e.get("data", "") or "non rilevata"
-            organo = clean_commission_name(e.get("commissione", "") or "non rilevato")
-
-            body += f"Data riunione: {data_riunione}\n"
-            body += f"Organo: {organo}\n"
-            body += f"Atto: {numero_atto}\n"
-            body += f"Link documento: {link_documento}\n"
-            body += f"Motivazione: {motivazione}\n"
-            body += f"Scadenza emendamenti: {scadenza}\n"
+        for item in section_items:
+            body += f"Data riunione: {item.get('data_riunione', '')}\n"
+            body += f"Organo: {item.get('organo', '')}\n"
+            body += f"Atto: {item.get('atto_numero', 'non rilevato')}\n"
+            body += f"Link documento: {item.get('link_documento', pdf_url)}\n"
+            body += f"Motivazione: {motivazione_for_mail(item)}\n"
+            body += f"Scadenza emendamenti: {item.get('scadenza_emendamenti', 'non rilevata')}\n"
             body += "\n---\n\n"
 
     return body
 
 
-# =========================================================
-# INVIO EMAIL
-# =========================================================
-def send_email(body: str) -> None:
+def send_email(subject: str, body: str) -> None:
     email_user = os.environ.get(EMAIL_USER_ENV)
     email_pass = os.environ.get(EMAIL_PASS_ENV)
     email_to = os.environ.get(EMAIL_TO_ENV)
@@ -788,7 +556,7 @@ def send_email(body: str) -> None:
         )
 
     msg = MIMEText(body, _charset="utf-8")
-    msg["Subject"] = "Monitor Camera"
+    msg["Subject"] = subject
     msg["From"] = email_user
     msg["To"] = email_to
 
@@ -804,51 +572,43 @@ def send_email(body: str) -> None:
 # MAIN
 # =========================================================
 def main() -> None:
-    rules = load_rules(RULES_FILE)
-    rule_sets = build_rule_sets(rules)
+    ensure_dir(STATE_DIR)
 
+    rules = load_json_file(RULES_FILE)
     pdf_url = trova_pdf_camera()
     scarica_pdf(pdf_url, PDF_LOCAL_PATH)
 
-    text = extract_text(PDF_LOCAL_PATH)
-    if not text or not text.strip():
-        raise RuntimeError("Il testo del PDF risulta vuoto")
+    pdf_text = extract_text(PDF_LOCAL_PATH)
+    pdf_text = normalize_text(pdf_text)
 
-    eventi = parse_eventi(text)
-    if not eventi:
-        raise RuntimeError("Nessun evento estratto dal PDF")
+    if not pdf_text:
+        raise RuntimeError("Testo PDF vuoto")
 
-    eventi_finali: List[Dict[str, Any]] = []
+    ai_data = call_openai_analysis(rules, pdf_text)
+    current_items = sanitize_ai_items(ai_data, pdf_url)
 
-    for e in eventi:
-        commissione = clean_commission_name(e.get("commissione", ""))
+    previous_state = load_previous_state()
+    previous_items = previous_state.get("atti_rilevanti", [])
+    if not isinstance(previous_items, list):
+        previous_items = []
 
-        if is_excluded_organ(commissione, rule_sets["excluded_organs"]):
-            continue
+    changed_items = compute_diff(previous_items, current_items)
 
-        reasons, score = match_rules(e.get("testo", ""), rule_sets)
-        categoria = assegna_categoria(e, reasons)
-
-        if categoria and reasons:
-            e["commissione"] = commissione
-            e["reasons"] = reasons
-            e["score"] = score
-            e["categoria"] = categoria
-            eventi_finali.append(e)
-
-    eventi_finali = dedup_eventi(eventi_finali)
-
-    if not eventi_finali:
-        body = (
-            "MONITOR CAMERA – ANALISI COMPLETA PDF\n\n"
-            f"Fonte PDF: {pdf_url}\n\n"
-            "Nessun evento rilevante trovato.\n"
-        )
+    if not changed_items:
+        print("Nessuna variazione rilevante rispetto al run precedente.")
     else:
-        body = build_email(pdf_url, eventi_finali)
+        body = build_email_body(pdf_url, changed_items)
+        print(body)
+        send_email("Monitor Camera", body)
 
-    print(body)
-    send_email(body)
+    save_json_file(
+        STATE_FILE,
+        {
+            "last_pdf_url": pdf_url,
+            "saved_at": datetime.now().isoformat(),
+            "atti_rilevanti": current_items,
+        },
+    )
 
 
 if __name__ == "__main__":
