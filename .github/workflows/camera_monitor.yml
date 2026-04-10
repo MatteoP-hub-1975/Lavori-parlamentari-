@@ -21,10 +21,23 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests pdfminer.six
+          pip install requests pdfminer.six openai
+
+      - name: Debug secrets
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+          EMAIL_USER: ${{ secrets.SMTP_USER }}
+          EMAIL_PASS: ${{ secrets.SMTP_PASSWORD }}
+          EMAIL_TO: ${{ secrets.SMTP_TO }}
+        run: |
+          echo "OPENAI_API_KEY: $([[ -n "$OPENAI_API_KEY" ]] && echo OK || echo MISSING)"
+          echo "EMAIL_USER: $([[ -n "$EMAIL_USER" ]] && echo OK || echo MISSING)"
+          echo "EMAIL_PASS: $([[ -n "$EMAIL_PASS" ]] && echo OK || echo MISSING)"
+          echo "EMAIL_TO: $([[ -n "$EMAIL_TO" ]] && echo OK || echo MISSING)"
 
       - name: Run Camera monitor
         env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
           EMAIL_USER: ${{ secrets.SMTP_USER }}
           EMAIL_PASS: ${{ secrets.SMTP_PASSWORD }}
           EMAIL_TO: ${{ secrets.SMTP_TO }}
