@@ -49,7 +49,6 @@ jobs:
         with:
           name: camera-output
           path: |
-            data/camera/**
-            debug_camera_text.txt
+            data/camera_ai/**
             camera.pdf
           if-no-files-found: warn
