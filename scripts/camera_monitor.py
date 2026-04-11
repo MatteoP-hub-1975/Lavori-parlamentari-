@@ -120,9 +120,9 @@ ISTRUZIONI OPERATIVE:
 8. Se un atto non è davvero rilevante, escludilo.
 9. Restituisci solo questo JSON:
 
-{
+{{
   "atti_rilevanti": [
-    {
+    {{
       "data_riunione": "",
       "organo": "",
       "categoria": "",
@@ -130,9 +130,9 @@ ISTRUZIONI OPERATIVE:
       "motivazione": "",
       "parole_chiave": [],
       "scadenza_emendamenti": ""
-    }
+    }}
   ]
-}
+}}
 """
 
 # =========================================================
