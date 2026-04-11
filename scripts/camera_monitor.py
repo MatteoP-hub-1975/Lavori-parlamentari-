@@ -48,45 +48,51 @@ Sei un assistente esperto di analisi parlamentare italiana.
 
 Devi analizzare un bollettino ufficiale della Camera dei Deputati.
 
-Obiettivo:
-individuare gli atti rilevanti per:
+OBIETTIVO:
+Individuare gli atti parlamentari rilevanti per:
 - INTERESSE TRASPORTO MARITTIMO
 - INTERESSE INDUSTRIA DEL TRASPORTO
 - INTERESSE INDUSTRIALE GENERALE
 
-Usa il knowledge base fornito come supporto valutativo, ma NON filtrare in modo eccessivo.
+Usa il knowledge base fornito solo come supporto valutativo, senza filtrare in modo eccessivo.
 
 REGOLE FONDAMENTALI:
 1. Non inventare informazioni.
 2. Non dedurre contenuti non presenti nel testo.
 3. Non duplicare atti uguali.
 4. Se un dato non è presente, restituisci stringa vuota.
-5. Non includere riunioni senza veri atti rilevanti.
+5. Non includere riunioni prive di atti concreti.
 6. Usa il knowledge base solo per valutare la rilevanza, non per aggiungere contenuti.
-7. Evita organi sporchi o spezzati: restituisci un nome di organo pulito e sintetico.
-8. Se lo stesso atto compare più volte nello stesso bollettino, restituiscilo una sola volta.
-9. Restituisci solo JSON valido, senza markdown e senza testo extra.
+7. Restituisci nomi di organo puliti, sintetici e coerenti.
+8. Se lo stesso atto compare più volte, restituiscilo una sola volta.
+9. Restituisci esclusivamente JSON valido (nessun testo extra).
 
-REGOLE DI VALUTAZIONE:
-10. Per INTERESSE TRASPORTO MARITTIMO usa criteri stringenti: il contesto deve essere davvero marittimo/portuale/navale.
-11. Per INTERESSE INDUSTRIA DEL TRASPORTO considera anche trasporti, logistica, infrastrutture e mobilità in senso generale.
-12. Per INTERESSE INDUSTRIALE GENERALE considera anche temi economici, industriali, energia, PNRR, innovazione, lavoro e competitività.
-13. 'salario minimo' NON va escluso automaticamente: se riguarda lavoro, imprese, occupazione o sistema produttivo, può essere rilevante almeno come INTERESSE INDUSTRIALE GENERALE.
-14. 'innovazione', 'digitalizzazione', 'salute e sicurezza', 'MIT', 'logistica', 'trasporti' non bastano da soli per il marittimo, ma possono essere rilevanti nelle altre due categorie.
-15. Se un atto è chiaramente importante ma non marittimo, classificalo comunque in una delle altre due categorie.
-16. In caso di dubbio tra esclusione e inclusione, meglio includere se c'è una motivazione concreta.
+CRITERI DI CLASSIFICAZIONE:
 
-Per ogni atto devi restituire:
+- INTERESSE TRASPORTO MARITTIMO:
+  solo se il contenuto è chiaramente marittimo, portuale, navale o riguarda trasporto via mare.
+
+- INTERESSE INDUSTRIA DEL TRASPORTO:
+  include trasporti, logistica, infrastrutture, mobilità (anche non marittimi).
+
+- INTERESSE INDUSTRIALE GENERALE:
+  include economia, lavoro, industria, energia, PNRR, competitività, innovazione.
+
+REGOLE IMPORTANTI:
+10. “salario minimo”, lavoro e occupazione sono SEMPRE rilevanti almeno come INDUSTRIALE GENERALE.
+11. Termini come “MIT”, “innovazione”, “digitalizzazione”, “salute e sicurezza” NON bastano da soli per il marittimo.
+12. Se un atto è importante ma non marittimo, includilo comunque nelle altre categorie.
+13. In caso di dubbio, includi se esiste una motivazione concreta.
+
+OUTPUT:
+Per ogni atto restituisci:
 - data_riunione
 - organo
 - categoria
 - atto_numero
-- motivazione
-- parole_chiave
+- motivazione (breve e concreta)
+- parole_chiave (solo termini presenti nel testo)
 - scadenza_emendamenti
-
-La motivazione deve essere breve e concreta.
-Le parole_chiave devono contenere solo i termini davvero trovati nel testo.
 """
 USER_PROMPT_TEMPLATE = """
 DATA OGGI: {today}
@@ -98,27 +104,20 @@ TESTO BOLLETTINO:
 {text}
 
 ISTRUZIONI OPERATIVE:
+
 1. Analizza il bollettino.
 2. Estrai gli atti rilevanti.
-3. Considera solo atti con data uguale o successiva a DATA OGGI.
+3. Considera SOLO atti con data uguale o successiva a DATA OGGI.
 4. Non duplicare atti identici.
-5. NON limitarti al solo ambito marittimo:
-   - includi anche atti di interesse industria del trasporto
-   - includi anche atti di interesse industriale generale
-6. NON scartare automaticamente temi come:
-   - salario minimo
-   - lavoro
-   - occupazione
-   - PNRR
-   - energia
-   - innovazione
-   - competitività
-7. Classifica ogni atto in una sola categoria tra:
+5. NON limitarti al solo ambito marittimo.
+6. NON escludere automaticamente temi economici o del lavoro.
+7. Classifica ogni atto in UNA SOLA categoria tra:
    - INTERESSE TRASPORTO MARITTIMO
    - INTERESSE INDUSTRIA DEL TRASPORTO
    - INTERESSE INDUSTRIALE GENERALE
-8. Se un atto non è davvero rilevante, escludilo.
-9. Restituisci solo questo JSON:
+8. Escludi solo atti chiaramente non rilevanti.
+
+Formato output JSON (obbligatorio):
 
 {{
   "atti_rilevanti": [
@@ -134,7 +133,6 @@ ISTRUZIONI OPERATIVE:
   ]
 }}
 """
-
 # =========================================================
 # UTILS GENERALI
 # =========================================================
@@ -595,10 +593,14 @@ def main() -> None:
 
     pdf_text = extract_text(PDF_LOCAL_PATH)
     pdf_text = normalize_text(pdf_text)
-
+    
     if not pdf_text:
         raise RuntimeError("Testo PDF vuoto")
-
+    
+    # DEBUG (fondamentale)
+    if "salario minimo" in pdf_text.lower():
+        print("DEBUG: 'salario minimo' trovato nel PDF")
+        
     ai_data = call_openai_analysis(rules, pdf_text)
     current_items = sanitize_ai_items(ai_data, pdf_url)
 
