@@ -24,6 +24,8 @@ jobs:
           pip install requests beautifulsoup4 openai
 
       - name: Run Gazzetta monitor
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
           mkdir -p output
           python scripts/gazzetta_monitor.py > output/gazzetta_output.json
