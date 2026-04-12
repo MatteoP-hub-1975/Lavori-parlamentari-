@@ -32,7 +32,7 @@ jobs:
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         run: |
-          python scripts/analyze_gazzetta_ai.py > output/gazzetta_ai_test.txt
+          python scripts/analyze_gazzetta_ai.py 2>&1 | tee output/gazzetta_ai_test.txt
 
       - name: Upload output artifact
         uses: actions/upload-artifact@v4
