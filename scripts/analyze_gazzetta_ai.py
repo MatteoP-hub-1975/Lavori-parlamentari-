@@ -1,7 +1,9 @@
 from openai import OpenAI
 import json
+import os
+import sys
 
-client = OpenAI()
+client = OpenAI(api_key=os.environ["OPENAI_API_KEY"])
 
 
 def analyze_atti(atti):
@@ -18,8 +20,11 @@ Classifica ogni atto in UNA categoria:
 Per ogni atto restituisci:
 - titolo sintetico
 - categoria
-- motivazione (breve)
+- motivazione breve
 - parole chiave
+
+Se nessun atto è rilevante, scrivi solo:
+NESSUN ATTO RILEVANTE
 
 Atti:
 {json.dumps(atti, ensure_ascii=False)}
@@ -32,3 +37,33 @@ Atti:
     )
 
     return response.choices[0].message.content
+
+
+if __name__ == "__main__":
+    try:
+        test_atti = [
+            {
+                "raw_text": "Disposizioni per l'implementazione dell'approccio equilibrato negli aeroporti nazionali in applicazione del regolamento (UE) 598/2014."
+            },
+            {
+                "raw_text": "Decisione di esecuzione (UE) 2026/335 della Commissione, che istituisce l'elenco dei paesi terzi esentati dall'autorizzazione preventiva per le importazioni di gas nell'Unione."
+            }
+        ]
+
+        result = analyze_atti(test_atti)
+
+        if result is None:
+            print("ERRORE: result is None")
+            sys.exit(1)
+
+        result = str(result).strip()
+
+        if not result:
+            print("ERRORE: risposta AI vuota")
+            sys.exit(1)
+
+        print(result)
+
+    except Exception as e:
+        print(f"ERRORE analyze_gazzetta_ai.py: {type(e).__name__}: {e}")
+        sys.exit(1)
