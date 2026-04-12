@@ -18,21 +18,29 @@ def parse_gazzetta_detail(detail_url):
 
     atti = []
 
-    # cerca il contenitore principale del sommario
-    content = soup.find("div", {"class": "container"})
-
-    if not content:
-        return atti
-
-    # prendi solo i paragrafi (gli atti sono spesso lì)
-    for p in content.find_all("p"):
-        text = p.get_text(" ", strip=True)
+    # Gli atti veri sono nei link <a> centrali della pagina
+    for a in soup.find_all("a", href=True):
+        text = a.get_text(" ", strip=True)
 
         if not text:
             continue
 
-        # filtro minimo per evitare roba inutile
-        if len(text) < 30:
+        # filtro: gli atti hanno sempre testo abbastanza lungo
+        if len(text) < 40:
+            continue
+
+        # filtro: devono contenere parole tipiche normative
+        keywords = [
+            "DECRETO",
+            "LEGGE",
+            "DELIBERA",
+            "ORDINANZA",
+            "COMUNICATO",
+            "REGOLAMENTO",
+            "DETERMINA"
+        ]
+
+        if not any(k in text.upper() for k in keywords):
             continue
 
         atti.append({
@@ -40,16 +48,3 @@ def parse_gazzetta_detail(detail_url):
         })
 
     return atti
-
-def main():
-    # TEST manuale – metti qui uno dei tuoi URL
-    url = "INSERISCI_QUI_DETAIL_URL"
-
-    atti = parse_gazzetta_detail(url)
-
-    for a in atti:
-        print(a["raw_text"])
-
-
-if __name__ == "__main__":
-    main()
