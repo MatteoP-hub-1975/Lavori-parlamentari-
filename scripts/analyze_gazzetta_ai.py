@@ -31,7 +31,7 @@ Atti:
 """
 
     response = client.chat.completions.create(
-        model="gpt-5-3",
+        model="gpt-5",
         messages=[{"role": "user", "content": prompt}],
         temperature=0
     )
