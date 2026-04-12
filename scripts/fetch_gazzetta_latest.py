@@ -36,15 +36,13 @@ def extract_latest_issue(list_url: str, detail_path: str, series_label: str) -> 
 
     text = soup.get_text("\n", strip=True)
 
-    # Cerca tutte le occorrenze tipo: n° 84 del 11-04-2026
     matches = re.findall(r"n°\s*(\d+)\s+del\s+(\d{2}-\d{2}-\d{4})", text)
 
     if not matches:
         raise ValueError(f"Nessuna gazzetta trovata in {list_url}")
 
-    numero, data_pub = matches[-1]  # l'ultima presente nella lista
+    numero, data_pub = matches[-1]
 
-    # converte data da DD-MM-YYYY a YYYY-MM-DD
     dd, mm, yyyy = data_pub.split("-")
     iso_date = f"{yyyy}-{mm}-{dd}"
 
@@ -54,19 +52,11 @@ def extract_latest_issue(list_url: str, detail_path: str, series_label: str) -> 
     )
 
     pdf_url = None
-    for link in soup.find_all("a", href=True):
-        href = link["href"]
-        text_link = link.get_text(" ", strip=True)
-
-        if f"n° {numero} del {data_pub}" in text_link:
-            break
-
-    # prova a ricavare il PDF dal link "Download PDF" vicino all'ultima occorrenza
     all_links = soup.find_all("a", href=True)
+
     for i, link in enumerate(all_links):
         text_link = link.get_text(" ", strip=True)
         if f"n° {numero} del {data_pub}" in text_link:
-            # cerca indietro il primo link "Download PDF"
             for j in range(max(0, i - 5), i):
                 prev_text = all_links[j].get_text(" ", strip=True)
                 if "Download PDF" in prev_text:
@@ -83,7 +73,7 @@ def extract_latest_issue(list_url: str, detail_path: str, series_label: str) -> 
     }
 
 
-def main():
+def get_latest_gazzette():
     results = {}
 
     for key, config in SOURCES.items():
@@ -93,6 +83,11 @@ def main():
             series_label=config["label"],
         )
 
+    return results
+
+
+def main():
+    results = get_latest_gazzette()
     print(json.dumps(results, indent=2, ensure_ascii=False))
 
 
