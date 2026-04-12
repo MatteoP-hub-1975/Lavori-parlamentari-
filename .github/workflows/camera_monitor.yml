@@ -44,6 +44,17 @@ jobs:
         run: |
           python scripts/camera_monitor.py
 
+      - name: Commit state file
+        run: |
+          git config user.name "github-actions"
+          git config user.email "github-actions@github.com"
+      
+          git add data/camera_ai/camera_ai_last.json || true
+      
+          git commit -m "Update camera AI state" || echo "No changes to commit"
+      
+          git push
+
       - name: Upload Camera output artifacts
         uses: actions/upload-artifact@v4
         with:
