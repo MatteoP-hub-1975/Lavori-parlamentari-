@@ -21,15 +21,21 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          pip install requests beautifulsoup4
+          pip install requests beautifulsoup4 openai
 
       - name: Run Gazzetta monitor
         run: |
           mkdir -p output
           python scripts/gazzetta_monitor.py > output/gazzetta_output.json
 
+      - name: Test AI analysis
+        env:
+          OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
+        run: |
+          python scripts/analyze_gazzetta_ai.py > output/gazzetta_ai_test.txt
+
       - name: Upload output artifact
         uses: actions/upload-artifact@v4
         with:
           name: gazzetta-output
-          path: output/gazzetta_output.json
+          path: output/
