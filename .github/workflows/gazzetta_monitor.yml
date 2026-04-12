@@ -30,6 +30,10 @@ jobs:
           mkdir -p output
           python scripts/gazzetta_monitor.py > output/gazzetta_output.json
 
+      - name: Generate Gazzetta email text
+        run: |
+          python scripts/generate_gazzetta_email.py > output/gazzetta_email.txt
+
       - name: Test AI analysis
         env:
           OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
