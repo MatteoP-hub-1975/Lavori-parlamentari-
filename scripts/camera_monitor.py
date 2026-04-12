@@ -104,20 +104,27 @@ TESTO BOLLETTINO:
 {text}
 
 ISTRUZIONI OPERATIVE:
-
 1. Analizza il bollettino.
 2. Estrai gli atti rilevanti.
-3. Considera SOLO atti con data uguale o successiva a DATA OGGI.
+3. NON filtrare gli atti per data.
 4. Non duplicare atti identici.
-5. NON limitarti al solo ambito marittimo.
-6. NON escludere automaticamente temi economici o del lavoro.
-7. Classifica ogni atto in UNA SOLA categoria tra:
+5. NON limitarti al solo ambito marittimo:
+   - includi anche atti di interesse industria del trasporto
+   - includi anche atti di interesse industriale generale
+6. NON scartare automaticamente temi come:
+   - salario minimo
+   - lavoro
+   - occupazione
+   - PNRR
+   - energia
+   - innovazione
+   - competitività
+7. Classifica ogni atto in una sola categoria tra:
    - INTERESSE TRASPORTO MARITTIMO
    - INTERESSE INDUSTRIA DEL TRASPORTO
    - INTERESSE INDUSTRIALE GENERALE
-8. Escludi solo atti chiaramente non rilevanti.
-
-Formato output JSON (obbligatorio):
+8. Se un atto non è davvero rilevante, escludilo.
+9. Restituisci solo questo JSON:
 
 {{
   "atti_rilevanti": [
