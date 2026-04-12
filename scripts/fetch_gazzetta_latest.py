@@ -24,24 +24,33 @@ HEADERS = {
 }
 
 
+import time
+import requests
+
+
 def fetch_html(url: str) -> str:
     last_error = None
 
-    for attempt in range(3):
+    for attempt in range(5):
         try:
             resp = requests.get(
                 url,
                 headers=HEADERS,
-                timeout=(20, 60)  # 20 sec connect, 60 sec read
+                timeout=(45, 120)  # connect timeout, read timeout
             )
             resp.raise_for_status()
             return resp.text
+
         except requests.exceptions.RequestException as e:
             last_error = e
-            print(f"[WARN] Tentativo {attempt + 1}/3 fallito per {url}: {e}")
+            wait_seconds = 10 * (attempt + 1)
+            print(f"[WARN] Tentativo {attempt + 1}/5 fallito per {url}: {e}")
+            if attempt < 4:
+                print(f"[WARN] Attendo {wait_seconds} secondi prima di riprovare...")
+                time.sleep(wait_seconds)
 
     raise last_error
-
+    
 def extract_latest_issue(list_url: str, detail_path: str, series_label: str) -> dict:
     html = fetch_html(list_url)
     soup = BeautifulSoup(html, "html.parser")
