@@ -1,0 +1,35 @@
+name: Monitor Gazzetta Ufficiale
+
+on:
+  schedule:
+    - cron: "30 5 * * *"
+  workflow_dispatch:
+
+jobs:
+  monitor-gazzetta:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install requests beautifulsoup4
+
+      - name: Run Gazzetta monitor
+        run: |
+          mkdir -p output
+          python scripts/gazzetta_monitor.py > output/gazzetta_output.json
+
+      - name: Upload output artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: gazzetta-output
+          path: output/gazzetta_output.json
