@@ -256,16 +256,27 @@ def url_exists(url: str, timeout: int = 20) -> bool:
 def trova_pdf_camera(max_giorni: int = MAX_LOOKBACK_DAYS) -> str:
     oggi = datetime.now()
 
+    # 🔹 PRIMA: oggi + futuro (0 → +3 giorni)
+    for i in range(0, 4):
+        data = oggi + timedelta(days=i)
+
+        for url in candidate_camera_urls(data):
+            print(f"Tento FUTURO: {url}")
+            if url_exists(url):
+                print(f"Trovato PDF (futuro): {url}")
+                return url
+
+    # 🔹 POI: fallback passato
     for i in range(1, max_giorni + 1):
         data = oggi - timedelta(days=i)
+
         for url in candidate_camera_urls(data):
-            print(f"Tento: {url}")
+            print(f"Tento PASSATO: {url}")
             if url_exists(url):
-                print(f"Trovato PDF: {url}")
+                print(f"Trovato PDF (passato): {url}")
                 return url
 
     raise RuntimeError("Nessun PDF trovato negli ultimi giorni")
-
 
 def scarica_pdf(url: str, output_path: str) -> None:
     r = requests.get(url, timeout=30)
