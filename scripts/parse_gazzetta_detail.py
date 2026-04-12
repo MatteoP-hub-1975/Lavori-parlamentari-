@@ -18,12 +18,21 @@ def parse_gazzetta_detail(detail_url):
 
     atti = []
 
-    # La GU struttura il sommario spesso in <li>
-    for li in soup.find_all("li"):
-        text = li.get_text(" ", strip=True)
+    # cerca il contenitore principale del sommario
+    content = soup.find("div", {"class": "container"})
 
-        # filtro minimo per evitare rumore
-        if len(text) < 20:
+    if not content:
+        return atti
+
+    # prendi solo i paragrafi (gli atti sono spesso lì)
+    for p in content.find_all("p"):
+        text = p.get_text(" ", strip=True)
+
+        if not text:
+            continue
+
+        # filtro minimo per evitare roba inutile
+        if len(text) < 30:
             continue
 
         atti.append({
@@ -31,7 +40,6 @@ def parse_gazzetta_detail(detail_url):
         })
 
     return atti
-
 
 def main():
     # TEST manuale – metti qui uno dei tuoi URL
