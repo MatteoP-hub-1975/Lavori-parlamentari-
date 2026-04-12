@@ -418,18 +418,51 @@ def payload_signature(item: Dict[str, Any]) -> Tuple[str, str, str]:
 
 
 def dedupe_items(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
-    out: List[Dict[str, Any]] = []
-    seen = set()
+    """
+    Tiene UNA sola occorrenza per atto_numero,
+    scegliendo la più rilevante.
+    """
+    best_per_atto = {}
+
+    def score_item(item):
+        organo = normalize_for_compare(item.get("organo", ""))
+
+        score = 0
+
+        # penalizza consultive / "alla commissione"
+        if "alla" in organo:
+            score -= 2
+
+        # penalizza commissioni alte (consultive)
+        if any(x in organo for x in ["vii", "viii", "ix", "xii", "xiii", "xiv"]):
+            score -= 1
+
+        # bonus per commissioni core
+        if any(x in organo for x in ["i ", "ii ", "iii ", "iv ", "v ", "vi "]):
+            score += 2
+
+        # bonus se commissioni riunite
+        if "riunite" in organo:
+            score += 3
+
+        return score
 
     for item in items:
-        key = act_key(item)
-        if key in seen:
+        atto = normalize_for_compare(item.get("atto_numero", ""))
+
+        if not atto:
             continue
-        seen.add(key)
-        out.append(item)
 
-    return out
+        if atto not in best_per_atto:
+            best_per_atto[atto] = item
+            continue
 
+        current_best = best_per_atto[atto]
+
+        if score_item(item) > score_item(current_best):
+            best_per_atto[atto] = item
+
+    return list(best_per_atto.values())
 
 def filter_only_today_or_future(items: List[Dict[str, Any]]) -> List[Dict[str, Any]]:
     today = datetime.now().date()
