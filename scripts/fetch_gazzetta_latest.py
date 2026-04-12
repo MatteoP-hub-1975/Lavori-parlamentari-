@@ -1,6 +1,7 @@
 import re
 import json
 import requests
+import time
 from bs4 import BeautifulSoup
 from urllib.parse import urljoin
 
@@ -22,11 +23,6 @@ SOURCES = {
 HEADERS = {
     "User-Agent": "Mozilla/5.0 (compatible; ConfitarmaMonitor/1.0)"
 }
-
-
-import time
-import requests
-
 
 def fetch_html(url: str) -> str:
     last_error = None
