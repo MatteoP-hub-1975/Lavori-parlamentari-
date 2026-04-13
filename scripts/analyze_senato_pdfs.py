@@ -73,10 +73,32 @@ def is_resoconto(item) -> bool:
 
 
 def download_pdf(url: str) -> bytes:
-    r = requests.get(url, timeout=60)
-    r.raise_for_status()
-    return r.content
+    headers = {
+        "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64)",
+        "Accept": "application/pdf,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8",
+        "Referer": "https://www.senato.it/",
+        "Connection": "keep-alive",
+    }
 
+    for attempt in range(3):
+        try:
+            r = requests.get(url, headers=headers, timeout=60)
+
+            if r.status_code == 200:
+                return r.content
+
+            if r.status_code == 403:
+                print(f"403 su {url} – retry {attempt+1}")
+                time.sleep(2)
+                continue
+
+            r.raise_for_status()
+
+        except Exception as e:
+            print(f"Errore download PDF: {e}")
+            time.sleep(2)
+
+    raise RuntimeError(f"Impossibile scaricare PDF: {url}")
 
 def extract_pdf_text(pdf_bytes: bytes) -> str:
     doc = fitz.open(stream=pdf_bytes, filetype="pdf")
