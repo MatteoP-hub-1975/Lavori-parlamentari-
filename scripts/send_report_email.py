@@ -83,23 +83,19 @@ def format_main_item(item):
     if numero:
         header += f" {numero}"
 
-    seduta_line = f"Commissione: {commissione} | Seduta: {seduta}"
-    if data_seduta:
-        seduta_line += f" | Data seduta: {data_seduta}"
+    seduta_line = f"Commissione: {commissione}"
 
     normative_line = ""
     if normative_hits:
         normative_line = f"Normative rilevanti trovate: {', '.join(normative_hits)}\n"
 
     text = f"""{header}
-{titolo}
 {seduta_line}
 {normative_line}Motivazione: {motivazione}
 PDF: {link}
 """
 
     return categoria, text
-
 
 def dedupe_preserve_order(items):
     seen = set()
