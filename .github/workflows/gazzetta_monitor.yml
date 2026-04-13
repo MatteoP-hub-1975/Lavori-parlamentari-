@@ -2,7 +2,7 @@ name: Monitor Gazzetta Ufficiale
 
 on:
   schedule:
-    - cron: "30 5 * * *"
+    - cron: "0 10 * * *"
   workflow_dispatch:
 
 jobs:
