@@ -3,6 +3,7 @@ name: Camera monitor
 on:
   schedule:
     - cron: "0 10 * * *"
+      timezone: "Europe/Rome"
   workflow_dispatch:
 
 jobs:
