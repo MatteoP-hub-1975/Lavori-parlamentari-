@@ -1,4 +1,5 @@
 import json
+from pathlib import Path
 
 from fetch_gazzetta_latest import get_latest_gazzette
 from parse_gazzetta_detail import parse_gazzetta_detail
@@ -6,7 +7,10 @@ from filter_gazzetta_candidates import filter_candidate_acts
 from analyze_gazzetta_ai import analyze_atti
 
 
-def main():
+OUTPUT_PATH = Path("output/gazzetta_output.json")
+
+
+def build_output():
     latest = get_latest_gazzette()
     output = {}
 
@@ -25,6 +29,29 @@ def main():
             "atti": atti,
             "candidati_ai": candidati,
             "ai_output": ai_output,
+        }
+
+    return output
+
+
+def main():
+    try:
+        output = build_output()
+    except Exception as e:
+        output = {
+            "error": f"Gazzetta fetch/parsing failed: {type(e).__name__}: {e}",
+            "serie_generale": {
+                "meta": {},
+                "atti": [],
+                "candidati_ai": [],
+                "ai_output": None,
+            },
+            "unione_europea": {
+                "meta": {},
+                "atti": [],
+                "candidati_ai": [],
+                "ai_output": None,
+            },
         }
 
     print(json.dumps(output, indent=2, ensure_ascii=False))
