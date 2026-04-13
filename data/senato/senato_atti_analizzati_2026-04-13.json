@@ -11,25 +11,35 @@
     "pdf_index": 1,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447393.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno della Commissione Giustizia; dal titolo disponibile non emergono profili specifici relativi a industria, trasporti o trasporto marittimo.",
+    "motivazione_preliminare": "Ordine del giorno della Commissione Giustizia; dal testo della pagina non emergono temi legati a industria, trasporti o trasporto marittimo.",
     "richiede_lettura_pdf": false,
-    "data_seduta": "",
+    "data_seduta": "martedì 14 aprile 2026",
     "termine_emendamenti": [],
-    "audizioni": [],
+    "audizioni": [
+      "audizione del Presidente dell'Unione Nazionale delle Camere Civili IN SEDE REDIGENTE I. Seguito della discussione dei disegni di legge: 1. Clotilde MINASI e altri – Istituzione dell'ordine e dell'albo professionale dei grafologi – Relatrice alla Commissione CAMPIONE (Pareri della 1ª, della 3ª, della 4ª, dell"
+    ],
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "ram"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447393.pdf",
-    "estratto_rilevante": ""
+    "motivazione_finale": "Si tratta di un ordine del giorno della 2ª Commissione Giustizia composto da numerosi punti su materie prevalentemente giudiziarie, penali, civili, processuali e ordinamentali. In applicazione della regola sui documenti compositi, sono stati esaminati i singoli punti: non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità di sistema portuale, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare, autostrade del mare o sea modal shift. Sono presenti alcuni temi con possibile rilievo economico o professionale (ordinamenti professionali, beni confiscati, PNRR, rigenerazione urbana), ma nessuno con focus chiaro su imprese, logistica o filiera del trasporto tale da giustificare una classificazione industriale o del trasporto.",
+    "estratto_rilevante": "PROCEDURE INFORMATIVE Seguito dell'indagine conoscitiva sull'impatto dell'intelligenza artificiale nel settore della giustizia: audizione del Presidente dell'Unione Nazionale delle Camere Civili ... IN SEDE REDIGENTE ... Disposizioni in materia di contrasto dei delitti informatici e del trattamento illecito di dati ... Modifiche al codice delle leggi antimafia ... gestione e destinazione dei beni sequestrati e confiscati ... IN SEDE REFERENTE ... Modifiche al codice di procedura penale ... in materia di indagini informatiche ... Delega al Governo per la riforma della disciplina degli ordinamenti professionali ... IN SEDE CONSULTIVA ... Conversione in legge ... del decreto-legge ... recante ulteriori disposizioni urgenti per l'attuazione del Piano nazionale di ripresa e resilienza (PNRR) e in materia di politiche di coesione"
   },
   {
     "ramo": "Senato",
@@ -43,24 +53,37 @@
     "pdf_index": 2,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447382.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Il documento programmatico di finanza pubblica può contenere misure macroeconomiche e di politica industriale con impatto generale sui settori produttivi.",
+    "motivazione_preliminare": "Audizioni sul documento programmatico di finanza pubblica, potenzialmente rilevante per politiche economiche e industriali generali.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
     "audizioni": [],
-    "resoconto_keywords_found": [],
-    "resoconto_alert": false,
+    "resoconto_keywords_found": [
+      "porto"
+    ],
+    "resoconto_alert": true,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "espo"
+      ]
     },
-    "categoria_finale": "Interesse industriale generale",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447382.pdf",
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Audizioni sul documento programmatico di finanza pubblica, potenzialmente rilevante per politiche economiche e industriali generali.",
     "estratto_rilevante": ""
   },
   {
@@ -75,7 +98,7 @@
     "pdf_index": 3,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447390.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Materia elettorale e ordinamento degli enti locali, priva di attinenza diretta con industria o trasporti.",
+    "motivazione_preliminare": "Materia elettorale e ordinamento degli enti locali, priva di attinenza con industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -84,16 +107,23 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "ordinamento_marittimo_registri_bandiera"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447390.pdf",
-    "estratto_rilevante": ""
+    "motivazione_finale": "Il documento riguarda modifiche al sistema elettorale dei comuni con popolazione superiore a 15.000 abitanti, in particolare elezione del sindaco al primo turno, soglie di voto, premi di maggioranza, composizione delle giunte e profili connessi agli enti locali. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare o autostrade del mare. Non vi sono neppure contenuti sostanziali su imprese, lavoro, energia, logistica o filiera del trasporto tali da giustificare una classificazione industriale o dei trasporti.",
+    "estratto_rilevante": "Titolo: «Modifiche agli articoli 72 e 73 del testo unico delle leggi sull'ordinamento degli enti locali, in materia di elezione del sindaco al primo turno nei comuni con popolazione superiore a 15.000 abitanti». Nel testo gli emendamenti riguardano soglie come «40 per cento dei voti validi», premi di maggioranza, affluenza, riparto dei seggi, nomina degli assessori e norme sugli enti locali."
   },
   {
     "ramo": "Senato",
@@ -107,7 +137,7 @@
     "pdf_index": 4,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447388.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Provvedimento in materia di tutela delle vittime di reato; non emergono connessioni con i settori industriali o dei trasporti.",
+    "motivazione_preliminare": "Provvedimento su tutela delle vittime di reato, non attinente a industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -116,15 +146,21 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447388.pdf",
+    "motivazione_finale": "Provvedimento su tutela delle vittime di reato, non attinente a industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -139,7 +175,7 @@
     "pdf_index": 5,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447405.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Misura di carattere sociale e volontariato civile, senza attinenza diretta a industria o trasporti.",
+    "motivazione_preliminare": "Misura di carattere sociale e civile, senza collegamento diretto con industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -148,15 +184,21 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "espo"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447405.pdf",
+    "motivazione_finale": "Misura di carattere sociale e civile, senza collegamento diretto con industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -171,25 +213,68 @@
     "pdf_index": 6,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447400.pdf",
     "categoria_preliminare": "Interesse trasporto marittimo",
-    "motivazione_preliminare": "Riguarda un'Autorità di sistema portuale, quindi direttamente il settore portuale e del trasporto marittimo.",
+    "motivazione_preliminare": "Relazione su Autorità di sistema portuale, chiaramente riferita a infrastrutture e attività del trasporto marittimo.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
     "audizioni": [],
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
-    "normative_hits": [],
+    "normative_hits": [
+      "SOLAS 1974",
+      "Codice della navigazione",
+      "Legge 84/1994",
+      "D.Lgs. 169/2016",
+      "Autostrade del mare",
+      "legge 84/94",
+      "codice della navigazione",
+      "dl 104/2020",
+      "cold ironing",
+      "solas"
+    ],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
-      "norm_refs_italia": [],
-      "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "finanza_fiscalita_aiuti_tassonomia"
+      ],
+      "keyphrases": [
+        "pnrr",
+        "fondo complementare"
+      ],
+      "norm_refs_italia": [
+        "legge 84/94",
+        "codice della navigazione",
+        "dl 104/2020",
+        "cold ironing"
+      ],
+      "norm_refs_ue_internazionale": [
+        "solas"
+      ],
+      "programs_tools": [
+        "pnrr",
+        "fondo complementare"
+      ],
+      "entities": [
+        "mit",
+        "mims",
+        "mef",
+        "ram",
+        "ustr",
+        "ics",
+        "capitanerie",
+        "guardia costiera",
+        "ees",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Interesse trasporto marittimo",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447400.pdf",
-    "estratto_rilevante": ""
+    "motivazione_finale": "Il documento riguarda in modo esplicito e diretto l'Autorità di sistema portuale del Mare di Sicilia occidentale e la gestione finanziaria dei porti del relativo network. Nel testo compaiono numerosi riferimenti specifici a porti, Autorità di sistema portuale, demanio marittimo, concessioni demaniali in ambito portuale, operazioni e servizi portuali, traffico portuale e codice della navigazione. In base alle regole fornite, anche una sola parte con tali riferimenti determina la classificazione come 'Interesse trasporto marittimo'.",
+    "estratto_rilevante": "AUTORITÀ DI SISTEMA PORTUALE DEL MARE DI SICILIA OCCIDENTALE ... amministra in via esclusiva le aree e i beni del demanio marittimo ... In materia di concessioni di aree demaniali in ambito portuale destinate allo svolgimento delle operazioni portuali ... 5.1. Attività autorizzatoria e di gestione del demanio marittimo ... 5.4. Traffico portuale ... Concessioni per le attività di cui agli artt. 36 e 38 c.nav."
   },
   {
     "ramo": "Senato",
@@ -203,24 +288,45 @@
     "pdf_index": 7,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447401.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento relativo ai servizi sanitari regionali; la sanità non è esclusa a priori ma qui non emerge una connessione chiara con industria o trasporti.",
+    "motivazione_preliminare": "Documento relativo ad AGENAS e al settore sanitario; la sanità non va esclusa a priori, ma qui non emerge un nesso con industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
     "audizioni": [],
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
-    "normative_hits": [],
+    "normative_hits": [
+      "EU ETS / Direttiva 2003/87/CE"
+    ],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "mef",
+        "ram",
+        "ustr",
+        "ics",
+        "ees",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447401.pdf",
+    "motivazione_finale": "Documento relativo ad AGENAS e al settore sanitario; la sanità non va esclusa a priori, ma qui non emerge un nesso con industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -235,7 +341,7 @@
     "pdf_index": 8,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447377.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -244,15 +350,21 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "espo"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447377.pdf",
+    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "estratto_rilevante": ""
   },
   {
@@ -267,7 +379,7 @@
     "pdf_index": 9,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447383.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -276,15 +388,26 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "mase",
+        "ram",
+        "ustr",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447383.pdf",
+    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -299,7 +422,7 @@
     "pdf_index": 10,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447384.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -308,15 +431,25 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "ees",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447384.pdf",
+    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -331,7 +464,7 @@
     "pdf_index": 11,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447385.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -340,15 +473,29 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "sicurezza_marittima_cyber_security"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "mase",
+        "ram",
+        "ustr",
+        "ees",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447385.pdf",
+    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -363,7 +510,7 @@
     "pdf_index": 12,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447386.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -372,15 +519,26 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "espo"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447386.pdf",
+    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -395,7 +553,7 @@
     "pdf_index": 13,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447387.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -404,15 +562,22 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447387.pdf",
+    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -427,7 +592,7 @@
     "pdf_index": 14,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447402.pdf",
     "categoria_preliminare": "Interesse industria del trasporto",
-    "motivazione_preliminare": "Riguarda l'Aero Club d'Italia, organismo connesso al comparto aeronautico e quindi al sistema dei trasporti aerei.",
+    "motivazione_preliminare": "Documento relativo ad Aero Club d'Italia, con possibile rilevanza per il settore aeronautico e dell'aviazione civile/sportiva.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -436,16 +601,31 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "mims",
+        "mef",
+        "ram",
+        "ustr",
+        "ics",
+        "ees",
+        "espo",
+        "rina"
+      ]
     },
-    "categoria_finale": "Interesse industria del trasporto",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447402.pdf",
-    "estratto_rilevante": ""
+    "categoria_finale": "Interesse industriale generale",
+    "motivazione_finale": "Il documento è una relazione della Corte dei conti sulla gestione finanziaria dell'Aero Club d'Italia. Non contiene riferimenti specifici a trasporto marittimo, navigazione, porti, demanio marittimo o lavoro marittimo, quindi non rientra nell'area 'Interesse trasporto marittimo'. Contiene invece elementi attinenti a organizzazione dell'ente, attività aeronautica, personale, contrattazione collettiva e gestione economico-finanziaria, che lo rendono rilevante sul piano organizzativo-lavoristico ed economico in senso generale. Non emerge però un focus specifico sulla filiera del trasporto/logistica tale da farlo rientrare in 'Interesse industria del trasporto'.",
+    "estratto_rilevante": "L Ae.C.I., nell esercizio in osservazione, ha applicato ai propri dipendenti il nuovo contratto collettivo nazionale di lavoro (Ccnl) per il comparto Funzioni Centrali - triennio 2019-2021 sia per la parte giuridica, sia per quella economica...; 5. I RISULTATI CONTABILI DELLA GESTIONE; 6. LO STATO PATRIMONIALE; 7. IL CONTO ECONOMICO; 8. LA GESTIONE FINANZIARIA."
   },
   {
     "ramo": "Senato",
@@ -459,7 +639,7 @@
     "pdf_index": 15,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447376.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -476,7 +656,7 @@
       "entities": []
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447376.pdf",
+    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "estratto_rilevante": ""
   },
   {
@@ -491,7 +671,7 @@
     "pdf_index": 16,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447396.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Documento relativo a ente nazionale di ricerca scientifica con possibili ricadute tecnologiche e industriali generali.",
+    "motivazione_preliminare": "Relazione su ente di ricerca nazionale con possibili ricadute su innovazione, tecnologia e sistema industriale generale.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -500,16 +680,34 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "mef",
+        "maeci",
+        "mimit",
+        "ram",
+        "ustr",
+        "ics",
+        "espo",
+        "rina"
+      ]
     },
-    "categoria_finale": "Interesse industriale generale",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447396.pdf",
-    "estratto_rilevante": ""
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il documento è una relazione della Corte dei conti sulla gestione finanziaria dell'INFN per l'esercizio 2024. I contenuti estratti riguardano il quadro normativo dell'ente, contabilità pubblica, governance, personale, spesa, partecipazioni e risultati contabili. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare o autostrade del mare. Né il focus è su imprese, politica industriale, logistica o filiera del trasporto in senso tale da giustificare una classificazione industriale o del trasporto.",
+    "estratto_rilevante": "Con la presente relazione la Corte dei conti riferisce al Parlamento, ai sensi dell'art. 7 della l. n. 259 del 1958, sul risultato del controllo eseguito ... sulla gestione finanziaria 2024 dell'Istituto Nazionale di Fisica Nucleare... / L'Istituto Nazionale di Fisica Nucleare (Infn) ... è un ente pubblico nazionale di ricerca, vigilato dal Ministero dell'università e della ricerca (Mur)... / Il rendiconto generale dell'Infn è, quindi, redatto in osservanza di quanto disposto..."
   },
   {
     "ramo": "Senato",
@@ -523,24 +721,48 @@
     "pdf_index": 17,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447398.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ente di ricerca biologica e zoologica; non emerge una connessione diretta e chiara con i settori industriali o dei trasporti rilevanti.",
+    "motivazione_preliminare": "Ente di ricerca zoologica; non emerge un collegamento chiaro con industria o trasporti. Pesca e diporto sono comunque da classificare come non attinenti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
     "audizioni": [],
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
-    "normative_hits": [],
+    "normative_hits": [
+      "piano del mare"
+    ],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
-      "norm_refs_italia": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "finanza_fiscalita_aiuti_tassonomia"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
+      "norm_refs_italia": [
+        "piano del mare"
+      ],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "mef",
+        "ram",
+        "ustr",
+        "ics",
+        "ees",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447398.pdf",
+    "motivazione_finale": "Ente di ricerca zoologica; non emerge un collegamento chiaro con industria o trasporti. Pesca e diporto sono comunque da classificare come non attinenti.",
     "estratto_rilevante": ""
   },
   {
@@ -555,24 +777,44 @@
     "pdf_index": 18,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447399.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento in materia di valutazione del sistema educativo; non attinente ai settori industria o trasporti.",
+    "motivazione_preliminare": "Documento su ente del sistema educativo, senza nesso evidente con industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
     "audizioni": [],
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
-    "normative_hits": [],
+    "normative_hits": [
+      "EU ETS / Direttiva 2003/87/CE"
+    ],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "mef",
+        "ram",
+        "ustr",
+        "ics",
+        "ees",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447399.pdf",
+    "motivazione_finale": "Documento su ente del sistema educativo, senza nesso evidente con industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -587,7 +829,7 @@
     "pdf_index": 19,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447395.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Fondazione culturale e di studi di architettura; non emerge attinenza diretta con industria o trasporti.",
+    "motivazione_preliminare": "Fondazione culturale e di studi di architettura, senza attinenza diretta a industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -596,15 +838,33 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
+      "keyphrases": [
+        "pnrr",
+        "fondo complementare"
+      ],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr",
+        "fondo complementare"
+      ],
+      "entities": [
+        "mit",
+        "mef",
+        "ram",
+        "ustr",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447395.pdf",
+    "motivazione_finale": "Fondazione culturale e di studi di architettura, senza attinenza diretta a industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -619,7 +879,7 @@
     "pdf_index": 20,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447375.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -628,15 +888,23 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447375.pdf",
+    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "estratto_rilevante": ""
   },
   {
@@ -651,7 +919,7 @@
     "pdf_index": 21,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447374.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -668,7 +936,7 @@
       "entities": []
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447374.pdf",
+    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "estratto_rilevante": ""
   },
   {
@@ -683,7 +951,7 @@
     "pdf_index": 22,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447379.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Riguarda concessioni pubbliche e project financing, tema di rilievo generale per operatori economici e imprese.",
+    "motivazione_preliminare": "Sentenza UE su concessioni e finanza di progetto, con rilievo generale per mercato, appalti e operatori economici.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -692,16 +960,23 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "espo"
+      ]
     },
-    "categoria_finale": "Interesse industriale generale",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447379.pdf",
-    "estratto_rilevante": ""
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il documento riguarda una sentenza della Corte di giustizia UE su una procedura di concessione/finanza di progetto relativa alla progettazione, fornitura, posa in opera, gestione e manutenzione di servizi igienici pubblici automatizzati nel Comune di Milano. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, demanio marittimo, lavoro marittimo o economia del mare. Non vi è neppure un focus su politica industriale, lavoro, energia, logistica o filiera del trasporto tale da giustificare una classificazione industriale o del trasporto.",
+    "estratto_rilevante": "Tale domanda è stata presentata nell’ambito di una controversia tra la Urban Vision SpA, da un lato, e il Comune di Milano (Italia) e la Digital Vox Srl, già A & C Network Srl, dall’altro, in merito all’aggiudicazione al raggruppamento costituito dalla Digital Vox e dalla Vox Communication Srl (...) di un contratto avente ad oggetto la progettazione, fornitura, posa in opera, gestione e manutenzione di servizi igienici pubblici automatizzati."
   },
   {
     "ramo": "Senato",
@@ -715,7 +990,7 @@
     "pdf_index": 23,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447380.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La sentenza incide su biotecnologie, agroindustria, libera circolazione delle merci e libertà d'impresa, con rilevanza economico-produttiva generale.",
+    "motivazione_preliminare": "Sentenza UE su OGM, libera circolazione delle merci e libertà d'impresa, con riflessi economici e produttivi generali.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -724,16 +999,24 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "espo"
+      ]
     },
-    "categoria_finale": "Interesse industriale generale",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447380.pdf",
-    "estratto_rilevante": ""
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il documento riguarda una sentenza della Corte di giustizia UE in materia di OGM, coltivazione del mais MON 810, validità di misure nazionali di divieto, libera circolazione delle merci, proporzionalità, non discriminazione e libertà d’impresa. Il contenuto è centrato su ambiente, agricoltura, diritto dell’Unione e biosicurezza, senza riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare. Non emerge neppure un focus su logistica, filiera del trasporto o politica industriale tale da giustificare una classificazione industriale o del trasporto.",
+    "estratto_rilevante": "«Emissione deliberata nell’ambiente di organismi geneticamente modificati (OGM) – Misure volte ad evitare la presenza involontaria di OGM nell’ambiente – Direttiva 2001/18/CE – Articolo 26 quater, paragrafi 1 e 3 – Regolamento (CE) n. 1829/2003 – Decisione di esecuzione (UE) 2016/321 – Divieto di coltivazione del mais OGM MON 810 in Italia – Validità – Libera circolazione delle merci – Articoli 34 TFUE e 114 TFUE – Principi di proporzionalità e di non discriminazione – Libertà d’impresa»"
   },
   {
     "ramo": "Senato",
@@ -747,7 +1030,7 @@
     "pdf_index": 24,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447378.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Attiene a appalti pubblici, concessioni e sanzioni UE, con impatto generale sulle imprese e sui mercati.",
+    "motivazione_preliminare": "Sentenza UE su appalti pubblici, concessioni e restrizioni economiche, di rilievo per operatori economici e mercato.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -756,16 +1039,23 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici"
+      ],
       "keyphrases": [],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
       "programs_tools": [],
-      "entities": []
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "espo"
+      ]
     },
-    "categoria_finale": "Interesse industriale generale",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447378.pdf",
-    "estratto_rilevante": ""
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il documento riguarda una sentenza della Corte di giustizia UE su misure restrittive contro la Russia e sull'applicazione dell'articolo 5 duodecies del regolamento (UE) n. 833/2014 in materia di appalti pubblici. Il caso concreto concerne l'aggiudicazione di servizi di caffetteria e piccola ristorazione presso le Gallerie degli Uffizi. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare. Inoltre, pur trattandosi di appalti e di soggetti societari, il focus non è su politica industriale, lavoro, energia, logistica o filiera del trasporto, ma su sanzioni UE e legittimità dell'aggiudicazione in ambito culturale.",
+    "estratto_rilevante": "La domanda di pronuncia pregiudiziale verte sull’interpretazione dell’articolo 5 duodecies, paragrafo 1, lettera c), del regolamento (UE) n. 833/2014 (...) nell’ambito di una controversia (...) vertente sulla legittimità dell’aggiudicazione (...) di un contratto di appalto pubblico di fornitura di taluni servizi alle Gallerie degli Uffizi (...) In esito ad una gara d’appalto (...) ha attribuito il contratto di appalto dei servizi di caffetteria e piccola ristorazione presso Palazzo Pitti e il giardino di Boboli."
   },
   {
     "ramo": "Senato",
@@ -779,7 +1069,7 @@
     "pdf_index": 25,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447373.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -788,15 +1078,31 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi"
+      ],
+      "keyphrases": [
+        "pnrr",
+        "fondo complementare"
+      ],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr",
+        "fondo complementare"
+      ],
+      "entities": [
+        "mit",
+        "mimit",
+        "ram",
+        "ustr",
+        "ees",
+        "espo"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447373.pdf",
+    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "estratto_rilevante": ""
   },
   {
@@ -811,24 +1117,45 @@
     "pdf_index": 26,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447397.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento previdenziale riferito alla cassa forense, senza attinenza diretta ai settori industria o trasporti.",
+    "motivazione_preliminare": "Documento su cassa previdenziale forense, senza attinenza diretta a industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
     "audizioni": [],
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
-    "normative_hits": [],
+    "normative_hits": [
+      "D.Lgs. 50/2017"
+    ],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "sicurezza_marittima_cyber_security"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "mef",
+        "ram",
+        "ustr",
+        "ics",
+        "ees",
+        "espo"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447397.pdf",
+    "motivazione_finale": "Documento su cassa previdenziale forense, senza attinenza diretta a industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -843,25 +1170,45 @@
     "pdf_index": 27,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447345.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Contratto di programma con Poste italiane, di rilievo per servizi economici di interesse generale, logistica e organizzazione industriale.",
+    "motivazione_preliminare": "Contratto di programma con Poste Italiane, con rilievo per servizi economici di interesse generale, logistica e organizzazione industriale.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
     "audizioni": [],
     "resoconto_keywords_found": [],
     "resoconto_alert": false,
-    "normative_hits": [],
+    "normative_hits": [
+      "dl 59/2021"
+    ],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
-      "norm_refs_italia": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "finanza_fiscalita_aiuti_tassonomia"
+      ],
+      "keyphrases": [
+        "fondo complementare"
+      ],
+      "norm_refs_italia": [
+        "dl 59/2021"
+      ],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "fondo complementare"
+      ],
+      "entities": [
+        "mit",
+        "mef",
+        "mimit",
+        "ram",
+        "ustr",
+        "espo"
+      ]
     },
-    "categoria_finale": "Interesse industriale generale",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447345.pdf",
-    "estratto_rilevante": ""
+    "categoria_finale": "Interesse industria del trasporto",
+    "motivazione_finale": "Il documento riguarda il contratto di programma tra MIMIT e Poste Italiane per il servizio postale universale 2026-2031. Il contenuto è centrato sull'organizzazione del servizio postale, sulla rete di raccolta e recapito, sui punti di accettazione e consegna, sulle attività di trasporto postale e sui costi del servizio universale. Pur non contenendo riferimenti specifici al trasporto marittimo, tratta in modo chiaro la filiera del recapito e del trasporto postale/corrieristico, che rientra nell'ambito dell'industria del trasporto secondo le regole date.",
+    "estratto_rilevante": "Ad esempio, tali servizi possono afferire ad attività di trasporto postale o ad attività al di fuori del servizio postale, in quanto afferenti ad esempio ai controlli di sicurezza sul traporto aereo e allo sdoganamento degli invii. [...] Poste di avvalersi, per l’erogazione del servizio universale, di punti di terzi in aggiunta agli uffici postali già esistenti [...] comunicare [...] l’elenco aggiornato dei punti di accettazione e consegna utilizzati [...] Il servizio di raccolta e di recapito viene effettuato a giorni alterni secondo modalità fissate dall’Autorità"
   },
   {
     "ramo": "Senato",
@@ -875,7 +1222,7 @@
     "pdf_index": 28,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447403.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Fascicolo omnibus di risposte scritte; dal titolo non emerge una chiara attinenza con industria o trasporti.",
+    "motivazione_preliminare": "Fascicolo eterogeneo; dal solo titolo non emerge una chiara attinenza con industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -884,15 +1231,30 @@
     "resoconto_alert": false,
     "normative_hits": [],
     "confitarma_kb_hits": {
-      "keyword_categories": [],
-      "keyphrases": [],
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
       "norm_refs_italia": [],
       "norm_refs_ue_internazionale": [],
-      "programs_tools": [],
-      "entities": []
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "espo",
+        "rina"
+      ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Errore analisi PDF: 403 Client Error: Forbidden for url: https://www.senato.it/service/PDF/PDFServer/DF/447403.pdf",
+    "motivazione_finale": "Fascicolo eterogeneo; dal solo titolo non emerge una chiara attinenza con industria o trasporti.",
     "estratto_rilevante": ""
   }
 ]

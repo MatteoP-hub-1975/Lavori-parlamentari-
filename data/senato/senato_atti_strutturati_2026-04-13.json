@@ -11,7 +11,7 @@
     "pdf_index": 1,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447393.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno della Commissione Giustizia; dal titolo disponibile non emergono profili specifici relativi a industria, trasporti o trasporto marittimo.",
+    "motivazione_preliminare": "Ordine del giorno della Commissione Giustizia; dal testo della pagina non emergono temi legati a industria, trasporti o trasporto marittimo.",
     "richiede_lettura_pdf": false
   },
   {
@@ -26,7 +26,7 @@
     "pdf_index": 2,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447382.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Il documento programmatico di finanza pubblica può contenere misure macroeconomiche e di politica industriale con impatto generale sui settori produttivi.",
+    "motivazione_preliminare": "Audizioni sul documento programmatico di finanza pubblica, potenzialmente rilevante per politiche economiche e industriali generali.",
     "richiede_lettura_pdf": true
   },
   {
@@ -41,7 +41,7 @@
     "pdf_index": 3,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447390.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Materia elettorale e ordinamento degli enti locali, priva di attinenza diretta con industria o trasporti.",
+    "motivazione_preliminare": "Materia elettorale e ordinamento degli enti locali, priva di attinenza con industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -56,7 +56,7 @@
     "pdf_index": 4,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447388.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Provvedimento in materia di tutela delle vittime di reato; non emergono connessioni con i settori industriali o dei trasporti.",
+    "motivazione_preliminare": "Provvedimento su tutela delle vittime di reato, non attinente a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -71,7 +71,7 @@
     "pdf_index": 5,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447405.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Misura di carattere sociale e volontariato civile, senza attinenza diretta a industria o trasporti.",
+    "motivazione_preliminare": "Misura di carattere sociale e civile, senza collegamento diretto con industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -86,7 +86,7 @@
     "pdf_index": 6,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447400.pdf",
     "categoria_preliminare": "Interesse trasporto marittimo",
-    "motivazione_preliminare": "Riguarda un'Autorità di sistema portuale, quindi direttamente il settore portuale e del trasporto marittimo.",
+    "motivazione_preliminare": "Relazione su Autorità di sistema portuale, chiaramente riferita a infrastrutture e attività del trasporto marittimo.",
     "richiede_lettura_pdf": true
   },
   {
@@ -101,7 +101,7 @@
     "pdf_index": 7,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447401.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento relativo ai servizi sanitari regionali; la sanità non è esclusa a priori ma qui non emerge una connessione chiara con industria o trasporti.",
+    "motivazione_preliminare": "Documento relativo ad AGENAS e al settore sanitario; la sanità non va esclusa a priori, ma qui non emerge un nesso con industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -116,7 +116,7 @@
     "pdf_index": 8,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447377.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -131,7 +131,7 @@
     "pdf_index": 9,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447383.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -146,7 +146,7 @@
     "pdf_index": 10,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447384.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -161,7 +161,7 @@
     "pdf_index": 11,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447385.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -176,7 +176,7 @@
     "pdf_index": 12,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447386.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -191,7 +191,7 @@
     "pdf_index": 13,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447387.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non si desume un focus su industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -206,7 +206,7 @@
     "pdf_index": 14,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447402.pdf",
     "categoria_preliminare": "Interesse industria del trasporto",
-    "motivazione_preliminare": "Riguarda l'Aero Club d'Italia, organismo connesso al comparto aeronautico e quindi al sistema dei trasporti aerei.",
+    "motivazione_preliminare": "Documento relativo ad Aero Club d'Italia, con possibile rilevanza per il settore aeronautico e dell'aviazione civile/sportiva.",
     "richiede_lettura_pdf": true
   },
   {
@@ -221,7 +221,7 @@
     "pdf_index": 15,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447376.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -236,7 +236,7 @@
     "pdf_index": 16,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447396.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Documento relativo a ente nazionale di ricerca scientifica con possibili ricadute tecnologiche e industriali generali.",
+    "motivazione_preliminare": "Relazione su ente di ricerca nazionale con possibili ricadute su innovazione, tecnologia e sistema industriale generale.",
     "richiede_lettura_pdf": true
   },
   {
@@ -251,7 +251,7 @@
     "pdf_index": 17,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447398.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ente di ricerca biologica e zoologica; non emerge una connessione diretta e chiara con i settori industriali o dei trasporti rilevanti.",
+    "motivazione_preliminare": "Ente di ricerca zoologica; non emerge un collegamento chiaro con industria o trasporti. Pesca e diporto sono comunque da classificare come non attinenti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -266,7 +266,7 @@
     "pdf_index": 18,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447399.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento in materia di valutazione del sistema educativo; non attinente ai settori industria o trasporti.",
+    "motivazione_preliminare": "Documento su ente del sistema educativo, senza nesso evidente con industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -281,7 +281,7 @@
     "pdf_index": 19,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447395.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Fondazione culturale e di studi di architettura; non emerge attinenza diretta con industria o trasporti.",
+    "motivazione_preliminare": "Fondazione culturale e di studi di architettura, senza attinenza diretta a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -296,7 +296,7 @@
     "pdf_index": 20,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447375.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -311,7 +311,7 @@
     "pdf_index": 21,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447374.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -326,7 +326,7 @@
     "pdf_index": 22,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447379.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Riguarda concessioni pubbliche e project financing, tema di rilievo generale per operatori economici e imprese.",
+    "motivazione_preliminare": "Sentenza UE su concessioni e finanza di progetto, con rilievo generale per mercato, appalti e operatori economici.",
     "richiede_lettura_pdf": true
   },
   {
@@ -341,7 +341,7 @@
     "pdf_index": 23,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447380.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "La sentenza incide su biotecnologie, agroindustria, libera circolazione delle merci e libertà d'impresa, con rilevanza economico-produttiva generale.",
+    "motivazione_preliminare": "Sentenza UE su OGM, libera circolazione delle merci e libertà d'impresa, con riflessi economici e produttivi generali.",
     "richiede_lettura_pdf": true
   },
   {
@@ -356,7 +356,7 @@
     "pdf_index": 24,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447378.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Attiene a appalti pubblici, concessioni e sanzioni UE, con impatto generale sulle imprese e sui mercati.",
+    "motivazione_preliminare": "Sentenza UE su appalti pubblici, concessioni e restrizioni economiche, di rilievo per operatori economici e mercato.",
     "richiede_lettura_pdf": true
   },
   {
@@ -371,7 +371,7 @@
     "pdf_index": 25,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447373.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal solo titolo non si ricava una materia industriale o dei trasporti; trattasi di pubblicazione di sentenza senza oggetto esplicitato.",
+    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
     "richiede_lettura_pdf": false
   },
   {
@@ -386,7 +386,7 @@
     "pdf_index": 26,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447397.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento previdenziale riferito alla cassa forense, senza attinenza diretta ai settori industria o trasporti.",
+    "motivazione_preliminare": "Documento su cassa previdenziale forense, senza attinenza diretta a industria o trasporti.",
     "richiede_lettura_pdf": false
   },
   {
@@ -401,7 +401,7 @@
     "pdf_index": 27,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447345.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Contratto di programma con Poste italiane, di rilievo per servizi economici di interesse generale, logistica e organizzazione industriale.",
+    "motivazione_preliminare": "Contratto di programma con Poste Italiane, con rilievo per servizi economici di interesse generale, logistica e organizzazione industriale.",
     "richiede_lettura_pdf": true
   },
   {
@@ -416,7 +416,7 @@
     "pdf_index": 28,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447403.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Fascicolo omnibus di risposte scritte; dal titolo non emerge una chiara attinenza con industria o trasporti.",
+    "motivazione_preliminare": "Fascicolo eterogeneo; dal solo titolo non emerge una chiara attinenza con industria o trasporti.",
     "richiede_lettura_pdf": false
   }
 ]
