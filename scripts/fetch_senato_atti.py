@@ -3,6 +3,7 @@ import sys
 import time
 from datetime import datetime
 from pathlib import Path
+from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
@@ -84,6 +85,24 @@ def fetch_html(url: str) -> str:
     return ""
 
 
+def normalize_senato_url(href: str) -> str:
+    href = compact_spaces(href)
+
+    if not href:
+        return ""
+
+    if href.startswith("http://") or href.startswith("https://"):
+        return href
+
+    if href.startswith("//"):
+        return "https:" + href
+
+    if href.startswith("www.senato.it/"):
+        return "https://" + href
+
+    return urljoin(BASE_URL + "/", href)
+
+
 def parse_html(html: str):
     if not html.strip():
         return []
@@ -96,7 +115,7 @@ def parse_html(html: str):
         if "/service/PDF/PDFServer/" not in href:
             continue
 
-        full_link = href if href.startswith("http") else f"{BASE_URL}{href}"
+        full_link = normalize_senato_url(href)
         text = compact_spaces(link.get_text(" ", strip=True))
 
         parent_text = ""
