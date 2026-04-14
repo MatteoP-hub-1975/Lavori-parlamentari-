@@ -5,13 +5,13 @@
     "sezione": "ODG e Calendario",
     "tipo_atto": "O.D.G. Giunte e Commissioni",
     "numero": "",
-    "titolo": "",
+    "titolo": "2ª Giustizia - seduta/e n. 385,386,387 (14/04/2026 - 16/04/2026)",
     "commissione": "2ª Giustizia",
     "seduta": "385,386,387",
     "pdf_index": 1,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447393.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ordine del giorno della Commissione Giustizia; dal testo della pagina non emergono temi legati a industria, trasporti o trasporto marittimo.",
+    "motivazione_preliminare": "Ordine del giorno della Commissione Giustizia; dal titolo della pagina non emergono temi riferibili a industria, trasporto o trasporto marittimo.",
     "richiede_lettura_pdf": false,
     "data_seduta": "martedì 14 aprile 2026",
     "termine_emendamenti": [],
@@ -38,8 +38,8 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Si tratta di un ordine del giorno della 2ª Commissione Giustizia composto da numerosi punti su materie prevalentemente giudiziarie, penali, civili, processuali e ordinamentali. In applicazione della regola sui documenti compositi, sono stati esaminati i singoli punti: non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità di sistema portuale, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare, autostrade del mare o sea modal shift. Sono presenti alcuni temi con possibile rilievo economico o professionale (ordinamenti professionali, beni confiscati, PNRR, rigenerazione urbana), ma nessuno con focus chiaro su imprese, logistica o filiera del trasporto tale da giustificare una classificazione industriale o del trasporto.",
-    "estratto_rilevante": "PROCEDURE INFORMATIVE Seguito dell'indagine conoscitiva sull'impatto dell'intelligenza artificiale nel settore della giustizia: audizione del Presidente dell'Unione Nazionale delle Camere Civili ... IN SEDE REDIGENTE ... Disposizioni in materia di contrasto dei delitti informatici e del trattamento illecito di dati ... Modifiche al codice delle leggi antimafia ... gestione e destinazione dei beni sequestrati e confiscati ... IN SEDE REFERENTE ... Modifiche al codice di procedura penale ... in materia di indagini informatiche ... Delega al Governo per la riforma della disciplina degli ordinamenti professionali ... IN SEDE CONSULTIVA ... Conversione in legge ... del decreto-legge ... recante ulteriori disposizioni urgenti per l'attuazione del Piano nazionale di ripresa e resilienza (PNRR) e in materia di politiche di coesione"
+    "motivazione_finale": "Si tratta di un ordine del giorno della 2ª Commissione Giustizia con contenuti interamente riferiti a temi di giustizia civile, penale, procedura, carcere, criminalità organizzata, diffamazione, cognome, successioni, violenza sessuale, professioni forensi e atti del Governo in materia di tratta di esseri umani. In base alle regole per i documenti compositi, sono stati esaminati i singoli punti dell'ODG: nessuno contiene riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare, autostrade del mare o sea modal shift. Non emergono neppure profili centrali riconducibili a industria, lavoro, energia o logistica tali da giustificare una classificazione diversa.",
+    "estratto_rilevante": "PROCEDURE INFORMATIVE - Seguito dell'indagine conoscitiva sull'impatto dell'intelligenza artificiale nel settore della giustizia: audizione del Presidente dell'Unione Nazionale delle Camere Civili [...] IN SEDE REDIGENTE [...] Disposizioni in materia di contrasto dei delitti informatici e del trattamento illecito di dati [...] Modifiche al codice delle leggi antimafia [...] IN SEDE REFERENTE [...] Modifiche al codice di procedura penale [...] IN SEDE CONSULTIVA [...] Conversione in legge, con modificazioni, del decreto-legge 19 febbraio 2026, n. 19, recante ulteriori disposizioni urgenti per l'attuazione del Piano nazionale di ripresa e resilienza (PNRR) e in materia di politiche di coesione"
   },
   {
     "ramo": "Senato",
@@ -47,13 +47,13 @@
     "sezione": "Resoconti",
     "tipo_atto": "Resoconto stenografico Giunte e Commissioni",
     "numero": "",
-    "titolo": "AUDIZIONI, AI SENSI DELL'ARTICOLO 125-BIS, COMMA 3, DEL REGOLAMENTO DEL SENATO E DELL'ARTICOLO 118-BIS, COMMA 3, DEL REGOLAMENTO DELLA CAMERA DEI DEPUTATI, IN ORDINE AL DOCUMENTO PROGRAMMATICO DI FINANZA PUBBLICA PER IL 2025 E CONNESSI ALLEGATI (DOC. CCXLIV, N. 1 - ALLEGATI I E II)",
+    "titolo": "5ª (Bilancio) Senato con V (Bilancio) Camera - \"AUDIZIONI, AI SENSI DELL'ARTICOLO 125-BIS, COMMA 3, DEL REGOLAMENTO DEL SENATO E DELL'ARTICOLO 118-BIS, COMMA 3, DEL REGOLAMENTO DELLA CAMERA DEI DEPUTATI, IN ORDINE AL DOCUMENTO PROGRAMMATICO DI FINANZA PUBBLICA PER IL 2025 E CONNESSI ALLEGATI (DOC. CCXLIV, N. 1 - ALLEGATI I E II)\"",
     "commissione": "5ª (Bilancio) Senato con V (Bilancio) Camera",
     "seduta": "",
     "pdf_index": 2,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447382.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Audizioni sul documento programmatico di finanza pubblica, potenzialmente rilevante per politiche economiche e industriali generali.",
+    "motivazione_preliminare": "Documento di finanza pubblica con possibile impatto trasversale su politiche industriali, investimenti e settori produttivi; per valutarne la concreta attinenza serve lettura del resoconto.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -83,22 +83,22 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Audizioni sul documento programmatico di finanza pubblica, potenzialmente rilevante per politiche economiche e industriali generali.",
+    "motivazione_finale": "Documento di finanza pubblica con possibile impatto trasversale su politiche industriali, investimenti e settori produttivi; per valutarne la concreta attinenza serve lettura del resoconto.",
     "estratto_rilevante": ""
   },
   {
     "ramo": "Senato",
     "data_pubblicazione": "2026-04-13",
     "sezione": "Emendamenti e O.D.G.",
-    "tipo_atto": "Emendamenti e O.D.G",
+    "tipo_atto": "Emendamenti e O.D.G.",
     "numero": "DDL 1451",
-    "titolo": "Modifiche agli articoli 72 e 73 del testo unico delle leggi sull'ordinamento degli enti locali, in materia di elezione del sindaco al primo turno nei comuni con popolazione superiore a 15.000 abitanti",
+    "titolo": "\"Modifiche agli articoli 72 e 73 del testo unico delle leggi sull'ordinamento degli enti locali, in materia di elezione del sindaco al primo turno nei comuni con popolazione superiore a 15.000 abitanti\" - Fascicolo n. 1 (bozze)",
     "commissione": "",
     "seduta": "",
     "pdf_index": 3,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447390.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Materia elettorale e ordinamento degli enti locali, priva di attinenza con industria o trasporti.",
+    "motivazione_preliminare": "Materia elettorale e ordinamento degli enti locali, senza evidente connessione con industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -122,8 +122,8 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il documento riguarda modifiche al sistema elettorale dei comuni con popolazione superiore a 15.000 abitanti, in particolare elezione del sindaco al primo turno, soglie di voto, premi di maggioranza, composizione delle giunte e profili connessi agli enti locali. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare o autostrade del mare. Non vi sono neppure contenuti sostanziali su imprese, lavoro, energia, logistica o filiera del trasporto tali da giustificare una classificazione industriale o dei trasporti.",
-    "estratto_rilevante": "Titolo: «Modifiche agli articoli 72 e 73 del testo unico delle leggi sull'ordinamento degli enti locali, in materia di elezione del sindaco al primo turno nei comuni con popolazione superiore a 15.000 abitanti». Nel testo gli emendamenti riguardano soglie come «40 per cento dei voti validi», premi di maggioranza, affluenza, riparto dei seggi, nomina degli assessori e norme sugli enti locali."
+    "motivazione_finale": "Il documento riguarda emendamenti a un disegno di legge sull'elezione del sindaco nei comuni sopra i 15.000 abitanti, con modifiche al TUEL relative a soglia per l'elezione al primo turno, premio di maggioranza, incompatibilità assessori-consiglieri, limiti di mandato e regole di attribuzione dei seggi. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità di sistema portuale, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare, autostrade del mare o sea modal shift. Non vi sono neppure contenuti centrali su imprese, lavoro, energia, logistica o filiera del trasporto tali da giustificare una classificazione industriale.",
+    "estratto_rilevante": "Titolo: \"Modifiche agli articoli 72 e 73 del testo unico delle leggi sull'ordinamento degli enti locali, in materia di elezione del sindaco al primo turno nei comuni con popolazione superiore a 15.000 abitanti\". Esempi: \"Al comma 1, lettera b), numero 2), capoverso «4»...\"; \"Al comma 1, sopprimere la lettera c)\"; \"all'articolo 73, al comma 10, il primo periodo è sostituito dal seguente...\""
   },
   {
     "ramo": "Senato",
@@ -131,13 +131,13 @@
     "sezione": "DDL e relazioni",
     "tipo_atto": "Disegno di legge",
     "numero": "1861",
-    "titolo": "Istituzione del Garante nazionale per i diritti delle vittime di reato",
+    "titolo": "\"Istituzione del Garante nazionale per i diritti delle vittime di reato\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 4,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447388.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Provvedimento su tutela delle vittime di reato, non attinente a industria o trasporti.",
+    "motivazione_preliminare": "Provvedimento in materia di tutela delle vittime di reato; non emergono profili industriali o di trasporto.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -160,7 +160,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Provvedimento su tutela delle vittime di reato, non attinente a industria o trasporti.",
+    "motivazione_finale": "Provvedimento in materia di tutela delle vittime di reato; non emergono profili industriali o di trasporto.",
     "estratto_rilevante": ""
   },
   {
@@ -169,13 +169,13 @@
     "sezione": "DDL e relazioni",
     "tipo_atto": "Disegno di legge",
     "numero": "1838",
-    "titolo": "Istituzione del Servizio civile volontario degli anziani",
+    "titolo": "\"Istituzione del Servizio civile volontario degli anziani\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 5,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447405.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Misura di carattere sociale e civile, senza collegamento diretto con industria o trasporti.",
+    "motivazione_preliminare": "Tema di servizio civile e politiche sociali; non chiaramente attinente a industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -198,7 +198,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Misura di carattere sociale e civile, senza collegamento diretto con industria o trasporti.",
+    "motivazione_finale": "Tema di servizio civile e politiche sociali; non chiaramente attinente a industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -207,13 +207,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XV",
     "numero": "549",
-    "titolo": "RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO AUTORITÀ DI SISTEMA PORTUALE DEL MARE DI SICILIA OCCIDENTALE (Esercizio 2023)",
+    "titolo": "\"RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO AUTORITÀ DI SISTEMA PORTUALE DEL MARE DI SICILIA OCCIDENTALE (Esercizio 2023)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 6,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447400.pdf",
     "categoria_preliminare": "Interesse trasporto marittimo",
-    "motivazione_preliminare": "Relazione su Autorità di sistema portuale, chiaramente riferita a infrastrutture e attività del trasporto marittimo.",
+    "motivazione_preliminare": "Relazione su Autorità di sistema portuale, direttamente riferita a porti e traffici marittimi.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -273,8 +273,8 @@
       ]
     },
     "categoria_finale": "Interesse trasporto marittimo",
-    "motivazione_finale": "Il documento riguarda in modo esplicito e diretto l'Autorità di sistema portuale del Mare di Sicilia occidentale e la gestione finanziaria dei porti del relativo network. Nel testo compaiono numerosi riferimenti specifici a porti, Autorità di sistema portuale, demanio marittimo, concessioni demaniali in ambito portuale, operazioni e servizi portuali, traffico portuale e codice della navigazione. In base alle regole fornite, anche una sola parte con tali riferimenti determina la classificazione come 'Interesse trasporto marittimo'.",
-    "estratto_rilevante": "AUTORITÀ DI SISTEMA PORTUALE DEL MARE DI SICILIA OCCIDENTALE ... amministra in via esclusiva le aree e i beni del demanio marittimo ... In materia di concessioni di aree demaniali in ambito portuale destinate allo svolgimento delle operazioni portuali ... 5.1. Attività autorizzatoria e di gestione del demanio marittimo ... 5.4. Traffico portuale ... Concessioni per le attività di cui agli artt. 36 e 38 c.nav."
+    "motivazione_finale": "Il documento riguarda in modo esplicito e diretto l'Autorità di sistema portuale del Mare di Sicilia occidentale, quindi il settore portuale e marittimo. Il testo contiene numerosi riferimenti specifici a porti, Autorità di sistema portuale, operazioni e servizi portuali, demanio marittimo, concessioni demaniali in ambito portuale, traffico portuale e codice della navigazione. In base alle regole fornite, anche una sola parte con tali riferimenti comporta la classificazione come 'Interesse trasporto marittimo'.",
+    "estratto_rilevante": "AUTORITÀ DI SISTEMA PORTUALE DEL MARE DI SICILIA OCCIDENTALE; ... amministra in via esclusiva le aree e i beni del demanio marittimo ...; In materia di concessioni di aree demaniali in ambito portuale destinate allo svolgimento delle operazioni portuali e dei servizi portuali ...; 5.1. Attività autorizzatoria e di gestione del demanio marittimo; 5.4. Traffico portuale."
   },
   {
     "ramo": "Senato",
@@ -282,13 +282,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XV",
     "numero": "547",
-    "titolo": "RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO AGENZIA NAZIONALE PER I SERVIZI SANITARI REGIONALI (AGENAS) (Esercizio 2024)",
+    "titolo": "\"RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO AGENZIA NAZIONALE PER I SERVIZI SANITARI REGIONALI (AGENAS) (Esercizio 2024)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 7,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447401.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento relativo ad AGENAS e al settore sanitario; la sanità non va esclusa a priori, ma qui non emerge un nesso con industria o trasporti.",
+    "motivazione_preliminare": "Relazione su ente del settore sanitario; dal titolo non emergono profili industriali o di trasporto.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -326,7 +326,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Documento relativo ad AGENAS e al settore sanitario; la sanità non va esclusa a priori, ma qui non emerge un nesso con industria o trasporti.",
+    "motivazione_finale": "Relazione su ente del settore sanitario; dal titolo non emergono profili industriali o di trasporto.",
     "estratto_rilevante": ""
   },
   {
@@ -335,13 +335,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. VII",
     "numero": "173",
-    "titolo": "SENTENZA DELLA CORTE COSTITUZIONALE N. 44 DEL 23 FEBBRAIO 2026",
+    "titolo": "\"SENTENZA DELLA CORTE COSTITUZIONALE N. 44 DEL 23 FEBBRAIO 2026\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 8,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447377.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_preliminare": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -364,7 +364,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_finale": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "estratto_rilevante": ""
   },
   {
@@ -373,13 +373,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. CXXVIII",
     "numero": "16",
-    "titolo": "RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE LAZIO (Anno 2025)",
+    "titolo": "\"RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE LAZIO (Anno 2025)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 9,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447383.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -407,7 +407,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_finale": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "estratto_rilevante": ""
   },
   {
@@ -416,13 +416,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. CXXVIII",
     "numero": "15",
-    "titolo": "RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE BASILICATA (Aggiornata al mese di dicembre 2025)",
+    "titolo": "\"RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE BASILICATA (Aggiornata al mese di dicembre 2025)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 10,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447384.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -449,7 +449,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_finale": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "estratto_rilevante": ""
   },
   {
@@ -458,13 +458,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. CXXVIII",
     "numero": "17",
-    "titolo": "RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE EMILIA-ROMAGNA (Anno 2025)",
+    "titolo": "\"RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE EMILIA-ROMAGNA (Anno 2025)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 11,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447385.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -495,7 +495,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_finale": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "estratto_rilevante": ""
   },
   {
@@ -504,13 +504,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. CXXVIII",
     "numero": "18",
-    "titolo": "RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE LIGURIA (Anno 2025)",
+    "titolo": "\"RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE LIGURIA (Anno 2025)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 12,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447386.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -538,7 +538,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_finale": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "estratto_rilevante": ""
   },
   {
@@ -547,13 +547,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. CXXVIII",
     "numero": "19",
-    "titolo": "RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE SARDEGNA (Anno 2025)",
+    "titolo": "\"RELAZIONE SULL'ATTIVITÀ SVOLTA DAL DIFENSORE CIVICO DELLA REGIONE SARDEGNA (Anno 2025)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 13,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447387.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_preliminare": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -577,7 +577,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Relazione generale del difensore civico regionale, senza attinenza esplicita a industria o trasporti.",
+    "motivazione_finale": "Relazione generale del difensore civico regionale; non emerge attinenza specifica ai settori richiesti.",
     "estratto_rilevante": ""
   },
   {
@@ -586,13 +586,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XV",
     "numero": "545",
-    "titolo": "RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO AERO CLUB D'ITALIA (Ae.C.I.) (Esercizio 2024)",
+    "titolo": "\"RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO AERO CLUB D'ITALIA (Ae.C.I.) (Esercizio 2024)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 14,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447402.pdf",
     "categoria_preliminare": "Interesse industria del trasporto",
-    "motivazione_preliminare": "Documento relativo ad Aero Club d'Italia, con possibile rilevanza per il settore aeronautico e dell'aviazione civile/sportiva.",
+    "motivazione_preliminare": "Riguarda l'Aero Club d'Italia, ambito aeronautico/aviazione; attinenza al comparto trasportistico e aeronautico da verificare nel dettaglio nel PDF.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -623,9 +623,9 @@
         "rina"
       ]
     },
-    "categoria_finale": "Interesse industriale generale",
-    "motivazione_finale": "Il documento è una relazione della Corte dei conti sulla gestione finanziaria dell'Aero Club d'Italia. Non contiene riferimenti specifici a trasporto marittimo, navigazione, porti, demanio marittimo o lavoro marittimo, quindi non rientra nell'area 'Interesse trasporto marittimo'. Contiene invece elementi attinenti a organizzazione dell'ente, attività aeronautica, personale, contrattazione collettiva e gestione economico-finanziaria, che lo rendono rilevante sul piano organizzativo-lavoristico ed economico in senso generale. Non emerge però un focus specifico sulla filiera del trasporto/logistica tale da farlo rientrare in 'Interesse industria del trasporto'.",
-    "estratto_rilevante": "L Ae.C.I., nell esercizio in osservazione, ha applicato ai propri dipendenti il nuovo contratto collettivo nazionale di lavoro (Ccnl) per il comparto Funzioni Centrali - triennio 2019-2021 sia per la parte giuridica, sia per quella economica...; 5. I RISULTATI CONTABILI DELLA GESTIONE; 6. LO STATO PATRIMONIALE; 7. IL CONTO ECONOMICO; 8. LA GESTIONE FINANZIARIA."
+    "categoria_finale": "Interesse industria del trasporto",
+    "motivazione_finale": "Errore analisi PDF: Expecting ',' delimiter: line 4 column 256 (char 964)",
+    "estratto_rilevante": ""
   },
   {
     "ramo": "Senato",
@@ -633,13 +633,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. VII",
     "numero": "172",
-    "titolo": "SENTENZA DELLA CORTE COSTITUZIONALE N. 39 DEL 13 GENNAIO 2026",
+    "titolo": "\"SENTENZA DELLA CORTE COSTITUZIONALE N. 39 DEL 13 GENNAIO 2026\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 15,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447376.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_preliminare": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -656,7 +656,7 @@
       "entities": []
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_finale": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "estratto_rilevante": ""
   },
   {
@@ -665,13 +665,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XV",
     "numero": "539",
-    "titolo": "RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO ISTITUTO NAZIONALE DI FISICA NUCLEARE (INFN) (Esercizio 2024)",
+    "titolo": "\"RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO ISTITUTO NAZIONALE DI FISICA NUCLEARE (INFN) (Esercizio 2024)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 16,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447396.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Relazione su ente di ricerca nazionale con possibili ricadute su innovazione, tecnologia e sistema industriale generale.",
+    "motivazione_preliminare": "Ente pubblico di ricerca con possibili ricadute su innovazione, tecnologia e sistema industriale; serve lettura del PDF per valutarne la rilevanza concreta.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -706,8 +706,8 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il documento è una relazione della Corte dei conti sulla gestione finanziaria dell'INFN per l'esercizio 2024. I contenuti estratti riguardano il quadro normativo dell'ente, contabilità pubblica, governance, personale, spesa, partecipazioni e risultati contabili. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare o autostrade del mare. Né il focus è su imprese, politica industriale, logistica o filiera del trasporto in senso tale da giustificare una classificazione industriale o del trasporto.",
-    "estratto_rilevante": "Con la presente relazione la Corte dei conti riferisce al Parlamento, ai sensi dell'art. 7 della l. n. 259 del 1958, sul risultato del controllo eseguito ... sulla gestione finanziaria 2024 dell'Istituto Nazionale di Fisica Nucleare... / L'Istituto Nazionale di Fisica Nucleare (Infn) ... è un ente pubblico nazionale di ricerca, vigilato dal Ministero dell'università e della ricerca (Mur)... / Il rendiconto generale dell'Infn è, quindi, redatto in osservanza di quanto disposto..."
+    "motivazione_finale": "Il documento è una relazione della Corte dei conti sulla gestione finanziaria dell'INFN per l'esercizio 2024. I contenuti riguardano il quadro normativo dell'ente di ricerca, la contabilità pubblica, gli organi, il personale, le partecipazioni e i risultati di bilancio. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità di sistema portuale, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare, autostrade del mare o sea modal shift. Inoltre non vi è un focus su imprese, politica industriale, energia, lavoro o logistica tale da giustificare una classificazione industriale o del trasporto.",
+    "estratto_rilevante": "L Istituto Nazionale di Fisica Nucleare (Infn), con sede in Frascati, è un ente pubblico nazionale di ricerca, vigilato dal Ministero dell università e della ricerca (Mur), che opera con autonomia scientifica, organizzativa, finanziaria e contabile, la cui finalità risiede nella promozione, coordinamento ed effettuazione della ricerca scientifica e dello sviluppo tecnologico nel settore della fisica nucleare, sub-nucleare, astro-particellare e delle interazioni fondamentali."
   },
   {
     "ramo": "Senato",
@@ -715,13 +715,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XV",
     "numero": "541",
-    "titolo": "RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO STAZIONE ZOOLOGICA ANTON DOHRN DI NAPOLI (Esercizio 2023)",
+    "titolo": "\"RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO STAZIONE ZOOLOGICA ANTON DOHRN DI NAPOLI (Esercizio 2023)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 17,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447398.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Ente di ricerca zoologica; non emerge un collegamento chiaro con industria o trasporti. Pesca e diporto sono comunque da classificare come non attinenti.",
+    "motivazione_preliminare": "Ente di ricerca zoologica; non emergono dal titolo profili chiaramente industriali o di trasporto. Pesca non va considerata attinente.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -762,7 +762,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Ente di ricerca zoologica; non emerge un collegamento chiaro con industria o trasporti. Pesca e diporto sono comunque da classificare come non attinenti.",
+    "motivazione_finale": "Ente di ricerca zoologica; non emergono dal titolo profili chiaramente industriali o di trasporto. Pesca non va considerata attinente.",
     "estratto_rilevante": ""
   },
   {
@@ -771,13 +771,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XV",
     "numero": "543",
-    "titolo": "RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO ISTITUTO NAZIONALE PER LA VALUTAZIONE DEL SISTEMA EDUCATIVO DI ISTRUZIONE E DI FORMAZIONE (INVALSI) (Esercizio 2023)",
+    "titolo": "\"RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO ISTITUTO NAZIONALE PER LA VALUTAZIONE DEL SISTEMA EDUCATIVO DI ISTRUZIONE E DI FORMAZIONE (INVALSI) (Esercizio 2023)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 18,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447399.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento su ente del sistema educativo, senza nesso evidente con industria o trasporti.",
+    "motivazione_preliminare": "Relazione su ente del sistema educativo; non emerge attinenza ai settori richiesti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -814,7 +814,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Documento su ente del sistema educativo, senza nesso evidente con industria o trasporti.",
+    "motivazione_finale": "Relazione su ente del sistema educativo; non emerge attinenza ai settori richiesti.",
     "estratto_rilevante": ""
   },
   {
@@ -823,13 +823,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XV",
     "numero": "537",
-    "titolo": "RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO FONDAZIONE CENTRO INTERNAZIONALE DI STUDI DI ARCHITETTURA «ANDREA PALLADIO» (CISA) (Esercizio 2023)",
+    "titolo": "\"RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO FONDAZIONE CENTRO INTERNAZIONALE DI STUDI DI ARCHITETTURA «ANDREA PALLADIO» (CISA) (Esercizio 2023)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 19,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447395.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Fondazione culturale e di studi di architettura, senza attinenza diretta a industria o trasporti.",
+    "motivazione_preliminare": "Fondazione culturale e di studi di architettura; non emerge connessione diretta con industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -864,7 +864,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Fondazione culturale e di studi di architettura, senza attinenza diretta a industria o trasporti.",
+    "motivazione_finale": "Fondazione culturale e di studi di architettura; non emerge connessione diretta con industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -873,13 +873,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. VII",
     "numero": "171",
-    "titolo": "SENTENZA DELLA CORTE COSTITUZIONALE N. 32 DEL 28 GENNAIO 2026",
+    "titolo": "\"SENTENZA DELLA CORTE COSTITUZIONALE N. 32 DEL 28 GENNAIO 2026\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 20,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447375.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_preliminare": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -904,7 +904,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_finale": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "estratto_rilevante": ""
   },
   {
@@ -913,13 +913,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. VII",
     "numero": "170",
-    "titolo": "SENTENZA DELLA CORTE COSTITUZIONALE N. 29 DEL 27 GENNAIO 2026",
+    "titolo": "\"SENTENZA DELLA CORTE COSTITUZIONALE N. 29 DEL 27 GENNAIO 2026\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 21,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447374.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_preliminare": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -936,7 +936,7 @@
       "entities": []
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_finale": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "estratto_rilevante": ""
   },
   {
@@ -945,13 +945,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XIX",
     "numero": "102",
-    "titolo": "Sentenza della Corte di Giustizia dell'Unione europea (Seconda Sezione) del 5 febbraio 2026, causa C-810/24, Urban Vision SpA contro Comune di Milano, Digital Vox Srl, già A & C Network SRL, nei confronti di Vox Communication SRL. Domanda di pronuncia pregiudiziale proposta dal Consiglio di Stato. Direttiva 2014/23/UE - Procedure di aggiudicazione dei contratti di concessione - Finanza di progetto ad iniziativa privata - Valutazione e approvazione di una proposta di finanza di progetto - Bando di gara pubblicato sulla base di tale proposta - Diritto di prelazione dell'operatore economico promotore interessato purché garantisca le condizioni della migliore offerta - Modifica apportata dopo la presentazione dell'offerta iniziale - Articolo 3 - Principi di parità di trattamento, non discriminazione e proporzionalità - Violazione",
+    "titolo": "\"Sentenza della Corte di Giustizia dell'Unione europea (Seconda Sezione) del 5 febbraio 2026, causa C-810/24, Urban Vision SpA contro Comune di Milano, Digital Vox Srl, già A & C Network SRL, nei confronti di Vox Communication SRL. Domanda di pronuncia pregiudiziale proposta dal Consiglio di Stato. Direttiva 2014/23/UE - Procedure di aggiudicazione dei contratti di concessione - Finanza di progetto ad iniziativa privata - Valutazione e approvazione di una proposta di finanza di progetto - Bando di gara pubblicato sulla base di tale proposta - Diritto di prelazione dell'operatore economico promotore interessato purché garantisca le condizioni della migliore offerta - Modifica apportata dopo la presentazione dell'offerta iniziale - Articolo 3 - Principi di parità di trattamento, non discriminazione e proporzionalità - Violazione\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 22,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447379.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Sentenza UE su concessioni e finanza di progetto, con rilievo generale per mercato, appalti e operatori economici.",
+    "motivazione_preliminare": "Pronuncia su concessioni e finanza di progetto, materia con possibile impatto generale su contratti pubblici e operatori economici.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -975,7 +975,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il documento riguarda una sentenza della Corte di giustizia UE su una procedura di concessione/finanza di progetto relativa alla progettazione, fornitura, posa in opera, gestione e manutenzione di servizi igienici pubblici automatizzati nel Comune di Milano. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, demanio marittimo, lavoro marittimo o economia del mare. Non vi è neppure un focus su politica industriale, lavoro, energia, logistica o filiera del trasporto tale da giustificare una classificazione industriale o del trasporto.",
+    "motivazione_finale": "Il documento riguarda una sentenza della Corte di giustizia UE su una procedura di concessione in finanza di progetto relativa alla progettazione, fornitura, posa, gestione e manutenzione di servizi igienici pubblici automatizzati nel Comune di Milano. Il tema centrale è giuridico-amministrativo: parità di trattamento, non discriminazione, trasparenza e diritto di prelazione del promotore nella procedura di concessione. Non emergono riferimenti specifici e contestualizzati a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo, economia del mare, né a logistica o filiera del trasporto tali da giustificare una classificazione industriale o dei trasporti.",
     "estratto_rilevante": "Tale domanda è stata presentata nell’ambito di una controversia tra la Urban Vision SpA, da un lato, e il Comune di Milano (Italia) e la Digital Vox Srl, già A & C Network Srl, dall’altro, in merito all’aggiudicazione al raggruppamento costituito dalla Digital Vox e dalla Vox Communication Srl (...) di un contratto avente ad oggetto la progettazione, fornitura, posa in opera, gestione e manutenzione di servizi igienici pubblici automatizzati."
   },
   {
@@ -984,13 +984,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XIX",
     "numero": "101",
-    "titolo": "Sentenza della Corte di giustizia dell'Unione europea (Prima Sezione) del 5 febbraio 2026, Cause riunite C-364/24 e C-393/24, Giorgio Fidenato, in proprio nonché quale titolare dell'azienda agricola In Trois contro Ministero dell'Agricoltura, della Sovranità alimentare e delle Foreste, nei contronti di: WX, in proprio nonché quale titolare dell'azienda agricola Li Pocis di WX, nonché Giorgio Fidenato, in proprio nonché quale titolare dell'azienda agricola In Trois contro Ministero dell'Agricoltura, della Sovranità alimentare e delle Foreste. Domande di pronuncia pregiudiziale proposte dal Consiglio di Stato e dal Tribunale di Udine. Emissione deliberata nell'ambiente di organismi geneticamente modificati (OGM) - Misure volte ad evitare la presenza involontaria di OGM nell'ambiente - Direttiva 2001/18/CE - Articolo 26 quater, paragrafi 1 e 3 - Regolamento (CE) n. 1829/2003 - Decisione di esecuzione (UE) 2016/321 - Divieto di coltivazione del mais OGM MON 810 in Italia - Validità - Libera circolazione delle merci - Articoli 34 TFUE e 114 TFUE - Principi di proporzionalità e di non discriminazione - Libertà d'impresa - Articoli 16 e 21 della Carta dei diritti fondamentali dell'Unione europea",
+    "titolo": "\"Sentenza della Corte di giustizia dell'Unione europea (Prima Sezione) del 5 febbraio 2026, Cause riunite C-364/24 e C-393/24, Giorgio Fidenato, in proprio nonché quale titolare dell'azienda agricola In Trois contro Ministero dell'Agricoltura, della Sovranità alimentare e delle Foreste, nei contronti di: WX, in proprio nonché quale titolare dell'azienda agricola Li Pocis di WX, nonché Giorgio Fidenato, in proprio nonché quale titolare dell'azienda agricola In Trois contro Ministero dell'Agricoltura, della Sovranità alimentare e delle Foreste. Domande di pronuncia pregiudiziale proposte dal Consiglio di Stato e dal Tribunale di Udine. Emissione deliberata nell'ambiente di organismi geneticamente modificati (OGM) - Misure volte ad evitare la presenza involontaria di OGM nell'ambiente - Direttiva 2001/18/CE - Articolo 26 quater, paragrafi 1 e 3 - Regolamento (CE) n. 1829/2003 - Decisione di esecuzione (UE) 2016/321 - Divieto di coltivazione del mais OGM MON 810 in Italia - Validità - Libera circolazione delle merci - Articoli 34 TFUE e 114 TFUE - Principi di proporzionalità e di non discriminazione - Libertà d'impresa - Articoli 16 e 21 della Carta dei diritti fondamentali dell'Unione europea\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 23,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447380.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Sentenza UE su OGM, libera circolazione delle merci e libertà d'impresa, con riflessi economici e produttivi generali.",
+    "motivazione_preliminare": "Pronuncia UE su OGM, mercato interno e libertà d'impresa; può avere riflessi generali su produzione agroindustriale e regolazione economica.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -1015,8 +1015,8 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il documento riguarda una sentenza della Corte di giustizia UE in materia di OGM, coltivazione del mais MON 810, validità di misure nazionali di divieto, libera circolazione delle merci, proporzionalità, non discriminazione e libertà d’impresa. Il contenuto è centrato su ambiente, agricoltura, diritto dell’Unione e biosicurezza, senza riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare. Non emerge neppure un focus su logistica, filiera del trasporto o politica industriale tale da giustificare una classificazione industriale o del trasporto.",
-    "estratto_rilevante": "«Emissione deliberata nell’ambiente di organismi geneticamente modificati (OGM) – Misure volte ad evitare la presenza involontaria di OGM nell’ambiente – Direttiva 2001/18/CE – Articolo 26 quater, paragrafi 1 e 3 – Regolamento (CE) n. 1829/2003 – Decisione di esecuzione (UE) 2016/321 – Divieto di coltivazione del mais OGM MON 810 in Italia – Validità – Libera circolazione delle merci – Articoli 34 TFUE e 114 TFUE – Principi di proporzionalità e di non discriminazione – Libertà d’impresa»"
+    "motivazione_finale": "Il documento riguarda una sentenza della Corte di giustizia UE in materia di OGM, coltivazione del mais MON 810, validità di divieti nazionali, libera circolazione delle merci, proporzionalità, non discriminazione e libertà d’impresa. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare. Inoltre, pur essendovi un richiamo alla libertà d’impresa, il contenuto non ha un focus su politica industriale, lavoro, energia, logistica o filiera dei trasporti tale da giustificare una classificazione di interesse industriale.",
+    "estratto_rilevante": "«Emissione deliberata nell’ambiente di organismi geneticamente modificati (OGM) – Misure volte ad evitare la presenza involontaria di OGM nell’ambiente – Direttiva 2001/18/CE – (…) Divieto di coltivazione del mais OGM MON 810 in Italia – Validità – Libera circolazione delle merci – Articoli 34 TFUE e 114 TFUE – Principi di proporzionalità e di non discriminazione – Libertà d’impresa»"
   },
   {
     "ramo": "Senato",
@@ -1024,13 +1024,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XIX",
     "numero": "103",
-    "titolo": "SENTENZA DELLA CORTE DI GIUSTIZIA DELL'UNIONE EUROPEA (QUINTA SEZIONE) DEL 12 FEBBRAIO 2026, CAUSA C-313/24, OPERA LABORATORI FIORENTINI SPA CONTRO MINISTERO DELLA CULTURA, GALLERIE DEGLI UFFIZI, A.L.E.S. - ARTE LAVORO E SERVIZI SPA, NEI CONFRONTI DI SCUDIERI INTERNATIONAL SRL. DOMANDA DI PRONUNCIA PREGIUDIZIALE PROPOSTA DAL CONSIGLIO DI STASTO. POLITICA ESTERA E DI SICUREZZA COMUNE - MISURE RETRITTIVE ADOTTATE IN CONSIDERAZIONE DELLE AZIONI DELLA RUSSIA CHE DESTABILIZZANO LA SITUAZIONE IN UCRAINA - REGOLAMENTO (UE) N. 833/2014 - ARTICOLO 5 DUODECIES, PARAGRAFO 1, LETTERA C) - DIVIETO DI AGGIUDICARE E DI PROSEGUIRE L'ESECUZIONE DI QUALSIASI CONTRATTO DI APPALTO PUBBLICO O DI CONCESSIONE A O CON UNA PERSONA FISICA O GIURIDICA, UN'ENTITÀ O UN ORGANISMO CHE AGISCONO \"PER CONTO O SOTTO LA DIREZIONE\" DI UN' \"ENTITÀ DI CUI ALLA LETTERA A) O B) DEL PRESENTE PARAGRAFO\" - AGGIUDICAZIONE DI UN CONTRATTO DI APPALTO PUBBLICO DA PARTE DELLA AUTORITÀ DI UNO STATO MEMBRO A UNA SOCIETÀ RESIDENTE DELLA QUALE DUE DEI TRE MEMBRI DEL CONSIGLIO DI AMMINISTRAZIONE SONO CITTADINI RUSSI E UNO DI ESSI, PRESIDENTE E AMMINISTRAZIONE DELEGATO DELLO STESSO CONSIGLIO DI AMMINISTRAZIONE, È ANCHE AMMINISTRATORE UNICO DELLA SOCIETÀ MADRE DELLA SOCIETÀ DI CUI SI TRATTA",
+    "titolo": "\"SENTENZA DELLA CORTE DI GIUSTIZIA DELL'UNIONE EUROPEA (QUINTA SEZIONE) DEL 12 FEBBRAIO 2026, CAUSA C-313/24, OPERA LABORATORI FIORENTINI SPA CONTRO MINISTERO DELLA CULTURA, GALLERIE DEGLI UFFIZI, A.L.E.S. - ARTE LAVORO E SERVIZI SPA, NEI CONFRONTI DI SCUDIERI INTERNATIONAL SRL. DOMANDA DI PRONUNCIA PREGIUDIZIALE PROPOSTA DAL CONSIGLIO DI STASTO. POLITICA ESTERA E DI SICUREZZA COMUNE - MISURE RETRITTIVE ADOTTATE IN CONSIDERAZIONE DELLE AZIONI DELLA RUSSIA CHE DESTABILIZZANO LA SITUAZIONE IN UCRAINA - REGOLAMENTO (UE) N. 833/2014 - ARTICOLO 5 DUODECIES, PARAGRAFO 1, LETTERA C) - DIVIETO DI AGGIUDICARE E DI PROSEGUIRE L'ESECUZIONE DI QUALSIASI CONTRATTO DI APPALTO PUBBLICO O DI CONCESSIONE A O CON UNA PERSONA FISICA O GIURIDICA, UN'ENTITÀ O UN ORGANISMO CHE AGISCONO \"PER CONTO O SOTTO LA DIREZIONE\" DI UN' \"ENTITÀ DI CUI ALLA LETTERA A) O B) DEL PRESENTE PARAGRAFO\" - AGGIUDICAZIONE DI UN CONTRATTO DI APPALTO PUBBLICO DA PARTE DELLA AUTORITÀ DI UNO STATO MEMBRO A UNA SOCIETÀ RESIDENTE DELLA QUALE DUE DEI TRE MEMBRI DEL CONSIGLIO DI AMMINISTRAZIONE SONO CITTADINI RUSSI E UNO DI ESSI, PRESIDENTE E AMMINISTRAZIONE DELEGATO DELLO STESSO CONSIGLIO DI AMMINISTRAZIONE, È ANCHE AMMINISTRATORE UNICO DELLA SOCIETÀ MADRE DELLA SOCIETÀ DI CUI SI TRATTA\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 24,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447378.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Sentenza UE su appalti pubblici, concessioni e restrizioni economiche, di rilievo per operatori economici e mercato.",
+    "motivazione_preliminare": "Pronuncia su appalti pubblici, concessioni e misure restrittive UE, con impatto potenziale generale sulle imprese e sui contratti pubblici.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -1054,8 +1054,8 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Il documento riguarda una sentenza della Corte di giustizia UE su misure restrittive contro la Russia e sull'applicazione dell'articolo 5 duodecies del regolamento (UE) n. 833/2014 in materia di appalti pubblici. Il caso concreto concerne l'aggiudicazione di servizi di caffetteria e piccola ristorazione presso le Gallerie degli Uffizi. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare. Inoltre, pur trattandosi di appalti e di soggetti societari, il focus non è su politica industriale, lavoro, energia, logistica o filiera del trasporto, ma su sanzioni UE e legittimità dell'aggiudicazione in ambito culturale.",
-    "estratto_rilevante": "La domanda di pronuncia pregiudiziale verte sull’interpretazione dell’articolo 5 duodecies, paragrafo 1, lettera c), del regolamento (UE) n. 833/2014 (...) nell’ambito di una controversia (...) vertente sulla legittimità dell’aggiudicazione (...) di un contratto di appalto pubblico di fornitura di taluni servizi alle Gallerie degli Uffizi (...) In esito ad una gara d’appalto (...) ha attribuito il contratto di appalto dei servizi di caffetteria e piccola ristorazione presso Palazzo Pitti e il giardino di Boboli."
+    "motivazione_finale": "Il documento riguarda una sentenza della Corte di giustizia UE sull'applicazione delle sanzioni europee contro la Russia nell'ambito di un appalto pubblico per servizi di caffetteria e ristorazione presso le Gallerie degli Uffizi. Il focus è giuridico-amministrativo e concerne appalti pubblici, misure restrittive UE e assetti societari dell'aggiudicatario. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare; né il contenuto è centrato su politica industriale, lavoro, logistica o filiera del trasporto in senso tale da giustificare una classificazione industriale.",
+    "estratto_rilevante": "La domanda di pronuncia pregiudiziale verte sull’interpretazione dell’articolo 5 duodecies, paragrafo 1, lettera c), del regolamento (UE) n. 833/2014 (...) nell’ambito di una controversia (...) vertente sulla legittimità dell’aggiudicazione a quest’ultima società di un contratto di appalto pubblico di fornitura di taluni servizi alle Gallerie degli Uffizi (...) L’autorità denominata «Ministero della Cultura – Gallerie degli Uffizi», con decisione del 25 novembre 2022, (...) ha attribuito il contratto di appalto dei servizi di caffetteria e piccola ristorazione presso Palazzo Pitti e il giardino di Boboli."
   },
   {
     "ramo": "Senato",
@@ -1063,13 +1063,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. VII",
     "numero": "168",
-    "titolo": "SENTENZA DELLA CORTE COSTITUZIONALE N. 23 DEL 14 GENNAIO 2026",
+    "titolo": "\"SENTENZA DELLA CORTE COSTITUZIONALE N. 23 DEL 14 GENNAIO 2026\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 25,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447373.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_preliminare": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -1102,7 +1102,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Dal titolo generico non emerge materia industriale o di trasporto.",
+    "motivazione_finale": "Dal solo titolo non è possibile ricavare un collegamento settoriale; non chiaramente attinente.",
     "estratto_rilevante": ""
   },
   {
@@ -1111,13 +1111,13 @@
     "sezione": "Documenti",
     "tipo_atto": "Doc. XV",
     "numero": "529",
-    "titolo": "RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO CASSA NAZIONALE DI PREVIDENZA E ASSISTENZA FORENSE (Esercizio 2023)",
+    "titolo": "\"RELAZIONE DELLA CORTE DEI CONTI AL PARLAMENTO CASSA NAZIONALE DI PREVIDENZA E ASSISTENZA FORENSE (Esercizio 2023)\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 26,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447397.pdf",
     "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Documento su cassa previdenziale forense, senza attinenza diretta a industria o trasporti.",
+    "motivazione_preliminare": "Relazione su cassa previdenziale forense; non emergono collegamenti diretti con industria o trasporti.",
     "richiede_lettura_pdf": false,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -1155,7 +1155,7 @@
       ]
     },
     "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Documento su cassa previdenziale forense, senza attinenza diretta a industria o trasporti.",
+    "motivazione_finale": "Relazione su cassa previdenziale forense; non emergono collegamenti diretti con industria o trasporti.",
     "estratto_rilevante": ""
   },
   {
@@ -1164,13 +1164,13 @@
     "sezione": "Atti del Governo",
     "tipo_atto": "Atto del Governo",
     "numero": "396",
-    "titolo": "Schema di contratto di programma tra il Ministero delle imprese e del made in Italy e la società Poste italiane S.p.A. per il periodo 2026-2031",
+    "titolo": "\"Schema di contratto di programma tra il Ministero delle imprese e del made in Italy e la società Poste italiane S.p.A. per il periodo 2026-2031\"",
     "commissione": "",
     "seduta": "",
     "pdf_index": 27,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447345.pdf",
     "categoria_preliminare": "Interesse industriale generale",
-    "motivazione_preliminare": "Contratto di programma con Poste Italiane, con rilievo per servizi economici di interesse generale, logistica e organizzazione industriale.",
+    "motivazione_preliminare": "Contratto di programma con Poste Italiane, rilevante per servizi logistici, infrastrutture di recapito e organizzazione industriale del servizio postale.",
     "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
@@ -1207,8 +1207,8 @@
       ]
     },
     "categoria_finale": "Interesse industria del trasporto",
-    "motivazione_finale": "Il documento riguarda il contratto di programma tra MIMIT e Poste Italiane per il servizio postale universale 2026-2031. Il contenuto è centrato sull'organizzazione del servizio postale, sulla rete di raccolta e recapito, sui punti di accettazione e consegna, sulle attività di trasporto postale e sui costi del servizio universale. Pur non contenendo riferimenti specifici al trasporto marittimo, tratta in modo chiaro la filiera del recapito e del trasporto postale/corrieristico, che rientra nell'ambito dell'industria del trasporto secondo le regole date.",
-    "estratto_rilevante": "Ad esempio, tali servizi possono afferire ad attività di trasporto postale o ad attività al di fuori del servizio postale, in quanto afferenti ad esempio ai controlli di sicurezza sul traporto aereo e allo sdoganamento degli invii. [...] Poste di avvalersi, per l’erogazione del servizio universale, di punti di terzi in aggiunta agli uffici postali già esistenti [...] comunicare [...] l’elenco aggiornato dei punti di accettazione e consegna utilizzati [...] Il servizio di raccolta e di recapito viene effettuato a giorni alterni secondo modalità fissate dall’Autorità"
+    "motivazione_finale": "L'atto riguarda lo schema di contratto di programma tra MIMIT e Poste Italiane per il servizio postale universale 2026-2031. Il contenuto è centrato sull'organizzazione, erogazione, capillarità, recapito, raccolta, rete di uffici e punti terzi, nonché sui costi e sulla compensazione del servizio universale postale. Sono presenti riferimenti specifici alla filiera del recapito e dei servizi postali/corrieri, quindi al settore trasporto-logistica in senso lato. Non emergono però riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo o economia del mare; pertanto non è classificabile come interesse trasporto marittimo.",
+    "estratto_rilevante": "Il contratto di programma 2026–2031 tra il Ministero delle Imprese e del Made in Italy (...) ed il fornitore del servizio postale universale, Poste Italiane S.p.A. (...) è il mezzo attraverso il quale vengono disciplinate le modalità di erogazione del servizio universale (...) L’articolo 2 (...) individua l’attività che Poste Italiane S.p.A. è tenuta a svolgere (...) concernente il servizio universale e prevede l’obbligo di fornitura dello stesso servizio su tutto il territorio nazionale (...) Il servizio di raccolta e di recapito viene effettuato a giorni alterni (...)"
   },
   {
     "ramo": "Senato",
@@ -1216,14 +1216,14 @@
     "sezione": "Risposte scritte ad interrogazioni",
     "tipo_atto": "Fascicolo",
     "numero": "137",
-    "titolo": "Risposte scritte ad interrogazioni",
+    "titolo": "\"Risposte scritte ad interrogazioni\" - dal 02/04/2026 al 09/04/2026",
     "commissione": "",
     "seduta": "",
     "pdf_index": 28,
     "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447403.pdf",
-    "categoria_preliminare": "Non attinenti",
-    "motivazione_preliminare": "Fascicolo eterogeneo; dal solo titolo non emerge una chiara attinenza con industria o trasporti.",
-    "richiede_lettura_pdf": false,
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "Il fascicolo può contenere interrogazioni su molte materie, incluse attività economiche e infrastrutture; senza lettura non è possibile escludere temi industriali.",
+    "richiede_lettura_pdf": true,
     "data_seduta": "",
     "termine_emendamenti": [],
     "audizioni": [],
@@ -1253,8 +1253,8 @@
         "rina"
       ]
     },
-    "categoria_finale": "Non attinenti",
-    "motivazione_finale": "Fascicolo eterogeneo; dal solo titolo non emerge una chiara attinenza con industria o trasporti.",
-    "estratto_rilevante": ""
+    "categoria_finale": "Interesse industriale generale",
+    "motivazione_finale": "Il fascicolo è un documento composito contenente più interrogazioni e risposte. Tra i singoli punti, uno riguarda esplicitamente una crisi industriale e occupazionale dello stabilimento Vantive di Medolla, con richiami a continuità produttiva, tavolo di crisi nazionale, salvaguardia dei lavoratori, politica industriale, incentivi e reindustrializzazione. Gli altri punti trattano prevalentemente incendi boschivi, protezione civile, parco del Vesuvio, eventi calamitosi in Sicilia, finanziamenti ai piccoli Comuni e iniziative di politica estera, senza riferimenti specifici al trasporto marittimo, ai porti, alla navigazione, al demanio marittimo, al lavoro marittimo o all'economia del mare in senso tecnico. La presenza del tema industriale è quindi chiara e specifica, ma non riferita al comparto trasporti né al trasporto marittimo.",
+    "estratto_rilevante": "quali iniziative urgenti intenda assumere il Governo per garantire la continuità produttiva e occupazionale dello stabilimento Vantive di Medolla (...) se non ritenga opportuno attivare un tavolo di crisi nazionale presso il Ministero delle imprese e del made in Italy (...) se intenda valutare l’utilizzo di strumenti di politica industriale, incentivi o accordi di programma (...) RISPOSTA. - Il Ministero segue con la massima attenzione la situazione relativa allo stabilimento Vantive di Medolla (...) il 23 marzo 2026 si è svolto presso il Ministero il primo tavolo di confronto dedicato alla vertenza (...) l'azienda ha confermato l'avvio di un percorso di reindustrializzazione (...) sarà perseguita esclusivamente una soluzione industriale in grado di assicurare la continuità produttiva e la salvaguardia dei lavoratori del sito."
   }
 ]
