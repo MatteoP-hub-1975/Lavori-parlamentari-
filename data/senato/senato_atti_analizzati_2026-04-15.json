@@ -1,0 +1,727 @@
+[
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "ODG e Calendario",
+    "tipo_atto": "Ordine del giorno Assemblea",
+    "numero": "",
+    "titolo": "Ordine del giorno Assemblea del 16/04/2026",
+    "commissione": "Assemblea",
+    "seduta": "410",
+    "pdf_index": 1,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447452.pdf",
+    "categoria_preliminare": "Non attinenti",
+    "motivazione_preliminare": "Ordine del giorno dell'Assemblea senza indicazioni testuali specifiche su temi industriali o di trasporto; l'attinenza non è desumibile dal solo titolo.",
+    "richiede_lettura_pdf": false,
+    "data_seduta": "Giovedì 16 aprile 2026",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [],
+      "keyphrases": [],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [],
+      "entities": []
+    },
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "L'ordine del giorno riguarda il seguito della discussione di un disegno di legge di conversione su sicurezza pubblica, attività di indagine dell'autorità giudiziaria, funzionalità delle forze di polizia, Ministero dell'interno, immigrazione e protezione internazionale. Nel testo estratto non compaiono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, codice della navigazione, lavoro marittimo, demanio marittimo o economia del mare. Non emergono neppure profili chiari e centrali di industria, lavoro o logistica tali da giustificare una classificazione diversa.",
+    "estratto_rilevante": "Conversione in legge del decreto-legge 24 febbraio 2026, n. 23, recante disposizioni urgenti in materia di sicurezza pubblica, di attività di indagine dell'autorità giudiziaria in presenza di cause di giustificazione, di funzionalità delle forze di polizia e del Ministero dell'interno, nonché di immigrazione e protezione internazionale"
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "ODG e Calendario",
+    "tipo_atto": "Calendario dei lavori dell'Assemblea",
+    "numero": "",
+    "titolo": "Calendario dei lavori dell'Assemblea dal 07/01/2026 al 01/10/2026",
+    "commissione": "Assemblea",
+    "seduta": "",
+    "pdf_index": 2,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447443.pdf",
+    "categoria_preliminare": "Non attinenti",
+    "motivazione_preliminare": "Calendario generale dei lavori parlamentari, documento organizzativo non specificamente riferito a industria o trasporti dal solo titolo.",
+    "richiede_lettura_pdf": false,
+    "data_seduta": "",
+    "termine_emendamenti": [
+      "Interrogazioni a risposta immediata, ai sensi dell’articolo 151-bis del Regola­ mento (giovedì 8, ore 15) I termini di presentazione degli emendamenti ai ddl n. 1718 (Decreto-legge n. 175/2025, Investimenti ed energia da fonti rinnovabili) e n. 1731 (Decreto-legge n. 180/2025, Continuità operativa stabilimenti ex ILVA) saranno stabiliti in relazione ai lavori delle",
+      "terrogazioni a risposta immediata, ai sensi dell’articolo 151-bis del Regola­ mento (giovedì 12, ore 15) Il termine di presentazione degli emendamenti al ddl n. 1785 (Decreto-legge n. 196/2025, Consultazioni elettorali e referendarie 2026) sarà stabilito in relazione ai lavori della Commissione. * * * La settimana dal 16 al 20 febbraio sarà riservata ai lavori delle",
+      "Disposizioni in materia di termini normativi (approvato dalla Camera dei deputati) (scade il 1° marzo) I termini di presentazione degli emendamenti ai ddl n. 1793 (Decreto-legge n. 201/2025, Cessione mezzi, materiali ed equipaggiamenti militari in favore dell’U­ craina) e n. 1812 (Decreto-legge n. 200/2025, Disposizioni in materia di termini normativi) saranno st",
+      "5, ore 15) – Comunicazioni del Governo in esito alla richiesta di aiuti dai Paesi del Golfo (giovedì 5) I termini di presentazione degli emendamenti ai ddl nn. 162, 199, 611, 631, 828, 1242, 1257, 1481, 1521, 1570, 1589 (Riforma della RAI), n. 1004 e connessi (Contrasto all’antisemitismo) e nn. 29, 42, 761, 863, 903, 1028, 1122, 1131 (Rigene­ razione urbana) saran",
+      "rsa mare (collegato alla manovra di finanza pubblica) (voto finale con la presenza del numero legale) Il termine di presentazione degli emendamenti al ddl n. 1624 (Valorizzazione della risorsa mare) sarà stabilito in relazione ai lavori della Commissione. La settimana dal 23 al 27 marzo sarà prevalentemente dedicata ai lavori delle Commissioni. 11 Martedì 31"
+    ],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "ram",
+        "espo",
+        "rina"
+      ]
+    },
+    "categoria_finale": "Interesse trasporto marittimo",
+    "motivazione_finale": "Il documento è un calendario composito dei lavori dell’Assemblea e va classificato cercando i singoli punti. Nel testo sono presenti riferimenti espliciti e specifici a materie direttamente riconducibili al trasporto marittimo e al demanio marittimo/economia del mare, sufficienti per la classificazione richiesta. In particolare compaiono il ddl n. 1624 sulla 'Valorizzazione della risorsa mare', il ddl n. 1692 in materia di 'demanio marittimo' al comune di Praia a Mare e, nelle integrazioni possibili del calendario, un riferimento espresso alla 'governance portuale'. Questi elementi soddisfano il criterio di presenza anche di una sola parte specificamente attinente al settore marittimo.",
+    "estratto_rilevante": "– Ddl n. 1624 – Valorizzazione della risorsa mare (collegato alla manovra di finanza pubblica) ...; – Ddl n. 1692 – Disposizioni in materia di demanio marittimo al comune di Praia a Mare (dalla sede redigente); ... il calendario potrà altresì essere integrato ... con le discussioni dei disegni di legge ... sulla governance portuale."
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "ODG e Calendario",
+    "tipo_atto": "O.D.G. Giunte e Commissioni",
+    "numero": "",
+    "titolo": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
+    "commissione": "10ª Affari sociali, sanità, lavoro pubblico e privato, previdenza sociale",
+    "seduta": "396",
+    "pdf_index": 3,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447455.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "La commissione tratta anche lavoro pubblico e privato e previdenza sociale, ambiti potenzialmente rilevanti per il sistema produttivo; essendo un ODG occorre verifica del contenuto.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "giovedì 16 aprile 2026",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici"
+      ],
+      "keyphrases": [],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [],
+      "entities": [
+        "mit",
+        "ram"
+      ]
+    },
+    "categoria_finale": "Interesse industriale generale",
+    "motivazione_finale": "L'ordine del giorno della 10ª Commissione è un documento composito e va valutato per singoli punti. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità portuali, codice della navigazione, lavoro marittimo, demanio marittimo o economia del mare, quindi non ricorre la categoria 'Interesse trasporto marittimo'. Tuttavia, tra i punti all'ordine del giorno vi sono contenuti chiaramente attinenti al lavoro e alla legislazione sociale, in particolare il disegno di legge su 'Semplificazioni in materia di lavoro e legislazione sociale' e, in sede consultiva, il disegno di legge sulla 'carriera dirigenziale e della valutazione della performance del personale dirigenziale e non dirigenziale delle pubbliche amministrazioni'. Questi elementi fanno rientrare il documento nell'ambito di impresa/lavoro in senso generale, ma non nel settore specifico dei trasporti.",
+    "estratto_rilevante": "I. Seguito dell'esame dei disegni di legge: 1. Paola MANCINI – Semplificazioni in materia di lavoro e legislazione sociale – Relatore alla Commissione BERRINO (...) IN SEDE CONSULTIVA Seguito dell'esame del disegno di legge: Disposizioni in materia di sviluppo della carriera dirigenziale e della valutazione della performance del personale dirigenziale e non dirigenziale delle pubbliche amministrazioni (approvato dalla Camera dei deputati) – Relatore alla Commissione BERRINO"
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "ODG e Calendario",
+    "tipo_atto": "O.D.G. Giunte e Commissioni",
+    "numero": "",
+    "titolo": "5ª Bilancio",
+    "commissione": "5ª Bilancio",
+    "seduta": "544,545,546",
+    "pdf_index": 4,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447454.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "La Commissione Bilancio può trattare misure economiche e finanziarie con impatto generale sulle imprese; trattandosi di ODG è necessaria lettura del PDF.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "mercoledì 15 aprile 2026",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [
+      "Codice della navigazione",
+      "codice della navigazione"
+    ],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
+      "keyphrases": [],
+      "norm_refs_italia": [
+        "codice della navigazione"
+      ],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [],
+      "entities": [
+        "mit",
+        "ram",
+        "espo"
+      ]
+    },
+    "categoria_finale": "Interesse trasporto marittimo",
+    "motivazione_finale": "L'ordine del giorno è un documento composito e va classificato cercando i singoli punti. Nel testo è presente almeno un riferimento esplicito e specifico ai settori rilevanti per il trasporto marittimo: il punto V.20 richiama espressamente il 'codice della navigazione' e il 'lavoro marittimo'; inoltre il punto V.31 menziona il 'demanio marittimo'. In base alle regole, la presenza anche di una sola parte con tali riferimenti comporta la classificazione come 'Interesse trasporto marittimo'.",
+    "estratto_rilevante": "20. MALAN e altri – Modifiche al codice della navigazione e altre disposizioni in materia di ordinamento amministrativo della navigazione e del lavoro marittimo - Relatore alla Commissione LIRIS (Parere alla 8ª Commissione)\n\n31. SIGISMONDI e altri – Disposizioni per la tutela e la salvaguardia dei manufatti e delle macchine per la pesca tradizionali esistenti sul demanio marittimo, lacuale e fluviale - Relatrice alla Commissione AMBROGIO (Parere alla 8ª Commissione)"
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "ODG e Calendario",
+    "tipo_atto": "O.D.G. Giunte e Commissioni",
+    "numero": "",
+    "titolo": "8ª (Ambiente, lavori pubblici) e 9ª (Industria e agricoltura)",
+    "commissione": "8ª (Ambiente, lavori pubblici) e 9ª (Industria e agricoltura)",
+    "seduta": "33",
+    "pdf_index": 5,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447437.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "La presenza della 9ª Commissione Industria rende l'atto chiaramente pertinente ai temi industriali; essendo un ODG richiede esame del PDF.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "mercoledì 15 aprile 2026",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
+      "keyphrases": [],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [],
+      "entities": [
+        "ustr"
+      ]
+    },
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Si tratta di un ordine del giorno di Commissioni riunite relativo al seguito dell'esame congiunto di disegni di legge sulla fauna selvatica, sulla disciplina della caccia, sulla prevenzione dei danni causati dalla fauna e sull'abolizione del diritto di accesso ai fondi altrui per l'esercizio venatorio. Applicando la regola sui documenti compositi, sono stati esaminati i singoli punti: nessuno contiene riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo, economia del mare o altri elementi richiesti per la classificazione marittima. Non emergono neppure contenuti centrali su impresa, politica industriale, lavoro, logistica o filiera del trasporto tali da giustificare una classificazione industriale.",
+    "estratto_rilevante": "Seguito dell'esame congiunto dei disegni di legge: 1. MALAN e altri – Modifiche alla legge 11 febbraio 1992, n. 157, recante norme per la protezione della fauna selvatica omeoterma e per il prelievo venatorio; 2. CONSIGLIO REGIONALE DEL FRIULI-VENEZIA GIULIA – Norme in materia di prevenzione dei danni causati dalla fauna selvatica; 3. Anna Maria FALLUCCHI – Modifiche alla legge 11 febbraio 1992, n. 157, in materia di specie cacciabili e periodi di attività venatoria; 4. DE CRISTOFARO e altri – Modifiche all'articolo 842 del codice civile, in materia di abolizione del diritto di accesso al fondo altrui per l'esercizio della caccia; 5. DISEGNO DI LEGGE D'INIZIATIVA POPOLARE – Stop caccia! Stop uccisioni degli animali per divertimento."
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "Resoconti",
+    "tipo_atto": "Resoconto stenografico Assemblea",
+    "numero": "",
+    "titolo": "Resoconto stenografico Assemblea del 14/04/2026",
+    "commissione": "Assemblea",
+    "seduta": "408",
+    "pdf_index": 6,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447444.pdf",
+    "categoria_preliminare": "Non attinenti",
+    "motivazione_preliminare": "Resoconto generale dell'Assemblea senza indicazione nel titolo di contenuti specificamente industriali o di trasporto.",
+    "richiede_lettura_pdf": false,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [
+      "porto",
+      "porti",
+      "portuale",
+      "autorità di sistema portuale",
+      "marittimo",
+      "navigazione",
+      "codice della navigazione",
+      "lavoro marittimo",
+      "logistica",
+      "trasporti"
+    ],
+    "resoconto_alert": true,
+    "normative_hits": [
+      "Codice della navigazione",
+      "codice della navigazione"
+    ],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "sicurezza_marittima_cyber_security",
+        "finanza_fiscalita_aiuti_tassonomia"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
+      "norm_refs_italia": [
+        "codice della navigazione"
+      ],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "ees",
+        "espo",
+        "rina"
+      ]
+    },
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Resoconto generale dell'Assemblea senza indicazione nel titolo di contenuti specificamente industriali o di trasporto.",
+    "estratto_rilevante": ""
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "Resoconti",
+    "tipo_atto": "Resoconto sommario Giunte e Commissioni",
+    "numero": "593",
+    "titolo": "Resoconto sommario Giunte e Commissioni n. 593 del 14/04/2026",
+    "commissione": "",
+    "seduta": "",
+    "pdf_index": 7,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447435.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "Resoconto aggregato di commissioni potenzialmente comprendente temi economici, industriali e infrastrutturali; non essendo chiaramente non attinente, richiede lettura del PDF.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [
+      "porto",
+      "porti",
+      "portuale",
+      "autorità di sistema portuale",
+      "marittimo",
+      "marittima",
+      "navigazione",
+      "logistica",
+      "trasporti"
+    ],
+    "resoconto_alert": true,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "sicurezza_marittima_cyber_security",
+        "finanza_fiscalita_aiuti_tassonomia"
+      ],
+      "keyphrases": [
+        "pnrr",
+        "fondo complementare"
+      ],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [
+        "pnrr",
+        "fondo complementare"
+      ],
+      "entities": [
+        "mit",
+        "mef",
+        "mase",
+        "mimit",
+        "ram",
+        "ustr",
+        "capitanerie",
+        "espo",
+        "rina"
+      ]
+    },
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Resoconto aggregato di commissioni potenzialmente comprendente temi economici, industriali e infrastrutturali; non essendo chiaramente non attinente, richiede lettura del PDF.",
+    "estratto_rilevante": ""
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "Resoconti",
+    "tipo_atto": "Resoconto stenografico Giunte e Commissioni",
+    "numero": "",
+    "titolo": "Audizione del dottor Claudio Demozzi, Presidente del Sindacato Nazionale Agenti di Assicurazione (SNA)",
+    "commissione": "Commissione parlamentare di inchiesta sistema bancario, finanziario e assicurativo",
+    "seduta": "",
+    "pdf_index": 8,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447449.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "Il tema assicurativo e finanziario incide sul sistema economico e imprenditoriale in generale; il contenuto specifico va verificato nel PDF.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [
+      "porto"
+    ],
+    "resoconto_alert": true,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "lavoro_marittimo_relazioni_industriali_welfare"
+      ],
+      "keyphrases": [],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [],
+      "entities": [
+        "mit",
+        "mimit",
+        "ram",
+        "ustr",
+        "espo"
+      ]
+    },
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il tema assicurativo e finanziario incide sul sistema economico e imprenditoriale in generale; il contenuto specifico va verificato nel PDF.",
+    "estratto_rilevante": ""
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "Resoconti",
+    "tipo_atto": "Resoconto stenografico Giunte e Commissioni",
+    "numero": "",
+    "titolo": "AUDIZIONE DEL PROFESSOR PAOLO SAVONA, PRESIDENTE DELLA COMMISSIONE NAZIONALE PER LE SOCIETÀ E LA BORSA (CONSOB)",
+    "commissione": "Commissione parlamentare di inchiesta sistema bancario, finanziario e assicurativo",
+    "seduta": "",
+    "pdf_index": 9,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447439.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "L'audizione del Presidente CONSOB riguarda vigilanza sui mercati e società, materia di rilievo economico generale; è opportuno leggere il PDF.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [
+      "porto",
+      "porti"
+    ],
+    "resoconto_alert": true,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici"
+      ],
+      "keyphrases": [],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [],
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "ics",
+        "espo",
+        "rina"
+      ]
+    },
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "L'audizione del Presidente CONSOB riguarda vigilanza sui mercati e società, materia di rilievo economico generale; è opportuno leggere il PDF.",
+    "estratto_rilevante": ""
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "Emendamenti e O.D.G.",
+    "tipo_atto": "Emendamenti e O.D.G",
+    "numero": "DDL 1818",
+    "titolo": "Conversione in legge del decreto-legge 24 febbraio 2026, n. 23, recante disposizioni urgenti in materia di sicurezza pubblica, di attività di indagine dell'autorità giudiziaria in presenza di cause di giustificazione, di funzionalità delle forze di polizia e del Ministero dell'interno, nonché di immigrazione e protezione internazionale - Fascicolo n. 2 ANNESSO (bozze)",
+    "commissione": "",
+    "seduta": "",
+    "pdf_index": 10,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447456.pdf",
+    "categoria_preliminare": "Non attinenti",
+    "motivazione_preliminare": "Il titolo è centrato su sicurezza pubblica, forze di polizia, immigrazione e protezione internazionale, senza profili industriali o di trasporto evidenti.",
+    "richiede_lettura_pdf": false,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [],
+      "keyphrases": [],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [],
+      "entities": [
+        "ram",
+        "ustr",
+        "espo"
+      ]
+    },
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il documento contiene emendamenti su coltivazione associata di cannabis per uso personale e su immigrazione/rimpatri volontari assistiti, inclusi compensi ai rappresentanti legali e termini procedurali relativi ai detenuti stranieri. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo, economia del mare o filiera del trasporto. I richiami a 'concessioni' e 'autorizzazioni' sono generici e non contestualizzati al settore marittimo o industriale.",
+    "estratto_rilevante": "«Art. 30-bis (Disposizioni in materia di rimpatri volontari assistiti) ... Al rappresentante legale munito di mandato ... è riconosciuto ... un compenso ...»; «Art. 5-bis. (Coltivazione per uso personale di gruppo e associato) ... I gruppi non possono svolgere attività di lucro ...»"
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "Emendamenti e O.D.G.",
+    "tipo_atto": "Emendamenti e O.D.G",
+    "numero": "DDL 1867",
+    "titolo": "Conversione in legge, con modificazioni, del decreto-legge 19 febbraio 2026, n. 19, recante ulteriori disposizioni urgenti per l'attuazione del Piano nazionale di ripresa e resilienza (PNRR) e in materia di politiche di coesione - Fascicolo n. 2 (bozze)",
+    "commissione": "",
+    "seduta": "",
+    "pdf_index": 11,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447438.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "PNRR e politiche di coesione incidono frequentemente su investimenti, infrastrutture, imprese e filiere produttive; richiede lettura del PDF.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
+      "keyphrases": [
+        "pnrr",
+        "fondo complementare"
+      ],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [
+        "pnrr",
+        "fondo complementare"
+      ],
+      "entities": [
+        "mit",
+        "mimit",
+        "ram",
+        "ustr",
+        "capitanerie",
+        "espo",
+        "rina"
+      ]
+    },
+    "categoria_finale": "Interesse trasporto marittimo",
+    "motivazione_finale": "Il fascicolo è composito e, pur riguardando in larga parte PNRR, PA, scuola, giustizia, sanità e coesione, contiene almeno una parte con riferimenti espliciti e specifici al settore marittimo-portuale. In particolare: l'emendamento 10.3 istituisce una 'autorizzazione unica nazionale per l'esercizio di attività produttive nei porti', richiama espressamente le Autorità di sistema portuale, le Capitanerie di porto e l'articolo 68 del codice della navigazione (regio decreto 30 marzo 1942, n. 327); inoltre l'emendamento 10.0.2 istituisce il Museo/Fondazione per la memoria del disastro marittimo della nave Moby Prince e richiama la sicurezza marittima. Ai sensi delle regole date, è sufficiente anche una sola parte con tali riferimenti specifici per classificare l'intero documento come 'Interesse trasporto marittimo'.",
+    "estratto_rilevante": "Emendamento 10.3: «è istituita l'autorizzazione unica nazionale per l'esercizio di attività produttive nei porti, rilasciata dall'Autorità di sistema portuale o dall'ente gestore del porto ... Le autorizzazioni ... sono registrate e integrate con i sistemi informativi delle Autorità di sistema portuale, delle Capitanerie di porto ... cessano di applicarsi ... quelle di cui all'articolo 68 del regio decreto 30 marzo 1942, n. 327». Emendamento 10.0.2: «È istituito il Museo per la memoria del disastro marittimo della nave “Moby Prince” ... favorire la conoscenza di buone pratiche per migliorare la sicurezza nell'ambito del trasporto marittimo»."
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "DDL e relazioni",
+    "tipo_atto": "Disegno di legge",
+    "numero": "1862",
+    "titolo": "Istituzione della Fondazione «ITS Academy per l'hotellerie, l'ospitalità, la cucina italiana e l'artigianato di eccellenza»",
+    "commissione": "",
+    "seduta": "",
+    "pdf_index": 12,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447442.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "L'atto riguarda formazione tecnica superiore per hotellerie, ospitalità e artigianato di eccellenza, ambiti economico-produttivi e di filiera; serve lettura del PDF per valutarne il perimetro.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale"
+      ],
+      "keyphrases": [],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [],
+      "entities": [
+        "mit",
+        "ram"
+      ]
+    },
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il disegno di legge riguarda l'istituzione di una Fondazione ITS Academy per la formazione nei settori dell'hotellerie, dell'ospitalità, della cucina italiana e dell'artigianato di eccellenza. Il contenuto è prevalentemente formativo, culturale e di valorizzazione del patrimonio immobiliare pubblico, con finalità educative e occupazionali generali. Non emergono riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare. Anche i richiami a turismo, immobili pubblici e occupazione non sono sufficienti, in assenza di un focus su impresa/industria o trasporto nei termini richiesti dalle regole.",
+    "estratto_rilevante": "È istituita la Fondazione « ITS Academy per l’hotellerie, l’ospitalità, la cucina italiana e l’artigianato di eccellenza » [...] con il compito di garantire una formazione professionalizzante nei settori dell’hotellerie, dell’ospitalità, della cucina italiana e dell’artigianato di eccellenza [...]"
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "DDL e relazioni",
+    "tipo_atto": "Messaggio disegno di legge",
+    "numero": "1867",
+    "titolo": "Conversione in legge, con modificazioni, del decreto-legge 19 febbraio 2026, n. 19, recante ulteriori disposizioni urgenti per l'attuazione del Piano nazionale di ripresa e resilienza (PNRR) e in materia di politiche di coesione",
+    "commissione": "Assemblea",
+    "seduta": "",
+    "pdf_index": 13,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447447.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "Il PNRR e le politiche di coesione possono contenere misure di forte impatto su industria, infrastrutture e competitività; non è chiaramente non attinente e richiede lettura.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [
+      "Codice della navigazione",
+      "codice della navigazione"
+    ],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "finanza_fiscalita_aiuti_tassonomia"
+      ],
+      "keyphrases": [
+        "pnrr"
+      ],
+      "norm_refs_italia": [
+        "codice della navigazione"
+      ],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "espo",
+        "rina"
+      ]
+    },
+    "categoria_finale": "Interesse industriale generale",
+    "motivazione_finale": "Il documento riguarda la conversione di un decreto-legge su PNRR e politiche di coesione e contiene numerose disposizioni su organizzazione amministrativa, proroga e rinnovo di incarichi dirigenziali e contratti a tempo determinato, reclutamento di personale, capacità amministrativa, contratti pubblici ICT, graduatorie di merito, contratti collettivi e profili occupazionali. Sono quindi presenti riferimenti espliciti a lavoro, occupazione, contrattazione e assetti organizzativi della PA con impatto economico-amministrativo. Non emergono però riferimenti specifici e contestualizzati a trasporto marittimo, navigazione, porti, demanio marittimo, lavoro marittimo o economia del mare; né un focus chiaro sulla filiera del trasporto tale da far rientrare l'atto nell'industria del trasporto.",
+    "estratto_rilevante": "«possono essere prorogati fino al 31 dicembre 2026 tutti gli incarichi dirigenziali e non dirigenziali attribuiti da regioni, città metropolitane, province e comuni»; «Resta fermo, per il personale non dirigenziale, il rispetto del limite massimo di trentasei mesi per la durata del contratto a tempo determinato»; «il Dipartimento per le politiche di coesione ... può assegnare alle amministrazioni ... una o più unità di personale»; «i contratti di lavoro a tempo determinato del personale impiegato presso il Ministero della cultura ... possono essere rinnovati fino al 31 dicembre 2026»; «la Presidenza del Consiglio dei ministri è autorizzata ... a indire una procedura selettiva ... per l’assunzione ... di un contingente di dieci unità di personale»; «la parola: “CCNL” è sostituita dalle seguenti: “contratto collettivo nazionale di lavoro”»."
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "Documenti",
+    "tipo_atto": "Documento",
+    "numero": "Doc. LXXXVII, n. 3",
+    "titolo": "RELAZIONE CONSUNTIVA SULLA PARTECIPAZIONE DELL'ITALIA ALL'UNIONE EUROPEA (Anno 2025)",
+    "commissione": "",
+    "seduta": "",
+    "pdf_index": 14,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447445.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "La partecipazione dell'Italia all'UE può includere politiche industriali, energetiche, ambientali, concorrenziali e infrastrutturali; necessario esame del PDF.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [
+      "Direttiva 2002/59/CE",
+      "EU ETS / Direttiva 2003/87/CE",
+      "Regolamento (UE) n. 1177/2010",
+      "D.Lgs. 47/2020",
+      "Autostrade del mare",
+      "Sea Modal Shift",
+      "fit for 55"
+    ],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "lavoro_marittimo_relazioni_industriali_welfare",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "sicurezza_marittima_cyber_security",
+        "relazioni_internazionali_rotte_sanzioni_compliance",
+        "finanza_fiscalita_aiuti_tassonomia"
+      ],
+      "keyphrases": [
+        "sea modal shift",
+        "pnrr",
+        "nis2"
+      ],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [
+        "fit for 55"
+      ],
+      "programs_tools": [
+        "pnrr"
+      ],
+      "entities": [
+        "mit",
+        "mef",
+        "mase",
+        "maeci",
+        "mimit",
+        "ram",
+        "ustr",
+        "ics",
+        "capitanerie",
+        "guardia costiera",
+        "irini",
+        "aspides",
+        "entry exit system",
+        "ees",
+        "espo",
+        "emsa",
+        "rina",
+        "frontex"
+      ]
+    },
+    "categoria_finale": "Interesse trasporto marittimo",
+    "motivazione_finale": "Il documento è composito e contiene almeno un riferimento esplicito e specifico al trasporto marittimo. In particolare, nell’indice compaiono voci direttamente attinenti al settore marittimo, come il dossier sul rafforzamento della politica commerciale europea nel settore agricolo con focus sulle accise per i carburanti utilizzati nelle attività di pesca marittima e soprattutto il dossier 52 relativo allo sviluppo della cooperazione nel settore dei trasporti marittimi. In base alle regole, è sufficiente anche una sola parte con riferimento specifico al trasporto marittimo per classificare l’intero documento come di interesse per il trasporto marittimo.",
+    "estratto_rilevante": "Dossier 35 – Tassazione Ambientale ed Energetica – Proposta di rifusione della Direttiva 2003/96/CE – Focus su accise per i carburanti utilizzati nelle attività di pesca marittima ...; Dossier 52 – Attuazione della normativa unionale e sviluppo della cooperazione nel settore dei trasporti marittimi ..."
+  },
+  {
+    "ramo": "Senato",
+    "data_pubblicazione": "2026-04-15",
+    "sezione": "Atti del Governo",
+    "tipo_atto": "Atto del Governo",
+    "numero": "398",
+    "titolo": "Schema di decreto legislativo recante testo unico delle disposizioni legislative in materia di imposte sui redditi",
+    "commissione": "",
+    "seduta": "",
+    "pdf_index": 15,
+    "link_pdf": "https://www.senato.it/service/PDF/PDFServer/DF/447436.pdf",
+    "categoria_preliminare": "Interesse industriale generale",
+    "motivazione_preliminare": "La disciplina delle imposte sui redditi ha impatto diretto e trasversale su imprese e attività produttive; l'atto richiede lettura del PDF.",
+    "richiede_lettura_pdf": true,
+    "data_seduta": "",
+    "termine_emendamenti": [],
+    "audizioni": [],
+    "resoconto_keywords_found": [],
+    "resoconto_alert": false,
+    "normative_hits": [],
+    "confitarma_kb_hits": {
+      "keyword_categories": [
+        "porti_adsp_infrastrutture_servizi_tecnico_nautici",
+        "trasporto_marittimo_short_sea_logistica_incentivi",
+        "ordinamento_marittimo_registri_bandiera",
+        "transizione_ecologica_combustibili_ets_fueleu_tecnica_navale",
+        "sicurezza_marittima_cyber_security",
+        "finanza_fiscalita_aiuti_tassonomia"
+      ],
+      "keyphrases": [],
+      "norm_refs_italia": [],
+      "norm_refs_ue_internazionale": [],
+      "programs_tools": [],
+      "entities": [
+        "mit",
+        "ram",
+        "ustr",
+        "ics",
+        "marina militare",
+        "ees",
+        "espo",
+        "rina"
+      ]
+    },
+    "categoria_finale": "Non attinenti",
+    "motivazione_finale": "Il documento riguarda uno schema di decreto legislativo di riordino e coordinamento del testo unico delle imposte sui redditi. Dall'estratto emergono contenuti di natura tributaria generale (IRPEF, oneri deducibili, detrazioni, redditi d'impresa, redditi di lavoro, redditi fondiari, ecc.), senza riferimenti espliciti e specifici a trasporto marittimo, navigazione, porti, autorità di sistema portuale, codice della navigazione, lavoro marittimo, demanio marittimo, economia del mare, autostrade del mare o sea modal shift. Non emerge neppure un focus specifico su logistica o filiera del trasporto tale da giustificare una classificazione industriale di settore.",
+    "estratto_rilevante": "Schema di decreto legislativo recante testo unico delle disposizioni legislative in materia di imposte sui redditi ... Il testo unico è composto da 376 articoli ... La Parte I attiene alle “Disposizioni generali” ... Titolo I “Imposta sul reddito delle persone fisiche” ... Capo V “Redditi di lavoro autonomo” ... Capo VI “Redditi d’impresa” ..."
+  }
+]
