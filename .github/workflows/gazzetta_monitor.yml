@@ -1,7 +1,7 @@
 name: Monitor Gazzetta Ufficiale
 
 on:
-  schedule:
+  #schedule:
     - ##cron: "0 10 * * *"
       ##timezone: "Europe/Rome"
   workflow_dispatch:
