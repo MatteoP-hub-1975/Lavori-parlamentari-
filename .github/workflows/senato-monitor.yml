@@ -1,7 +1,7 @@
 name: Senato Monitor
 
 on:
-  schedule:
+  #schedule:
     - ##cron: "0 10 * * 2-6"
       ##timezone: "Europe/Rome"
   workflow_dispatch:
